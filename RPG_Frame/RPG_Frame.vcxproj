@@ -18,6 +18,44 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Component\BackpackComponent.h" />
+    <ClInclude Include="include\Component\BattleComponent.h" />
+    <ClInclude Include="include\Component\Component.h" />
+    <ClInclude Include="include\DEFINES.h" />
+    <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\GameObject\GameObject.h" />
+    <ClInclude Include="include\Component\InputComponent.h" />
+    <ClInclude Include="include\GameObject\MapObject.h" />
+    <ClInclude Include="include\GameObject\NpcObject.h" />
+    <ClInclude Include="include\Math2.h" />
+    <ClInclude Include="include\Component\MoveComponent.h" />
+    <ClInclude Include="include\GameObject\PlayerObject.h" />
+    <ClInclude Include="include\Component\SpriteComponent.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Component\BackpackComponent.cpp" />
+    <ClCompile Include="src\Component\BattleComponent.cpp" />
+    <ClCompile Include="src\Component\Component.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameObject\GameObject.cpp" />
+    <ClCompile Include="src\Component\InputComponent.cpp" />
+    <ClCompile Include="src\GameObject\NpcObject.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\GameObject\MapObject.cpp" />
+    <ClCompile Include="src\Math2.cpp" />
+    <ClCompile Include="src\Component\MoveComponent.cpp" />
+    <ClCompile Include="src\GameObject\PlayerObejct.cpp" />
+    <ClCompile Include="src\Component\SpriteComponent.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dll\SDL2.dll" />
+    <None Include="dll\SDL2_image.dll" />
+    <None Include="dll\SDL2_ttf.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\青鸟华光简中圆.TTF" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -114,15 +152,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\SDL2-devel-2.24.0-VC\SDL2-2.24.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\SDL2_ttf-2.20.2\include;.\include;.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\include;.\SDL2_image-devel-2.6.2-VC\SDL2_image-2.6.2\include;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\GameObject;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\Component;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\SDL2-devel-2.24.0-VC\SDL2-2.24.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>D:\SDL2-devel-2.24.0-VC\SDL2-2.24.0\lib\x64\SDL2.lib;D:\SDL2-devel-2.24.0-VC\SDL2-2.24.0\lib\x64\SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\SDL2_image-devel-2.6.2-VC\SDL2_image-2.6.2\lib\x64;.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\lib\x64;.\SDL2_ttf-2.20.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\lib\x64\SDL2.lib;.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\lib\x64\SDL2main.lib;.\SDL2_image-devel-2.6.2-VC\SDL2_image-2.6.2\lib\x64\SDL2_image.lib;.\SDL2_ttf-2.20.2\lib\x64\SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -141,13 +179,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="Game.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
