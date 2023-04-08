@@ -12,6 +12,8 @@ namespace GameFrame {
 		int AddACK(int ack);
 		int GetDEF();
 		int AddDEF(int def);
+		bool GetBattleState();
+		void SetBattleSate(bool state);
 
 	private:
 		int		Hp;

@@ -27,3 +27,13 @@ void GameFrame::InputComponent::ProcessInput(const uint8_t* keystate)
 	}
 }
 
+void GameFrame::InputComponent::SetRequestCom(Component* component)
+{
+	RequestComp = component;
+}
+
+void GameFrame::InputComponent::SetIsMain(bool is)
+{
+	IsMain = is;
+}
+

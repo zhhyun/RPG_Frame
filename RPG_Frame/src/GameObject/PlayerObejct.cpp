@@ -59,3 +59,13 @@ int GameFrame::PlayerObject::AddDEF(int def)
 	DEF = DEF + def;
 	return DEF;
 }
+
+bool GameFrame::PlayerObject::GetBattleState()
+{
+	return IsCombating;
+}
+
+void GameFrame::PlayerObject::SetBattleSate(bool state)
+{
+	IsCombating = state;
+}

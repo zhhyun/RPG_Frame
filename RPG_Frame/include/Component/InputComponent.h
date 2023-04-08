@@ -8,6 +8,8 @@ namespace GameFrame {
 	public:
 		InputComponent(GameObject* gameobject);
 		void ProcessInput(const uint8_t* keystate) override;
+		void SetRequestCom(Component* component);
+		void SetIsMain(bool is);
 
 	private:
 		bool IsMain;

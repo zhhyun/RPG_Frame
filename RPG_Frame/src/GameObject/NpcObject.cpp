@@ -22,3 +22,17 @@ GameFrame::NpcObject::NpcObject(Game* game):
 GameFrame::NpcObject::~NpcObject()
 {
 }
+
+int GameFrame::NpcObject::GetHp()
+{
+	return Hp;
+}
+
+bool GameFrame::NpcObject::GetBattleState()
+{
+	return false;
+}
+
+void GameFrame::NpcObject::SetBattleSate(bool state)
+{
+}
