@@ -21,9 +21,12 @@
   <ItemGroup>
     <ClInclude Include="include\Component\BackpackComponent.h" />
     <ClInclude Include="include\Component\BattleComponent.h" />
+    <ClInclude Include="include\Component\CollisionComponent.h" />
     <ClInclude Include="include\Component\Component.h" />
+    <ClInclude Include="include\Component\MapSpriteComponent.h" />
     <ClInclude Include="include\DEFINES.h" />
     <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\GameObject\ActorObject.h" />
     <ClInclude Include="include\GameObject\GameObject.h" />
     <ClInclude Include="include\Component\InputComponent.h" />
     <ClInclude Include="include\GameObject\MapObject.h" />
@@ -36,8 +39,11 @@
   <ItemGroup>
     <ClCompile Include="src\Component\BackpackComponent.cpp" />
     <ClCompile Include="src\Component\BattleComponent.cpp" />
+    <ClCompile Include="src\Component\CollisionComponent.cpp" />
     <ClCompile Include="src\Component\Component.cpp" />
+    <ClCompile Include="src\Component\MapSpriteComponent.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameObject\ActorObject.cpp" />
     <ClCompile Include="src\GameObject\GameObject.cpp" />
     <ClCompile Include="src\Component\InputComponent.cpp" />
     <ClCompile Include="src\GameObject\NpcObject.cpp" />
@@ -52,9 +58,15 @@
     <None Include="dll\SDL2.dll" />
     <None Include="dll\SDL2_image.dll" />
     <None Include="dll\SDL2_ttf.dll" />
+    <None Include="MAP\map1.map" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Fonts\青鸟华光简中圆.TTF" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="sprite\1-1.png" />
+    <Image Include="sprite\1.png" />
+    <Image Include="sprite\2.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

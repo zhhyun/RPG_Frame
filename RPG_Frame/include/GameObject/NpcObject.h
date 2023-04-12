@@ -1,25 +1,15 @@
 #ifndef __NpcObject__
 #define __NpcObject__
-#include "GameObject.h"
+#include "ActorObject.h"
+
 namespace GameFrame {
-	class NpcObject : public GameObject {
+	class NpcObject : public ActorObject {
 	public:
-		NpcObject(Game* game);
+		NpcObject(Game* game, MapObject* map, const std::string& name);
 		~NpcObject();
-		int GetHp();
-		int AddHp(int hp);
-		int GetACK();
-		int AddACK(int ack);
-		int GetDEF();
-		int AddDEF(int def);
-		bool GetBattleState();
-		void SetBattleSate(bool state);
 
 	private:
-		int		Hp;
-		int		Speed;
-		int		ACK;
-		int		DEF;
+
 	};
 }
 #endif __NpcObject__

@@ -1,2 +1,2 @@
-#define ScreenW 1080
-#define ScreenH 720
+#define ScreenW 1280
+#define ScreenH 960

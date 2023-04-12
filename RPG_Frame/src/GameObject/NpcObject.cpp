@@ -2,37 +2,23 @@
 #include	"SpriteComponent.h"
 #include	"MoveComponent.h"
 #include	"InputComponent.h"
+#include	"BattleComponent.h"
+#include	"CollisionComponent.h"
 #include	"Game.h"
 
-GameFrame::NpcObject::NpcObject(Game* game):
-	Hp(100),
-	ACK(10),
-	DEF(10),
-	Speed(1),
-	GameObject(game)
+GameFrame::NpcObject::NpcObject(Game* game, MapObject* map, const std::string& name):
+	ActorObject(game, map, name)
 {
 	Vector2 pos{ 210,210 };
 	SetPosition(pos);
 	SpriteComponent* Npc = new SpriteComponent(this, 100);
-	AddSpriteComponent(Npc);
-	SDL_Texture* tex = GetGame()->GetTexture("Npc");
-	Npc->SetTexture(tex);
+	BattleComponent* Battle = new BattleComponent(this);
+	CollisionComponent* collision = new CollisionComponent(this);
+	collision->SetCollision(pos, 64, 32);
+	std::string str = "Npc";
+	Npc->LoadTexture(str);
 }
 
 GameFrame::NpcObject::~NpcObject()
-{
-}
-
-int GameFrame::NpcObject::GetHp()
-{
-	return Hp;
-}
-
-bool GameFrame::NpcObject::GetBattleState()
-{
-	return false;
-}
-
-void GameFrame::NpcObject::SetBattleSate(bool state)
 {
 }

@@ -1,11 +1,11 @@
-#include "GameObject.h"
-#include "Game.h"
-#include "Component.h"
+#include	"GameObject.h"
+#include	"Game.h"
+#include	"Component.h"
 #include	"SpriteComponent.h"
 
 
 namespace GameFrame {
-	GameObject::GameObject(Game* game) :
+	GameObject::GameObject(Game* game, const std::string& name) :
 		mDir(Dir::DOWN),
 		Pos(0,0),
 		mScale(1),
@@ -14,8 +14,9 @@ namespace GameFrame {
 		mState(State::EActive),
 		IsMoving(false)
 	{
-		mGame->CreateGameObject(this);
+		mGame->AddGameObject(this,name);
 	}
+
 	GameObject::~GameObject()
 	{ 
 		mGame->RemoveGameObject(this);

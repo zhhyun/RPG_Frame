@@ -23,7 +23,11 @@ namespace GameFrame {
 		return mGameObject;
 	}
 
-	void Component::ProcessInput(const uint8_t* keystate)
+	void Component::ProcessInput2(const uint8_t* keystate)
+	{
+	}
+
+	void Component::ProcessInput(const SDL_Keycode key)
 	{
 	}
 

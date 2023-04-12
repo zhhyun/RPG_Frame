@@ -8,7 +8,7 @@ namespace GameFrame {
 		y = 0.0f;
 	}
 
-	GameFrame::Vector2::Vector2(float X, float Y)
+	GameFrame::Vector2::Vector2(int X, int Y)
 	{
 		x = X;
 		y = Y;
@@ -39,7 +39,7 @@ namespace GameFrame {
 		return Vector2(a.x * b, a.y * b);
 	}
 
-	Vector2 operator*(float a, const Vector2& b)
+	Vector2 operator*(int a, const Vector2& b)
 	{
 		return Vector2(a * b.x, a * b.y);
 	}

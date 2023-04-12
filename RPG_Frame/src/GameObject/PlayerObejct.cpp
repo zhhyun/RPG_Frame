@@ -1,71 +1,47 @@
 #include	"PlayerObject.h"
+#include	"MapObject.h"
 #include	"SpriteComponent.h"
 #include	"MoveComponent.h"
 #include	"InputComponent.h"
+#include	"BattleComponent.h"
+#include	"CollisionComponent.h"
 #include	"Game.h"
 
-GameFrame::PlayerObject::PlayerObject(Game* game) :
-	Hp(100),
-	ACK(10),
-	DEF(10),
-	Speed(1),
-	IsCombating(false),
-	GameObject(game)
+GameFrame::PlayerObject::PlayerObject(Game* game, MapObject* map, const std::string& name) :
+	ActorObject(game, map, name)
 {
-	Vector2 pos{110,110};
+	
+	Vector2 pos{200,200};
 	SetPosition(pos);
 	SpriteComponent* Sprite = new SpriteComponent(this, 100);
-	AddSpriteComponent(Sprite);
-	SDL_Texture* tex = GetGame()->GetTexture("Player");
-	Sprite->SetTexture(tex);
+	std::string str = "Player";
+	Sprite->LoadTexture(str);
 	MoveComponent* Move = new MoveComponent(this);
-	//BackpackComponent* BackPack = new BackpackComponent(this, 99);
+	CollisionComponent* collision = new CollisionComponent(this);
 	InputComponent* Input = new InputComponent(this);
+	BattleComponent* Battle = new BattleComponent(this);
+	AddHp(1000);
+	AddACK(20);
+	collision->SetCollision(pos, 64, 64);
 }
 
 GameFrame::PlayerObject::~PlayerObject()
 {
 }
 
-int GameFrame::PlayerObject::GetHp()
-{
-	return Hp;
-}
 
-int GameFrame::PlayerObject::AddHp(int hp)
+void GameFrame::PlayerObject::update()
 {
-	Hp = Hp + hp;
-	return Hp;
-}
+	BattleComponent* bc = GetComponent<BattleComponent>();
 
-int GameFrame::PlayerObject::GetACK()
-{
-	return ACK;
-}
-
-int GameFrame::PlayerObject::AddACK(int ack)
-{
-	ACK = ACK + ack;
-	return ACK;
-}
-
-int GameFrame::PlayerObject::GetDEF()
-{
-	return DEF;
-}
-
-int GameFrame::PlayerObject::AddDEF(int def)
-{
-	DEF = DEF + def;
-	return DEF;
-}
-
-bool GameFrame::PlayerObject::GetBattleState()
-{
-	return IsCombating;
-}
-
-void GameFrame::PlayerObject::SetBattleSate(bool state)
-{
-	IsCombating = state;
+	//如果在战斗中，则只更新战斗和输入组件
+	if (IsCombating) {
+		bc->update();
+		return;
+	}
+	else {
+		for (auto iter : mComponents) {
+			iter->update();
+		}
+	}
 }

@@ -8,7 +8,8 @@ namespace GameFrame {
 	class MoveComponent : public Component {
 	public:
 		MoveComponent(GameObject* gameobject);
-		void ProcessInput(const uint8_t *keystate) override;
+		void ProcessInput(const SDL_Keycode key);
+		void ProcessInput2(const uint8_t* keystate);
 		void update() override;
 
 	private:

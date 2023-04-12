@@ -3,6 +3,7 @@
 #include	"PlayerObject.h"
 #include	"NpcObject.h"
 #include	"InputComponent.h"
+#include	"MapObject.h"
 
 namespace GameFrame {
 	Game::Game() :
@@ -87,20 +88,21 @@ namespace GameFrame {
 			case SDL_QUIT:
 				IsRunning = false;
 				break;
+				/*case SDL_KEYDOWN:
+					GetGameObject<PlayerObject>()->GetComponent<InputComponent>()->ProcessInput(event.key.keysym.sym);
+					break;*/
 			default:
 				break;
 			}
 		}
-		
-		const uint8_t* keyState = SDL_GetKeyboardState(NULL);
-		
-		mIsUpdating = true;
-		GetGameObject<PlayerObject>()->GetComponent<InputComponent>()->ProcessInput(keyState);
-		mIsUpdating = false;
-
+			const uint8_t* keystate = SDL_GetKeyboardState(NULL);
+			mIsUpdating = true;
+			GetGameObject("Player")->GetComponent<InputComponent>()->ProcessInput2(keystate);
+			mIsUpdating = false;
+		//}
 	}
 
-	void Game::CreateGameObject(GameObject* gameobject)//本函数作用是将创建好了的游戏对象注册到game的容器中
+	void Game::AddGameObject(GameObject* gameobject)//本函数作用是将创建好了的游戏对象注册到game的容器中
 		//在程序里定义一个游戏对象不代表在游戏里创建一个游戏对象
 		//在游戏里创建对象用Game类的创建对象函数来实现
 		//创建对象函数一般由该对象定义时 去找 和自己联系的game对象 调用
@@ -114,6 +116,11 @@ namespace GameFrame {
 		else {
 			mGameObjects.emplace_back(gameobject);
 		}
+	}
+
+	void Game::AddGameObject(GameObject* gameobject, const std::string& Name)
+	{
+		mGameObjects2.emplace(Name, gameobject);
 	}
 
 	void Game::RemoveGameObject(GameObject* gameobject)
@@ -147,13 +154,23 @@ namespace GameFrame {
 		return tex;
 	}
 
+	GameObject* Game::GetGameObject(const std::string& name)
+	{
+		GameObject* go = nullptr;
+		auto iter = mGameObjects2.find(name);
+		if (iter != mGameObjects2.end()) {
+			go = iter->second;
+		}
+		return go;
+	}
+
 	void Game::Update()
 	{
 		SDL_Delay(10);
 
 		mIsUpdating = true;
-		for (auto gameobejct : mGameObjects) {
-			gameobejct->update();
+		for (auto gameobejct : mGameObjects2) {
+			gameobejct.second->update();
 		}
 
 		mIsUpdating = false;
@@ -198,8 +215,6 @@ namespace GameFrame {
 			}
 			else
 			{
-				int textureW;
-				int textureH;
 				SDL_Rect soildRect = { 0,0,textSurface->w,textSurface->h };
 				SDL_RenderCopy(mRenderer, mTexture, nullptr, &soildRect);
 				// 【这里设置了字体纹理大小】
@@ -213,10 +228,10 @@ namespace GameFrame {
 		// 释放临时表面
 		SDL_FreeSurface(textSurface);
 
-		for (auto iter : mGameObjects) {
-			iter->Draw(mRenderer);
-		}
-
+		/*for (auto iter : mGameObjects2) {
+			iter.second->Draw(mRenderer);
+		}*/
+		GetGameObject("map1")->Draw(mRenderer);
 		//交换缓冲区
 		SDL_RenderPresent(mRenderer);
 	}
@@ -245,11 +260,17 @@ namespace GameFrame {
 
 	void Game::LoadData()
 	{
-		LoadTexture("sprite/2.png",	"Player");
+		LoadTexture("sprite/1-1.png", "tile");
 		LoadTexture("sprite/1.png", "Npc");
+		LoadTexture("sprite/2.png",	"Player");
+		
+
 		Font = TTF_OpenFont("Fonts/1.TTF", 28);
-		PlayerObject* Player = new PlayerObject(this);
-		NpcObject* Npc = new NpcObject(this);
+		MapObject* map = new MapObject(this, "MAP/map1.map", "map1");
+		NpcObject* Npc = new NpcObject(this, map, "Npc");
+		PlayerObject* Player = new PlayerObject(this, map, "Player");
+		//Player->BattleStart(Npc);
+
 	}
 	void Game::Unload()
 	{

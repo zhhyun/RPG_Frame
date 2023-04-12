@@ -16,7 +16,8 @@ namespace GameFrame {
 		bool Initialize();
 		void loop();
 		void shutdown();
-		void CreateGameObject(GameObject* gameobject);
+		void AddGameObject(GameObject* gameobject);
+		void AddGameObject(GameObject* gameobject, const std::string& Name);
 		template<typename T> T* GetGameObject() {
 			for (auto com : mGameObjects) {
 				T* gameobject = dynamic_cast<T*>(com);
@@ -30,6 +31,7 @@ namespace GameFrame {
 		void RemoveGameObject(GameObject* gameobject);
 		//获取贴图
 		SDL_Texture* GetTexture(const std::string& filename);
+		GameObject* GetGameObject(const std::string& name);
 
 	private:
 		void Event();
@@ -44,7 +46,7 @@ namespace GameFrame {
 
 		//注：unordered_map是哈希表容器
 		std::unordered_map<std::string, SDL_Texture*> mTextures;
-
+		std::unordered_map<std::string, GameObject*> mGameObjects2;
 
 		bool							IsRunning;			//游戏运行标记
 		bool							mIsUpdating;		//更新标记

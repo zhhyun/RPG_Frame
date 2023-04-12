@@ -1,14 +1,14 @@
-#include "SpriteComponent.h"
+#include	"SpriteComponent.h"
 #include	"GameObject.h"
+#include	"Game.h"
 
 
 GameFrame::SpriteComponent::SpriteComponent(GameObject* gameobject, int draworder):
 	mTexture(nullptr),
-	mTexWidth(0),
-	mTexHeight(0),
 	mDrawOrder(draworder),
 	Component(gameobject)
 {
+	mGameObject->AddSpriteComponent(this);
 }
 
 GameFrame::SpriteComponent::~SpriteComponent()
@@ -17,39 +17,37 @@ GameFrame::SpriteComponent::~SpriteComponent()
 
 void GameFrame::SpriteComponent::Draw(SDL_Renderer* renderer)
 {
-	if (!mTexture)
-	{
-		return;
-	}
 
 	// 贴图即将被绘制的位置
-	SDL_Rect dstrect;
-	dstrect.w = static_cast<int>(mTexWidth * mGameObject->GetScale().x);
-	dstrect.h = static_cast<int>(mTexHeight * mGameObject->GetScale().y);
-	dstrect.x = static_cast<int>(mGameObject->GetPosition().x);
-	dstrect.y = static_cast<int>(mGameObject->GetPosition().y);
 
 		int textureW;
 		int textureH;
 		int x =  mGameObject->GetPosition().x;
 		int y =  mGameObject->GetPosition().y;
 
-		SDL_QueryTexture(mTexture, nullptr, nullptr, &textureW, &textureH);
+		SDL_QueryTexture(mTextures.begin()->second, nullptr, nullptr, &textureW, &textureH);
 
 		SDL_Rect imageRect{ 0,0,textureW/3,textureH/4 };
 
 		SDL_Rect dstRect{ x, y,textureW/3,textureH/4 };
-
-		SDL_RenderCopy(renderer, mTexture, &imageRect, &dstRect);
+		
+		SDL_RenderCopy(renderer, mTextures.begin()->second, &imageRect, &dstRect);
 
 	// 绘制贴图（考虑旋转）
 	//SDL_RenderCopyEx(renderer, mTexture, nullptr, &dstrect, mGameObject->GetRotation(), nullptr, SDL_FLIP_NONE);
 
 }
 
-void GameFrame::SpriteComponent::SetTexture(SDL_Texture* texture)
+
+void GameFrame::SpriteComponent::LoadTexture(std::string& fileName)
 {
-	mTexture = texture;
-	// 从贴图中查询贴图的宽和高
-	SDL_QueryTexture(texture, nullptr, nullptr, &mTexWidth, &mTexHeight);
+	{
+		auto iter = mTextures.find(fileName);
+		if (iter != mTextures.end()) {
+			SDL_DestroyTexture(iter->second);
+			mTextures.erase(iter);
+		}
+		SDL_Texture* tex = mGameObject->GetGame()->GetTexture(fileName);
+		mTextures.emplace(fileName, tex);
+	}
 }

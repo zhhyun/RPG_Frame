@@ -1,28 +1,17 @@
 #ifndef __PlayerObject__
 #define __PlayerObject__
-#include "GameObject.h"
+#include "ActorObject.h"
 
 namespace GameFrame {
-	class PlayerObject : public GameObject {
+	class PlayerObject : public ActorObject {
 	public:
-		PlayerObject(Game* game);
+		PlayerObject(Game* game, MapObject* map, const std::string& name);
 		~PlayerObject();
 		
-		int GetHp();
-		int AddHp(int hp);
-		int GetACK();
-		int AddACK(int ack);
-		int GetDEF();
-		int AddDEF(int def);
-		bool GetBattleState();
-		void SetBattleSate(bool state);
+		void update() override;
 
 	private:
-		int		Hp;
-		int		Speed;
-		int		ACK;
-		int		DEF;
-		bool	IsCombating;
+		
 	};
 }
 #endif __PlayerObject__
