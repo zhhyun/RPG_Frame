@@ -13,11 +13,10 @@ namespace GameFrame{
 		virtual ~Component();
 		virtual void update();
 		class GameObject* GetGameObject();
-		virtual void ProcessInput(const SDL_Keycode key);
-		virtual void ProcessInput2(const uint8_t* keystate);
+		virtual void ProcessInput(const uint8_t* keystate);
 
 	protected:
-		class GameObject*				mGameObject;
+		class GameObject*				mOwner;
 		int								mUpdateOder;
 	};
 }

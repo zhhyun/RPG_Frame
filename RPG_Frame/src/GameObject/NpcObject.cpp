@@ -14,7 +14,7 @@ GameFrame::NpcObject::NpcObject(Game* game, MapObject* map, const std::string& n
 	SpriteComponent* Npc = new SpriteComponent(this, 100);
 	BattleComponent* Battle = new BattleComponent(this);
 	CollisionComponent* collision = new CollisionComponent(this);
-	collision->SetCollision(pos, 64, 32);
+	collision->SetCollision(pos, 32, 32);
 	std::string str = "Npc";
 	Npc->LoadTexture(str);
 }

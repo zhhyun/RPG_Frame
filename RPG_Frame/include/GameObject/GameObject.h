@@ -9,11 +9,11 @@
 namespace GameFrame {
 	class GameObject {
 	public:
-		enum class State {
+		enum State {
 			EActive,
 			EDead
 		};
-		enum class Dir
+		enum Dir
 		{
 			UP,
 			DOWN,
@@ -62,8 +62,8 @@ namespace GameFrame {
 		void SetDir(Dir mdir);
 		class Game* GetGame() const;
 		virtual void Draw(SDL_Renderer* renderer);
-		bool GetMovingState();
-		void SetMovingState(bool ismov);
+		/*bool GetMovingState();
+		void SetMovingState(bool ismov);*/
 
 
 	protected:
@@ -77,8 +77,6 @@ namespace GameFrame {
 		float								mRotation;
 		class Game*							mGame;
 		State								mState;
-		bool								IsMoving;
-
 	};
 }
 

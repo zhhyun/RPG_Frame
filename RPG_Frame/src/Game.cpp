@@ -12,7 +12,8 @@ namespace GameFrame {
 		mRenderer(nullptr),
 		mTexture(nullptr),
 		mIsUpdating(false),
-		Font(nullptr)
+		Font(nullptr),
+		mTickCount(0)
 	{
 
 	}
@@ -97,7 +98,7 @@ namespace GameFrame {
 		}
 			const uint8_t* keystate = SDL_GetKeyboardState(NULL);
 			mIsUpdating = true;
-			GetGameObject("Player")->GetComponent<InputComponent>()->ProcessInput2(keystate);
+			GetGameObject("Player")->GetComponent<InputComponent>()->ProcessInput(keystate);
 			mIsUpdating = false;
 		//}
 	}
@@ -166,8 +167,11 @@ namespace GameFrame {
 
 	void Game::Update()
 	{
-		SDL_Delay(10);
-
+		float fm = (1 / FPS) * 1000;//单位毫秒
+		while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTickCount + fm))
+			;
+		mTickCount = SDL_GetTicks();
+		float deltaTime = (SDL_GetTicks() - mTickCount) / 1000.0f;//单位秒
 		mIsUpdating = true;
 		for (auto gameobejct : mGameObjects2) {
 			gameobejct.second->update();

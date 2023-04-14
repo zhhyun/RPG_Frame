@@ -7,8 +7,8 @@ namespace GameFrame {
 	class InputComponent : public Component {
 	public:
 		InputComponent(GameObject* gameobject);
-		void ProcessInput(const SDL_Keycode key);
-		void ProcessInput2(const uint8_t* keystate);
+		//void ProcessInput(const SDL_Keycode key);
+		void ProcessInput(const uint8_t* keystate);
 		void SetRequestCom(Component* component);
 		void SetIsMain(bool is);
 

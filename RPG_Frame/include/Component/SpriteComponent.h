@@ -12,6 +12,7 @@ namespace GameFrame {
 		~SpriteComponent(); 
 		virtual void Draw(SDL_Renderer* renderer);
 		void LoadTexture(std::string& fileName);//将贴图装载到容器中
+		SDL_Texture* GetTexture(std::string& fileName);
 
 	protected:
 		SDL_Texture* mTexture;

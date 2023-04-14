@@ -3,17 +3,13 @@
 #include	"Game.h"
 
 GameFrame::MapObject::MapObject(Game* game, const char* fileName, const std::string& name):
+	MapW(ScreenW),
+	MapH(ScreenH),
 	GameObject(game,name)
 {
-	/*for (int i = 0; i < ScreenW/32; i++) {
-		for (int j = 0; j < ScreenH/32; j++) {
-			map[i][j] = 0;
-			RunMap[i][j] = map[i][j];
-		}
-	}*/
 	MapSpriteComponent* map = new MapSpriteComponent(this, 0, fileName);
-	//SDL_Texture* tex = GetGame()->GetTexture("block");
-	//map->SetTexture(tex);
+	PhysWorld* phys = new PhysWorld();
+	Pw = phys;
 }
 
 
@@ -48,4 +44,13 @@ void GameFrame::MapObject::RemoveMapObject(GameObject* gameobject)
 		std::iter_swap(iter, mMapObjects.end() - 1);
 		mMapObjects.pop_back();
 	}
+}
+
+void GameFrame::PhysWorld::AddBox(CollisionComponent* box)
+{
+	mBox.emplace_back(box);
+}
+
+void GameFrame::PhysWorld::RemoveBox(CollisionComponent* box)
+{
 }

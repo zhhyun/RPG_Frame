@@ -3,9 +3,17 @@
 #include "GameObject.h"
 #include "ActorObject.h"
 #include "DEFINES.h"
-
+#include "CollisionComponent.h"
 
 namespace GameFrame {
+	class PhysWorld {
+	public:
+		void AddBox(CollisionComponent* box);
+		void RemoveBox(CollisionComponent* box);
+	//private:
+		std::vector<class CollisionComponent*> mBox;
+	};
+
 	class MapObject : public GameObject {
 	public:
 		MapObject(class Game* game, const char* fileName, const std::string& name);
@@ -20,8 +28,9 @@ namespace GameFrame {
 		friend class CollisionComponent;
 
 	private:
-		/*int map[ScreenW/32][ScreenH/32];
-		int RunMap[ScreenW/32][ScreenH/32];*/
+		int MapW;
+		int MapH;
+		PhysWorld* Pw;
 
 	protected:
 		std::vector<class GameObject*> mMapObjects;//存放地图上的游戏物体

@@ -5,24 +5,49 @@
 #include	"InputComponent.h"
 #include	"BattleComponent.h"
 #include	"CollisionComponent.h"
+#include	"AnimSpriteComponent.h"
 #include	"Game.h"
 
 GameFrame::PlayerObject::PlayerObject(Game* game, MapObject* map, const std::string& name) :
 	ActorObject(game, map, name)
 {
-	
-	Vector2 pos{200,200};
+	Vector2 pos{210,274};
+	Vector2 down{ 0,0 };
+	Vector2 idledown{ 64,0 };
+	Vector2 left{ 0,64 };
+	Vector2 right{ 0,128 };
+	Vector2 up{ 0,192 };
 	SetPosition(pos);
-	SpriteComponent* Sprite = new SpriteComponent(this, 100);
+	//SpriteComponent* Sprite = new SpriteComponent(this, 100);
+	AnimSpriteComponent* Animation = new AnimSpriteComponent(this, 99);
 	std::string str = "Player";
-	Sprite->LoadTexture(str);
+	Animation->LoadTexture(str);
 	MoveComponent* Move = new MoveComponent(this);
 	CollisionComponent* collision = new CollisionComponent(this);
 	InputComponent* Input = new InputComponent(this);
 	BattleComponent* Battle = new BattleComponent(this);
+	
+	//ÉèÖÃ½ÇÉ«¶¯»­
+	Anim* UpForward = new Anim(Animation->GetTexture(str), 3, true, up, 10, 64, 64);
+	Anim* DownForward = new Anim(Animation->GetTexture(str), 3, true, down, 10, 64, 64);
+	Anim* LeftForward = new Anim(Animation->GetTexture(str), 3, true, left, 10, 64, 64);
+	Anim* RightForward = new Anim(Animation->GetTexture(str), 3, true, right, 10, 64, 64);
+	Anim* DownIdle = new Anim(Animation->GetTexture(str), 1, true, idledown, 10, 64, 64);
+
+
+	Animation->AddAnimation(UpForward, "UpForward");
+	Animation->AddAnimation(DownForward, "DownForward");
+	Animation->AddAnimation(LeftForward, "LeftForward");
+	Animation->AddAnimation(RightForward,"RightForward");
+
+	Animation->AddAnimation(DownIdle, "DownIdle");
+
+	Animation->PlayAnimation("DownIdle");
+
 	AddHp(1000);
 	AddACK(20);
-	collision->SetCollision(pos, 64, 64);
+	SetH(64); SetW(64);
+	collision->SetCollision(pos, GetH(), GetW());
 }
 
 GameFrame::PlayerObject::~PlayerObject()
@@ -45,3 +70,4 @@ void GameFrame::PlayerObject::update()
 		}
 	}
 }
+ 

@@ -11,8 +11,7 @@ namespace GameFrame {
 		mScale(1),
 		mRotation(0),
 		mGame(game),
-		mState(State::EActive),
-		IsMoving(false)
+		mState(State::EActive)
 	{
 		mGame->AddGameObject(this,name);
 	}
@@ -99,16 +98,6 @@ namespace GameFrame {
 		for (auto iter : mSpriteComponents) {
 			iter->Draw(renderer);
 		}
-	}
-
-	bool GameObject::GetMovingState()
-	{
-		return IsMoving;
-	}
-
-	void GameObject::SetMovingState(bool ismov)
-	{
-		IsMoving = ismov;
 	}
 
 	Vector2 GameObject::GetPosition() const

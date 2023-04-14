@@ -1,2 +1,3 @@
-#define ScreenW 1280
-#define ScreenH 960
+#define ScreenW 720
+#define ScreenH 560
+#define FPS 3.0

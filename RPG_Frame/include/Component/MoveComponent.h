@@ -8,12 +8,20 @@ namespace GameFrame {
 	class MoveComponent : public Component {
 	public:
 		MoveComponent(GameObject* gameobject);
-		void ProcessInput(const SDL_Keycode key);
-		void ProcessInput2(const uint8_t* keystate);
+
+		enum class MovDir {
+			idle,
+			toUp,
+			toDown,
+			toLeft,
+			toRight
+		};
+		void ProcessInput(const uint8_t* keystate);
 		void update() override;
 
 	private:
-		
+		bool								IsMoving;
+		MovDir								movdir;
 	};
 
 }

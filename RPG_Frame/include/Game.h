@@ -5,11 +5,12 @@
 #include <SDL_ttf.h>
 #include <string>
 #include <unordered_map>
+#include "InputSystem.h"
 
 namespace GameFrame {
 	class GameObject;
 	class PlayerObejct;
-
+	
 	class Game {
 	public:
 		Game();
@@ -52,8 +53,9 @@ namespace GameFrame {
 		bool							mIsUpdating;		//更新标记
 		SDL_Window*						mWindow;			//窗口指针
 		SDL_Renderer*					mRenderer;			//渲染器
-		SDL_Texture* mTexture;			//纹理图片
-		TTF_Font* Font;
+		SDL_Texture*					mTexture;			//纹理图片
+		TTF_Font*						Font;				//字体
+		Uint32							mTickCount;			//计时器
 	};
 
 }

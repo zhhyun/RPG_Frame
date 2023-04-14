@@ -2,16 +2,16 @@
 #include	"GameObject.h"
 
 namespace GameFrame {
-	Component::Component(class GameObject* gameobject):
-		mGameObject(gameobject),
+	Component::Component(class GameObject* gameobject) :
+		mOwner(gameobject),
 		mUpdateOder(100)
 	{
-		mGameObject->AddComponent(this);
+		mOwner->AddComponent(this);
 	}
 
 	Component::~Component()
 	{
-		mGameObject->RemoveComponent(this);
+		mOwner->RemoveComponent(this);
 	}
 
 	void Component::update()
@@ -20,15 +20,10 @@ namespace GameFrame {
 
 	GameObject* Component::GetGameObject()
 	{
-		return mGameObject;
+		return mOwner;
 	}
 
-	void Component::ProcessInput2(const uint8_t* keystate)
+	void Component::ProcessInput(const uint8_t* keystate)
 	{
 	}
-
-	void Component::ProcessInput(const SDL_Keycode key)
-	{
-	}
-
 }

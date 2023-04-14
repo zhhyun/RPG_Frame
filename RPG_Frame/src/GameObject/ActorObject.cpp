@@ -14,6 +14,8 @@ GameFrame::ActorObject::ActorObject(Game* game, MapObject* map, const std::strin
 	Speed(1),
 	IsCombating(false),
 	mMap(map),
+	Height(20),
+	Wdith(20),
 	GameObject(game,name)
 {
 	map->AddMapObject(this);
@@ -28,10 +30,9 @@ int GameFrame::ActorObject::GetHp()
 	return Hp;
 }
 
-int GameFrame::ActorObject::AddHp(int hp)
+void GameFrame::ActorObject::AddHp(int hp)
 {
 	Hp = Hp + hp;
-	return Hp;
 }
 
 int GameFrame::ActorObject::GetACK()
@@ -39,10 +40,9 @@ int GameFrame::ActorObject::GetACK()
 	return ACK;
 }
 
-int GameFrame::ActorObject::AddACK(int ack)
+void GameFrame::ActorObject::AddACK(int ack)
 {
 	ACK = ACK + ack;
-	return ACK;
 }
 
 int GameFrame::ActorObject::GetDEF()
@@ -50,10 +50,29 @@ int GameFrame::ActorObject::GetDEF()
 	return DEF;
 }
 
-int GameFrame::ActorObject::AddDEF(int def)
+void GameFrame::ActorObject::AddDEF(int def)
 {
 	DEF = DEF + def;
-	return DEF;
+}
+
+int GameFrame::ActorObject::GetH()
+{
+	return Height;
+}
+
+void GameFrame::ActorObject::SetH(int h)
+{
+	Height = h;
+}
+
+int GameFrame::ActorObject::GetW()
+{
+	return Wdith;
+}
+
+void GameFrame::ActorObject::SetW(int w)
+{
+	Wdith = w;
 }
 
 bool GameFrame::ActorObject::GetBattleState()

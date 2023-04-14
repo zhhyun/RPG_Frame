@@ -14,10 +14,10 @@ namespace GameFrame {
 		y = Y;
 	}
 
-	const Vector2 Vector2::up = Vector2(0, -8);
-	const Vector2 Vector2::down = Vector2(0, 8);
-	const Vector2 Vector2::left = Vector2(-8, 0);
-	const Vector2 Vector2::right = Vector2(8, 0);
+	const Vector2 Vector2::up = Vector2(0, -5);
+	const Vector2 Vector2::down = Vector2(0, 5);
+	const Vector2 Vector2::left = Vector2(-5, 0);
+	const Vector2 Vector2::right = Vector2(5, 0);
 
 	Vector2 GameFrame::operator+(const Vector2& a, const Vector2& b)
 	{

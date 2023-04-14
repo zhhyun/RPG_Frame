@@ -8,7 +8,7 @@ GameFrame::SpriteComponent::SpriteComponent(GameObject* gameobject, int draworde
 	mDrawOrder(draworder),
 	Component(gameobject)
 {
-	mGameObject->AddSpriteComponent(this);
+	mOwner->AddSpriteComponent(this);
 }
 
 GameFrame::SpriteComponent::~SpriteComponent()
@@ -20,10 +20,10 @@ void GameFrame::SpriteComponent::Draw(SDL_Renderer* renderer)
 
 	// 贴图即将被绘制的位置
 
-		int textureW;
+	int textureW;
 		int textureH;
-		int x =  mGameObject->GetPosition().x;
-		int y =  mGameObject->GetPosition().y;
+		int x =  mOwner->GetPosition().x;
+		int y =  mOwner->GetPosition().y;
 
 		SDL_QueryTexture(mTextures.begin()->second, nullptr, nullptr, &textureW, &textureH);
 
@@ -47,7 +47,12 @@ void GameFrame::SpriteComponent::LoadTexture(std::string& fileName)
 			SDL_DestroyTexture(iter->second);
 			mTextures.erase(iter);
 		}
-		SDL_Texture* tex = mGameObject->GetGame()->GetTexture(fileName);
+		SDL_Texture* tex = mOwner->GetGame()->GetTexture(fileName);
 		mTextures.emplace(fileName, tex);
 	}
+}
+
+SDL_Texture* GameFrame::SpriteComponent::GetTexture(std::string& fileName)
+{
+	return mTextures.find(fileName)->second;
 }

@@ -10,11 +10,15 @@ namespace GameFrame {
 		ActorObject(class Game* game, class MapObject* map, const std::string& name);
 		~ActorObject();
 		int GetHp();
-		int AddHp(int hp);
+		void AddHp(int hp);
 		int GetACK();
-		int AddACK(int ack);
+		void AddACK(int ack);
 		int GetDEF();
-		int AddDEF(int def);
+		void AddDEF(int def);
+		int GetH();
+		void SetH(int h);
+		int GetW();
+		void SetW(int w);
 
 		int BattleStart(class ActorObject* b);
 
@@ -28,7 +32,8 @@ namespace GameFrame {
 		int		Speed;
 		int		ACK;
 		int		DEF;
-		//int		
+		int		Height;
+		int		Wdith;
 
 	protected:
 		bool	IsCombating;

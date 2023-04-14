@@ -13,13 +13,15 @@ namespace GameFrame {
 		~CollisionComponent();
 		
 		void SetCollision(Vector2 vec, int h, int w);
+		void SetCollision(Vector2 vec);
 		int CheckCollision();
-		
-		void update() override;
-		//´¢´æÅö×²ÇøÓòµÄÈİÆ÷
-		SDL_Rect* mCollision;
+		void OnUpdateWorldTransform();
 
-		
+		//´¢´æÅö×²ÇøÓòµÄÈİÆ÷
+		friend class CollisionComponent;
+	private:
+		SDL_Rect	mCollision;
+		bool		IsUpdateFromObject;
 	};
 }
 #endif __CollisionComponent__

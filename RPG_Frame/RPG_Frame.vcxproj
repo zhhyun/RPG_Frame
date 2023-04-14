@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Component\AnimSpriteComponent.h" />
     <ClInclude Include="include\Component\BackpackComponent.h" />
     <ClInclude Include="include\Component\BattleComponent.h" />
     <ClInclude Include="include\Component\CollisionComponent.h" />
     <ClInclude Include="include\Component\Component.h" />
     <ClInclude Include="include\Component\MapSpriteComponent.h" />
+    <ClInclude Include="include\InputSystem.h" />
     <ClInclude Include="include\DEFINES.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\GameObject\ActorObject.h" />
@@ -37,6 +39,7 @@
     <ClInclude Include="include\Component\SpriteComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Component\AnimSpriteComponent.cpp" />
     <ClCompile Include="src\Component\BackpackComponent.cpp" />
     <ClCompile Include="src\Component\BattleComponent.cpp" />
     <ClCompile Include="src\Component\CollisionComponent.cpp" />
@@ -53,6 +56,7 @@
     <ClCompile Include="src\Component\MoveComponent.cpp" />
     <ClCompile Include="src\GameObject\PlayerObejct.cpp" />
     <ClCompile Include="src\Component\SpriteComponent.cpp" />
+    <ClCompile Include="src\InputSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dll\SDL2.dll" />
@@ -67,6 +71,7 @@
     <Image Include="sprite\1-1.png" />
     <Image Include="sprite\1.png" />
     <Image Include="sprite\2.png" />
+    <Image Include="sprite\map1.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

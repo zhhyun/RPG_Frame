@@ -3,41 +3,46 @@
 #include	"MapObject.h"
 
 GameFrame::CollisionComponent::CollisionComponent(GameObject* gameobject):
+	IsUpdateFromObject(true),
 	Component(gameobject)
-{
-	//默认碰撞区间是绑定对象的大小
-	SetCollision(mGameObject->GetPosition(), 64, 64);
+{//默认碰撞区间是绑定对象的大小
+	SetCollision(mOwner->GetPosition(), 64, 64);
+	dynamic_cast<ActorObject*>(mOwner)->mMap->Pw->AddBox(this);
 }
 
 GameFrame::CollisionComponent::~CollisionComponent()
 {
 }
 
-void GameFrame::CollisionComponent::SetCollision(Vector2 vec, int h, int w)
+void GameFrame::CollisionComponent::SetCollision(Vector2 vec, int h , int w )
 {
-	SDL_Rect* tmp = new SDL_Rect{ vec.x,vec.y,w,h };
-	mCollision = tmp;
-	//delete tmp;
+	mCollision.x = vec.x;
+	mCollision.y = vec.y;
+	mCollision.w = w;
+	mCollision.h = h;
+}
+
+void GameFrame::CollisionComponent::SetCollision(Vector2 vec)
+{
+	mCollision.x = vec.x;
+	mCollision.y = vec.y;
 }
 
 int GameFrame::CollisionComponent::CheckCollision()
 { 
-	MapObject* map = dynamic_cast<ActorObject*>(mGameObject)->mMap;
-	int x0 = mGameObject->GetPosition().x;
-	int y0 = mGameObject->GetPosition().y;
-	int h0 = mCollision->h;
-	int w0 = mCollision->w;
+	MapObject* map = dynamic_cast<ActorObject*>(mOwner)->mMap;
+	int x0 = mOwner->GetPosition().x;
+	int y0 = mOwner->GetPosition().y;
+	int h0 = mCollision.h;
+	int w0 = mCollision.w;
 
-	for (auto iter : map->mMapObjects) {
-		//如果获取到碰撞组件
-		if (iter->GetComponent<CollisionComponent>()) {
-			CollisionComponent* cc = iter->GetComponent<CollisionComponent>();
-			//如果获取到的组件不是自己,则检测碰撞
-			if (cc != this) {
-				int x1 = cc->mCollision->x;
-				int y1 = cc->mCollision->y;
-				int h1 = cc->mCollision->h;
-				int w1 = cc->mCollision->w;
+	for (auto iter : map->Pw->mBox) {
+		//如果获取到的组件不是自己,则检测碰撞
+		if (iter != this) {
+				int x1 = iter->mCollision.x;
+				int y1 = iter->mCollision.y;
+				int h1 = iter->mCollision.h;
+				int w1 = iter->mCollision.w;
 				//矩形碰撞原理：当两个矩形的x轴和y轴同时重叠时，两个矩形才碰撞；只要有一个轴分离，就没有发生碰撞
 				if (x0 > x1) {
 					//先检查y轴分离，看两个碰撞区域相对位置
@@ -52,7 +57,7 @@ int GameFrame::CollisionComponent::CheckCollision()
 				}
 				if (y0 > y1) {
 					//检查x轴分离
-					if ((y0 + y0 - y1) >= (h0 + h1)) {
+					if ((y0 + h0 - y1) >= (h0 + h1)) {
 						return 0;
 					}
 				}
@@ -63,13 +68,12 @@ int GameFrame::CollisionComponent::CheckCollision()
 				}
 				return 1;
 			}
-		}
-		
-	}
+		}	
 }
 
-void GameFrame::CollisionComponent::update()
+void GameFrame::CollisionComponent::OnUpdateWorldTransform()
 {
-	//更新碰撞区域位置
-	SetCollision(mGameObject->GetPosition(), 64, 64);
+	if (IsUpdateFromObject) {
+		SetCollision(mOwner->GetPosition());
+	}
 }
