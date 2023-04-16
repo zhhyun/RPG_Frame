@@ -6,14 +6,14 @@
 namespace GameFrame{
 
 	class GameObject;
-
+	class InputSystem;
 	class Component {
 	public:
 		Component(class GameObject* gameobject);
 		virtual ~Component();
 		virtual void update();
 		class GameObject* GetGameObject();
-		virtual void ProcessInput(const uint8_t* keystate);
+		virtual void ProcessInput(const InputSystem* keystate);
 
 	protected:
 		class GameObject*				mOwner;

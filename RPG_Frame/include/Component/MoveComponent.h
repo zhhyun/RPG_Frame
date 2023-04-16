@@ -2,26 +2,37 @@
 #define __MoveComponent__
 #include "Component.h"
 #include "Math2.h"
+#include <vector>
+#include <SDL.h>
+#include "InputSystem.h"
 
 namespace GameFrame {
 	class GameObject;
+	typedef struct KeyQueSate{
+		SDL_Scancode key;
+		ButtomState keystate;
+	}KeyQueSate;
 	class MoveComponent : public Component {
 	public:
 		MoveComponent(GameObject* gameobject);
-
-		enum class MovDir {
-			idle,
-			toUp,
-			toDown,
-			toLeft,
-			toRight
+		enum class MovState {
+			MovStart,
+			MovStop,
+			MovHeld,
+			Idle
 		};
-		void ProcessInput(const uint8_t* keystate);
+		void ProcessInput(const uint8_t* keystate); 
+		void ProcessInput(const InputSystem* keystate);
+		void SetSpeed(float speed);
+		float GetSpeed();
+		void ClearStoptate();
 		void update() override;
+		std::vector<KeyQueSate>			mReqKeys;
 
 	private:
-		bool								IsMoving;
-		MovDir								movdir;
+		Vector2								movdir;//ÒÆ¶¯ÏòÁ¿
+		MovState							mMovState;
+		float								Speed;
 	};
 
 }

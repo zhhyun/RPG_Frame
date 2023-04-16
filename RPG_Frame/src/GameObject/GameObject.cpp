@@ -80,7 +80,7 @@ namespace GameFrame {
 
 	GameObject::Dir GameObject::GetDir() const
 	{
-		return Dir();
+		return mDir;
 	}
 
 	void GameObject::SetDir(Dir mdir)

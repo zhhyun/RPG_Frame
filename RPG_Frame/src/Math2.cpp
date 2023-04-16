@@ -14,10 +14,12 @@ namespace GameFrame {
 		y = Y;
 	}
 
-	const Vector2 Vector2::up = Vector2(0, -5);
-	const Vector2 Vector2::down = Vector2(0, 5);
-	const Vector2 Vector2::left = Vector2(-5, 0);
-	const Vector2 Vector2::right = Vector2(5, 0);
+	const Vector2 Vector2::up = Vector2(0, -1);
+	const Vector2 Vector2::down = Vector2(0, 1);
+	const Vector2 Vector2::left = Vector2(-1, 0);
+	const Vector2 Vector2::right = Vector2(1, 0);
+	const Vector2 Vector2::ZERO = Vector2(0, 0);
+	const Vector2 Vector2::idle = Vector2(0, 0);
 
 	Vector2 GameFrame::operator+(const Vector2& a, const Vector2& b)
 	{
@@ -32,6 +34,13 @@ namespace GameFrame {
 	Vector2 operator*(const Vector2& a, const Vector2& b)
 	{
 		return Vector2(a.x * b.x, a.y * b.y);
+	}
+
+	bool operator==(const Vector2& a, const Vector2& b)
+	{
+		if(a.x == b.x && a.y == b.y)
+			return true;
+		return false;
 	}
 
 	Vector2 operator*(const Vector2& a, float b)

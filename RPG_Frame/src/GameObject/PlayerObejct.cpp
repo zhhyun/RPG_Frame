@@ -13,7 +13,10 @@ GameFrame::PlayerObject::PlayerObject(Game* game, MapObject* map, const std::str
 {
 	Vector2 pos{210,274};
 	Vector2 down{ 0,0 };
+	Vector2 idleup{ 64,192 };
 	Vector2 idledown{ 64,0 };
+	Vector2 idleleft{ 64,64 };
+	Vector2 idleright{ 64,128 };
 	Vector2 left{ 0,64 };
 	Vector2 right{ 0,128 };
 	Vector2 up{ 0,192 };
@@ -25,24 +28,29 @@ GameFrame::PlayerObject::PlayerObject(Game* game, MapObject* map, const std::str
 	MoveComponent* Move = new MoveComponent(this);
 	CollisionComponent* collision = new CollisionComponent(this);
 	InputComponent* Input = new InputComponent(this);
+	Input->SetRequestCom(Move);
 	BattleComponent* Battle = new BattleComponent(this);
 	
 	//ÉèÖÃ½ÇÉ«¶¯»­
-	Anim* UpForward = new Anim(Animation->GetTexture(str), 3, true, up, 10, 64, 64);
-	Anim* DownForward = new Anim(Animation->GetTexture(str), 3, true, down, 10, 64, 64);
-	Anim* LeftForward = new Anim(Animation->GetTexture(str), 3, true, left, 10, 64, 64);
-	Anim* RightForward = new Anim(Animation->GetTexture(str), 3, true, right, 10, 64, 64);
-	Anim* DownIdle = new Anim(Animation->GetTexture(str), 1, true, idledown, 10, 64, 64);
-
+	Anim* UpForward = new Anim(Animation->GetTexture(str), 3, true, up, 10.0, 64, 64);
+	Anim* DownForward = new Anim(Animation->GetTexture(str), 3, true, down, 15.0, 64, 64);
+	Anim* LeftForward = new Anim(Animation->GetTexture(str), 3, true, left, 15.0, 64, 64);
+	Anim* RightForward = new Anim(Animation->GetTexture(str), 3, true, right, 15.0, 64, 64);
+	Anim* UpIdle = new Anim(Animation->GetTexture(str), 1, true, idleup, -1, 64, 64);
+	Anim* DownIdle = new Anim(Animation->GetTexture(str), 1, true, idledown, -1, 64, 64);
+	Anim* LeftIdle = new Anim(Animation->GetTexture(str), 1, true, idleleft, -1, 64, 64);
+	Anim* RightIdle = new Anim(Animation->GetTexture(str), 1, true, idleright, -1, 64, 64);
 
 	Animation->AddAnimation(UpForward, "UpForward");
 	Animation->AddAnimation(DownForward, "DownForward");
 	Animation->AddAnimation(LeftForward, "LeftForward");
 	Animation->AddAnimation(RightForward,"RightForward");
-
+	Animation->AddAnimation(UpIdle, "UpIdle");
 	Animation->AddAnimation(DownIdle, "DownIdle");
+	Animation->AddAnimation(LeftIdle, "LeftIdle");
+	Animation->AddAnimation(RightIdle, "RightIdle");
 
-	Animation->PlayAnimation("DownIdle");
+	Animation->PlayAnimation("UpIdle");
 
 	AddHp(1000);
 	AddACK(20);

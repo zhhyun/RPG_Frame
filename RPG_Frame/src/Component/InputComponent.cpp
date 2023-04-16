@@ -1,6 +1,7 @@
 #include	"InputComponent.h"
 #include	"MoveComponent.h"
 #include	"GameObject.h"
+#include	"InputSystem.h"
 #include	<SDL.h>
 
 GameFrame::InputComponent::InputComponent(class GameObject* gameobject) :
@@ -31,13 +32,29 @@ void GameFrame::InputComponent::ProcessInput(const uint8_t* keystate)
 {
 	if (IsMain) {
 		//若值为1，则送给正在响应的组件
-		RequestComp->ProcessInput(keystate);
+		//RequestComp->ProcessInput(keystate);
 	}
 	else {
 		if (keystate[SDL_SCANCODE_W] || keystate[SDL_SCANCODE_A] || keystate[SDL_SCANCODE_D] || keystate[SDL_SCANCODE_S]) {
 			GetGameObject()->GetComponent<MoveComponent>()->ProcessInput(keystate);
 		}
 	}
+}
+
+void GameFrame::InputComponent::ProcessInput(InputSystem* keystate)
+{
+
+		RequestComp->ProcessInput(keystate);
+
+
+	/*	if (keystate->GetState().keyborad.GetKeyState(SDL_SCANCODE_W) != ButtomState::ENone || 
+			keystate->GetState().keyborad.GetKeyValue(SDL_SCANCODE_S) != ButtomState::ENone ||
+			keystate->GetState().keyborad.GetKeyValue(SDL_SCANCODE_A) != ButtomState::ENone ||
+			keystate->GetState().keyborad.GetKeyValue(SDL_SCANCODE_D) != ButtomState::ENone) {
+
+			GetGameObject()->GetComponent<MoveComponent>()->ProcessInput(keystate);
+		}*/
+
 }
 
 void GameFrame::InputComponent::SetRequestCom(Component* component)

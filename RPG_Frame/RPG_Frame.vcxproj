@@ -22,6 +22,7 @@
     <ClInclude Include="include\Component\AnimSpriteComponent.h" />
     <ClInclude Include="include\Component\BackpackComponent.h" />
     <ClInclude Include="include\Component\BattleComponent.h" />
+    <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Component\CollisionComponent.h" />
     <ClInclude Include="include\Component\Component.h" />
     <ClInclude Include="include\Component\MapSpriteComponent.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="include\Component\SpriteComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Cameracpp.cpp" />
     <ClCompile Include="src\Component\AnimSpriteComponent.cpp" />
     <ClCompile Include="src\Component\BackpackComponent.cpp" />
     <ClCompile Include="src\Component\BattleComponent.cpp" />

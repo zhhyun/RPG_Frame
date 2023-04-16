@@ -12,7 +12,7 @@ namespace GameFrame {
 		int frame;//帧数，用于确定集成图被切割成几帧
 		bool IsLoopPlay;//是否循环播放
 		Vector2 AnimPosInTex;
-		int mAnimFPS;//动画播放速率，一秒钟放多少帧
+		float mAnimFPS;//动画播放速率，一秒钟放多少帧
 		int textureW;
 		int textureH;
 		Anim(SDL_Texture* tex,int frame,bool isplay,Vector2 pos,int fps, int w, int h):
@@ -31,7 +31,7 @@ namespace GameFrame {
 		~AnimSpriteComponent();
 		void AddAnimation(Anim* anim, const std::string& name);
 		void PlayAnimation(const std::string& name);
-		void StopPlay();
+		void StopPlay();//停止当前播放的动画
 		void PausePlay();
 		void Draw(SDL_Renderer* renderer) override;
 

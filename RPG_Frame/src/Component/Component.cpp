@@ -23,7 +23,7 @@ namespace GameFrame {
 		return mOwner;
 	}
 
-	void Component::ProcessInput(const uint8_t* keystate)
+	void Component::ProcessInput(const InputSystem* keystate)
 	{
 	}
 }

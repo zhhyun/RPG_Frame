@@ -13,9 +13,10 @@ namespace GameFrame {
 		mTexture(nullptr),
 		mIsUpdating(false),
 		Font(nullptr),
-		mTickCount(0)
+		mTickCount(0),
+		mAnimTickCount(0)
 	{
-
+		mInputSystem = new InputSystem;
 	}
 	
 	bool Game::Initialize() {
@@ -52,6 +53,10 @@ namespace GameFrame {
 			SDL_Log("ttf初始化失败:%s", SDL_GetError());
 			return false;
 		}
+		if(!mInputSystem->Initialize()) {
+			SDL_Log("输入处理系统初始化失败:%s", SDL_GetError());
+			return false;
+		}
 
 		LoadData();
 
@@ -63,6 +68,7 @@ namespace GameFrame {
 		Unload();
 		SDL_DestroyWindow(mWindow);
 		SDL_DestroyRenderer(mRenderer);
+		mInputSystem->ShutDown();
 		TTF_Quit();
 		IMG_Quit();
 		SDL_Quit();
@@ -82,7 +88,7 @@ namespace GameFrame {
 	{
 		SDL_Event event;
 
-
+		mInputSystem->PrepareUpdate();
 	//当队列中有事件，则判断事件的类型
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
@@ -96,10 +102,10 @@ namespace GameFrame {
 				break;
 			}
 		}
-			const uint8_t* keystate = SDL_GetKeyboardState(NULL);
-			mIsUpdating = true;
-			GetGameObject("Player")->GetComponent<InputComponent>()->ProcessInput(keystate);
-			mIsUpdating = false;
+		mInputSystem->update();
+		mIsUpdating = true;
+		GetGameObject("Player")->GetComponent<InputComponent>()->ProcessInput(mInputSystem);
+		mIsUpdating = false;
 		//}
 	}
 
@@ -165,9 +171,24 @@ namespace GameFrame {
 		return go;
 	}
 
+	Uint32 Game::GetTicks()
+	{
+		return mTickCount;
+	}
+
+	Uint32 Game::GetAnimTicks()
+	{
+		return mAnimTickCount;
+	}
+
+	void Game::SetAnimTicks(Uint32 count)
+	{
+		mAnimTickCount = count;
+	}
+
 	void Game::Update()
 	{
-		float fm = (1 / FPS) * 1000;//单位毫秒
+		float fm = (1 / FPS) * 1000.0f;//单位毫秒
 		while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTickCount + fm))
 			;
 		mTickCount = SDL_GetTicks();

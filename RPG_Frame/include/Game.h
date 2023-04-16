@@ -33,6 +33,9 @@ namespace GameFrame {
 		//获取贴图
 		SDL_Texture* GetTexture(const std::string& filename);
 		GameObject* GetGameObject(const std::string& name);
+		Uint32 GetTicks();
+		Uint32 GetAnimTicks();
+		void SetAnimTicks(Uint32 count);
 
 	private:
 		void Event();
@@ -56,6 +59,8 @@ namespace GameFrame {
 		SDL_Texture*					mTexture;			//纹理图片
 		TTF_Font*						Font;				//字体
 		Uint32							mTickCount;			//计时器
+		Uint32							mAnimTickCount;		//动画用计时器
+		InputSystem*					mInputSystem;		//输入处理系统
 	};
 
 }
