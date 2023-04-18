@@ -1,11 +1,12 @@
 #ifndef __I_Game__
 #define __I_Game__
-#include <SDL_image.h>
-#include <SDL.h>
-#include <SDL_ttf.h>
-#include <string>
-#include <unordered_map>
-#include "InputSystem.h"
+#include	<SDL_image.h>
+#include	<SDL.h>
+#include	<SDL_ttf.h>
+//#include	<string>
+#include	<unordered_map>
+#include	"InputSystem.h"
+#include	<tinyxml.h>
 
 namespace GameFrame {
 	class GameObject;
@@ -30,7 +31,7 @@ namespace GameFrame {
 		}
 
 		void RemoveGameObject(GameObject* gameobject);
-		//»ñÈ¡ÌùÍ¼
+		//è·å–è´´å›¾
 		SDL_Texture* GetTexture(const std::string& filename);
 		GameObject* GetGameObject(const std::string& name);
 		Uint32 GetTicks();
@@ -48,19 +49,19 @@ namespace GameFrame {
 		std::vector<GameObject*> mGameObjects;
 		std::vector<GameObject*> mPendingObjects;
 
-		//×¢£ºunordered_mapÊÇ¹şÏ£±íÈİÆ÷
+		//æ³¨ï¼šunordered_mapæ˜¯å“ˆå¸Œè¡¨å®¹å™¨
 		std::unordered_map<std::string, SDL_Texture*> mTextures;
 		std::unordered_map<std::string, GameObject*> mGameObjects2;
 
-		bool							IsRunning;			//ÓÎÏ·ÔËĞĞ±ê¼Ç
-		bool							mIsUpdating;		//¸üĞÂ±ê¼Ç
-		SDL_Window*						mWindow;			//´°¿ÚÖ¸Õë
-		SDL_Renderer*					mRenderer;			//äÖÈ¾Æ÷
-		SDL_Texture*					mTexture;			//ÎÆÀíÍ¼Æ¬
-		TTF_Font*						Font;				//×ÖÌå
-		Uint32							mTickCount;			//¼ÆÊ±Æ÷
-		Uint32							mAnimTickCount;		//¶¯»­ÓÃ¼ÆÊ±Æ÷
-		InputSystem*					mInputSystem;		//ÊäÈë´¦ÀíÏµÍ³
+		bool							IsRunning;			//æ¸¸æˆè¿è¡Œæ ‡è®°
+		bool							mIsUpdating;		//æ›´æ–°æ ‡è®°
+		SDL_Window*						mWindow;			//çª—å£æŒ‡é’ˆ
+		SDL_Renderer*					mRenderer;			//æ¸²æŸ“å™¨
+		SDL_Texture*					mTexture;			//çº¹ç†å›¾ç‰‡
+		TTF_Font*						Font;				//å­—ä½“
+		Uint32							mTickCount;			//è®¡æ—¶å™¨ // uint32å‹æ•°æ®ç»“æ„å‚¨å­˜ä¸Šé™ä¸º4294967295ï¼Œæ¢ç®—æˆæ—¶é—´çº¦497å¤©
+		Uint32							mAnimTickCount;		//åŠ¨ç”»ç”¨è®¡æ—¶å™¨
+		InputSystem*					mInputSystem;		//è¾“å…¥å¤„ç†ç³»ç»Ÿ
 	};
 
 }

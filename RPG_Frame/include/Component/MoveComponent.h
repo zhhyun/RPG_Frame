@@ -21,11 +21,9 @@ namespace GameFrame {
 			MovHeld,
 			Idle
 		};
-		void ProcessInput(const uint8_t* keystate); 
 		void ProcessInput(const InputSystem* keystate);
 		void SetSpeed(float speed);
 		float GetSpeed();
-		void ClearStoptate();
 		void update() override;
 		std::vector<KeyQueSate>			mReqKeys;
 

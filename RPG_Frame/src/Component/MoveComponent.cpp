@@ -9,70 +9,9 @@
 GameFrame::MoveComponent::MoveComponent(GameObject* gameobject) :
 	movdir(0, 0),
 	mMovState(MovState::Idle),
-	Speed(5),
+	Speed(5.0),
 	Component(gameobject)
 {
-}
-
-//void GameFrame::MoveComponent::ProcessInput(const SDL_Keycode key)
-//{
-//	if (mGameObject->GetMovingState() ){
-//	//	return;
-//	}
-//	else {
-//		mGameObject->SetMovingState(true);
-//		if (key == SDLK_w) {
-//			mGameObject->SetDir(GameObject::Dir::UP);
-//			Vector2 curpos = mGameObject->GetPosition();
-//			Vector2 newpos = curpos + Vector2::up;
-//			mGameObject->SetPosition(newpos);
-//			//问题警告：按一次按键运行4次
-//			SDL_Log("MOV_W");
-//		}
-//		else if (key == SDLK_s) {
-//			mGameObject->SetDir(GameObject::Dir::DOWN);
-//			Vector2 curpos = mGameObject->GetPosition();
-//			Vector2 newpos = curpos + Vector2::down;
-//			mGameObject->SetPosition(newpos);
-//			SDL_Log("MOV_S");
-//		}
-//		else if (key == SDLK_a) {
-//			mGameObject->SetDir(GameObject::Dir::LEFT);
-//			Vector2 curpos = mGameObject->GetPosition();
-//			Vector2 newpos = curpos + Vector2::left;
-//			mGameObject->SetPosition(newpos);
-//			SDL_Log("MOV_A");
-//		}
-//		else if (key == SDLK_d) {
-//			mGameObject->SetDir(GameObject::Dir::RIGHT);
-//			Vector2 curpos = mGameObject->GetPosition();
-//			Vector2 newpos = curpos + Vector2::right;
-//			mGameObject->SetPosition(newpos);
-//			SDL_Log("MOV_D");
-//		}
-//		mGameObject->SetMovingState(false);
-//	}
-//	
-//}
-
-void GameFrame::MoveComponent::ProcessInput(const uint8_t* keystate)
-{
-		/*if (keystate[SDL_SCANCODE_W]) {
-			mOwner->SetDir(GameObject::Dir::UP);
-			movdir = MovDir::toUp;
-		}
-		else if (keystate[SDL_SCANCODE_S]) {
-			mOwner->SetDir(GameObject::Dir::DOWN);
-			movdir = MovDir::toDown;
-		}
-		else if (keystate[SDL_SCANCODE_A]) {
-			mOwner->SetDir(GameObject::Dir::LEFT);
-			movdir = MovDir::toLeft;
-		}
-		else if (keystate[SDL_SCANCODE_D]) {
-			mOwner->SetDir(GameObject::Dir::RIGHT);
-			movdir = MovDir::toRight;
-		}*/
 }
 
 void GameFrame::MoveComponent::ProcessInput(const InputSystem* keystate)
@@ -82,7 +21,6 @@ void GameFrame::MoveComponent::ProcessInput(const InputSystem* keystate)
 	ButtomState A = keystate->GetState().keyborad.GetKeyState(SDL_SCANCODE_A);
 	ButtomState S = keystate->GetState().keyborad.GetKeyState(SDL_SCANCODE_S);
 	ButtomState D = keystate->GetState().keyborad.GetKeyState(SDL_SCANCODE_D);
-	SDL_Log("%d", W);
 	//不在运动的状态
 	if ((W == ButtomState::ENone) &&
 		(S == ButtomState::ENone) &&
@@ -409,4 +347,3 @@ void GameFrame::MoveComponent::update()
 		}
 	}
 }
-

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Base64.h" />
     <ClInclude Include="include\Component\AnimSpriteComponent.h" />
     <ClInclude Include="include\Component\BackpackComponent.h" />
     <ClInclude Include="include\Component\BattleComponent.h" />
@@ -38,8 +39,11 @@
     <ClInclude Include="include\Component\MoveComponent.h" />
     <ClInclude Include="include\GameObject\PlayerObject.h" />
     <ClInclude Include="include\Component\SpriteComponent.h" />
+    <ClInclude Include="tinyxml_2_6_2\tinystr.h" />
+    <ClInclude Include="tinyxml_2_6_2\tinyxml.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Base64.cpp" />
     <ClCompile Include="src\Cameracpp.cpp" />
     <ClCompile Include="src\Component\AnimSpriteComponent.cpp" />
     <ClCompile Include="src\Component\BackpackComponent.cpp" />
@@ -59,12 +63,18 @@
     <ClCompile Include="src\GameObject\PlayerObejct.cpp" />
     <ClCompile Include="src\Component\SpriteComponent.cpp" />
     <ClCompile Include="src\InputSystem.cpp" />
+    <ClCompile Include="tinyxml_2_6_2\tinystr.cpp" />
+    <ClCompile Include="tinyxml_2_6_2\tinyxml.cpp" />
+    <ClCompile Include="tinyxml_2_6_2\tinyxmlerror.cpp" />
+    <ClCompile Include="tinyxml_2_6_2\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dll\SDL2.dll" />
     <None Include="dll\SDL2_image.dll" />
     <None Include="dll\SDL2_ttf.dll" />
     <None Include="MAP\map1.map" />
+    <None Include="MAP\map0.tmx" />
+    <None Include="scripts\uncompress.py" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Fonts\青鸟华光简中圆.TTF" />
@@ -74,6 +84,7 @@
     <Image Include="sprite\1.png" />
     <Image Include="sprite\2.png" />
     <Image Include="sprite\map1.png" />
+    <Image Include="sprite\tilesheet_0.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -135,6 +146,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\111\source\repos\RPG_Frame\RPG_Frame\tinyxml_2_6_2;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -149,6 +161,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\111\source\repos\RPG_Frame\RPG_Frame\lib\python;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\SDL2_ttf-2.20.2\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -173,13 +186,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\SDL2_ttf-2.20.2\include;.\include;.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\include;.\SDL2_image-devel-2.6.2-VC\SDL2_image-2.6.2\include;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\GameObject;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\Component;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\111\source\repos\RPG_Frame\RPG_Frame\zlib-1213\zlib-1213_include;.\SDL2_ttf-2.20.2\include;.\include;.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\include;.\SDL2_image-devel-2.6.2-VC\SDL2_image-2.6.2\include;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\GameObject;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\Component;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\extend\python\internal;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\extend\python\cpython;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\extend\python;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>
+      </AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\SDL2_image-devel-2.6.2-VC\SDL2_image-2.6.2\lib\x64;.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\lib\x64;.\SDL2_ttf-2.20.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\lib\x64\SDL2.lib;.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\lib\x64\SDL2main.lib;.\SDL2_image-devel-2.6.2-VC\SDL2_image-2.6.2\lib\x64\SDL2_image.lib;.\SDL2_ttf-2.20.2\lib\x64\SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\SDL2_image-devel-2.6.2-VC\SDL2_image-2.6.2\lib\x64;.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\lib\x64;.\SDL2_ttf-2.20.2\lib\x64;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\lib\x64\SDL2.lib;.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\lib\x64\SDL2main.lib;.\SDL2_image-devel-2.6.2-VC\SDL2_image-2.6.2\lib\x64\SDL2_image.lib;.\SDL2_ttf-2.20.2\lib\x64\SDL2_ttf.lib;.\lib\python\_tkinter.lib;.\lib\python\python3.lib;.\lib\python\python38.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

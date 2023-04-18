@@ -15,7 +15,7 @@ namespace GameFrame {
 		float mAnimFPS;//动画播放速率，一秒钟放多少帧
 		int textureW;
 		int textureH;
-		Anim(SDL_Texture* tex,int frame,bool isplay,Vector2 pos,int fps, int w, int h):
+		Anim(SDL_Texture* tex,int frame,bool isplay,Vector2 pos,float fps, int w, int h):
 			mAnimTextures(tex),
 			frame(frame),
 			IsLoopPlay(isplay),

@@ -4,6 +4,7 @@
 #include	"NpcObject.h"
 #include	"InputComponent.h"
 #include	"MapObject.h"
+#include    <Python.h>
 
 namespace GameFrame {
 	Game::Game() :
@@ -21,42 +22,47 @@ namespace GameFrame {
 	
 	bool Game::Initialize() {
 		if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-			SDL_Log("³õÊ¼»¯Ê§°Ü:%s", SDL_GetError());
+			SDL_Log("åˆå§‹åŒ–å¤±è´¥:%s", SDL_GetError());
 			return false;
 		}
 
 		mWindow = SDL_CreateWindow(
-			"Test Game Frame 2022-10-1", 
-			400,			//x
-			200,			//y
-			ScreenW,		//w
-			ScreenH,		//h
+			PROGRAMME_TITLE,
+			SCREEN_X,			//x
+			SCREEN_Y,			//y
+			SCREEN_W,		//w
+			SCREEN_H,		//h
 			0);
 
 		if (!mWindow) {
-			SDL_Log("´°¿Ú³õÊ¼»¯Ê§°Ü:%s", SDL_GetError());
+			SDL_Log("çª—å£åˆå§‹åŒ–å¤±è´¥:%s", SDL_GetError());
 			return false;
 		}
 
 		mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
 		
 		if (!mRenderer) {
-			SDL_Log("äÖÈ¾Æ÷³õÊ¼»¯Ê§°Ü:%s", SDL_GetError());
+			SDL_Log("æ¸²æŸ“å™¨åˆå§‹åŒ–å¤±è´¥:%s", SDL_GetError());
 			return false;
 		}
 
 		if(!IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG)) {
-			SDL_Log("image³õÊ¼»¯Ê§°Ü:%s", SDL_GetError());
+			SDL_Log("imageåˆå§‹åŒ–å¤±è´¥:%s", SDL_GetError());
 			return false;
 		}
 		if (TTF_Init() == -1){
-			SDL_Log("ttf³õÊ¼»¯Ê§°Ü:%s", SDL_GetError());
+			SDL_Log("ttfåˆå§‹åŒ–å¤±è´¥:%s", SDL_GetError());
 			return false;
 		}
 		if(!mInputSystem->Initialize()) {
-			SDL_Log("ÊäÈë´¦ÀíÏµÍ³³õÊ¼»¯Ê§°Ü:%s", SDL_GetError());
+			SDL_Log("è¾“å…¥å¤„ç†ç³»ç»Ÿåˆå§‹åŒ–å¤±è´¥:%s", SDL_GetError());
 			return false;
 		}
+		//åˆå§‹åŒ–python
+		Py_Initialize();
+		PyRun_SimpleString("import sys");
+		PyRun_SimpleString("sys.path.append('./scripts')");
+
 
 		LoadData();
 
@@ -70,6 +76,7 @@ namespace GameFrame {
 		SDL_DestroyRenderer(mRenderer);
 		mInputSystem->ShutDown();
 		TTF_Quit();
+		Py_Finalize();
 		IMG_Quit();
 		SDL_Quit();
 	}
@@ -89,15 +96,12 @@ namespace GameFrame {
 		SDL_Event event;
 
 		mInputSystem->PrepareUpdate();
-	//µ±¶ÓÁÐÖÐÓÐÊÂ¼þ£¬ÔòÅÐ¶ÏÊÂ¼þµÄÀàÐÍ
+	//å½“é˜Ÿåˆ—ä¸­æœ‰äº‹ä»¶ï¼Œåˆ™åˆ¤æ–­äº‹ä»¶çš„ç±»åž‹
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
 			case SDL_QUIT:
 				IsRunning = false;
 				break;
-				/*case SDL_KEYDOWN:
-					GetGameObject<PlayerObject>()->GetComponent<InputComponent>()->ProcessInput(event.key.keysym.sym);
-					break;*/
 			default:
 				break;
 			}
@@ -106,19 +110,18 @@ namespace GameFrame {
 		mIsUpdating = true;
 		GetGameObject("Player")->GetComponent<InputComponent>()->ProcessInput(mInputSystem);
 		mIsUpdating = false;
-		//}
 	}
 
-	void Game::AddGameObject(GameObject* gameobject)//±¾º¯Êý×÷ÓÃÊÇ½«´´½¨ºÃÁËµÄÓÎÏ·¶ÔÏó×¢²áµ½gameµÄÈÝÆ÷ÖÐ
-		//ÔÚ³ÌÐòÀï¶¨ÒåÒ»¸öÓÎÏ·¶ÔÏó²»´ú±íÔÚÓÎÏ·Àï´´½¨Ò»¸öÓÎÏ·¶ÔÏó
-		//ÔÚÓÎÏ·Àï´´½¨¶ÔÏóÓÃGameÀàµÄ´´½¨¶ÔÏóº¯ÊýÀ´ÊµÏÖ
-		//´´½¨¶ÔÏóº¯ÊýÒ»°ãÓÉ¸Ã¶ÔÏó¶¨ÒåÊ± È¥ÕÒ ºÍ×Ô¼ºÁªÏµµÄgame¶ÔÏó µ÷ÓÃ
-		//´«µÝµÄ²ÎÊý¾ÍÊÇ¶¨Òå¶ÔÏó×Ô¼ºµÄÖ¸Õë£¬Ïàµ±ÓÚ°Ñ×Ô¼º×¢²áµ½Game¶ÔÏóÖÐ
+	void Game::AddGameObject(GameObject* gameobject)//æœ¬å‡½æ•°ä½œç”¨æ˜¯å°†åˆ›å»ºå¥½äº†çš„æ¸¸æˆå¯¹è±¡æ³¨å†Œåˆ°gameçš„å®¹å™¨ä¸­
+		//åœ¨ç¨‹åºé‡Œå®šä¹‰ä¸€ä¸ªæ¸¸æˆå¯¹è±¡ä¸ä»£è¡¨åœ¨æ¸¸æˆé‡Œåˆ›å»ºä¸€ä¸ªæ¸¸æˆå¯¹è±¡
+		//åœ¨æ¸¸æˆé‡Œåˆ›å»ºå¯¹è±¡ç”¨Gameç±»çš„åˆ›å»ºå¯¹è±¡å‡½æ•°æ¥å®žçŽ°
+		//åˆ›å»ºå¯¹è±¡å‡½æ•°ä¸€èˆ¬ç”±è¯¥å¯¹è±¡å®šä¹‰æ—¶ åŽ»æ‰¾ å’Œè‡ªå·±è”ç³»çš„gameå¯¹è±¡ è°ƒç”¨
+		//ä¼ é€’çš„å‚æ•°å°±æ˜¯å®šä¹‰å¯¹è±¡è‡ªå·±çš„æŒ‡é’ˆï¼Œç›¸å½“äºŽæŠŠè‡ªå·±æ³¨å†Œåˆ°Gameå¯¹è±¡ä¸­
 	{
 		if (mIsUpdating) {
-			//¸üÐÂ×´Ì¬ÏÂ´´½¨µÄÓÎÏ·¶ÔÏó¶¼·ÅÔÚµÈ´ýÇøÀï
+			//æ›´æ–°çŠ¶æ€ä¸‹åˆ›å»ºçš„æ¸¸æˆå¯¹è±¡éƒ½æ”¾åœ¨ç­‰å¾…åŒºé‡Œ
 			mPendingObjects.emplace_back(gameobject);
-			//emplace_backÔÚÈÝÆ÷¶ÓÎ²²åÈë
+			//emplace_backåœ¨å®¹å™¨é˜Ÿå°¾æ’å…¥
 		}
 		else {
 			mGameObjects.emplace_back(gameobject);
@@ -132,21 +135,21 @@ namespace GameFrame {
 
 	void Game::RemoveGameObject(GameObject* gameobject)
 	{
-		//find²éÕÒvector´Óaµ½bÄÚµÄÖ¸¶¨ÔªËØ
-		//²¢·µ»ØÒ»¸öÖ¸Ïò¸ÃÔªËØµÄµü´úÆ÷
+		//findæŸ¥æ‰¾vectorä»Žaåˆ°bå†…çš„æŒ‡å®šå…ƒç´ 
+		//å¹¶è¿”å›žä¸€ä¸ªæŒ‡å‘è¯¥å…ƒç´ çš„è¿­ä»£å™¨
 		auto iter = std::find(mPendingObjects.begin(), mPendingObjects.end(), gameobject);
 
 		if (iter != mPendingObjects.end()) {
-			//½«É¾³ýÔªËØÒÆµ½¶ÓÎ²
+			//å°†åˆ é™¤å…ƒç´ ç§»åˆ°é˜Ÿå°¾
 			std::iter_swap(iter, mPendingObjects.end() - 1);
-			//ÆÆ»µË³ÐòÉ¾³ý¶ÓÎ²
+			//ç ´åé¡ºåºåˆ é™¤é˜Ÿå°¾
 			mPendingObjects.pop_back();//
 		}
 
 		 iter = std::find(mGameObjects.begin(), mGameObjects.end(), gameobject);
 		 if (iter != mGameObjects.end()){
 			 std::iter_swap(iter, mPendingObjects.end() - 1);
-			 //ÆÆ»µË³ÐòÉ¾³ý¶ÓÎ²
+			 //ç ´åé¡ºåºåˆ é™¤é˜Ÿå°¾
 			 mPendingObjects.pop_back();//
 		 }
 	}
@@ -188,11 +191,11 @@ namespace GameFrame {
 
 	void Game::Update()
 	{
-		float fm = (1 / FPS) * 1000.0f;//µ¥Î»ºÁÃë
+		float fm = (1 / FPS) * 1000.0f;//å•ä½æ¯«ç§’
 		while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTickCount + fm))
 			;
 		mTickCount = SDL_GetTicks();
-		float deltaTime = (SDL_GetTicks() - mTickCount) / 1000.0f;//µ¥Î»Ãë
+		float deltaTime = (SDL_GetTicks() - mTickCount) / 1000.0f;//å•ä½ç§’
 		mIsUpdating = true;
 		for (auto gameobejct : mGameObjects2) {
 			gameobejct.second->update();
@@ -218,7 +221,7 @@ namespace GameFrame {
 
 	void Game::Draw()
 	{
-		//Çå³ý»º³åÇø
+		//æ¸…é™¤ç¼“å†²åŒº
 		SDL_RenderClear(mRenderer);
 
 
@@ -226,23 +229,23 @@ namespace GameFrame {
 		int m_Width;
 		int m_Height;
 		
-		SDL_Surface* textSurface = TTF_RenderText_Solid(Font, "sdl_ttf", textColor);
+		SDL_Surface* textSurface = TTF_RenderText_Solid(Font, "SDLä¸­æ–‡æµ‹è¯•", textColor);
 		if (!textSurface)
 		{
-			SDL_Log("Ê§°Ü:%s", SDL_GetError());
+			SDL_Log("å¤±è´¥:%s", SDL_GetError());
 		}
 		else
 		{
 			mTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
 			if (!mTexture)
 			{
-				SDL_Log("Ê§°Ü:%s", SDL_GetError());
+				SDL_Log("å¤±è´¥:%s", SDL_GetError());
 			}
 			else
 			{
 				SDL_Rect soildRect = { 0,0,textSurface->w,textSurface->h };
 				SDL_RenderCopy(mRenderer, mTexture, nullptr, &soildRect);
-				// ¡¾ÕâÀïÉèÖÃÁË×ÖÌåÎÆÀí´óÐ¡¡¿
+				// ã€è¿™é‡Œè®¾ç½®äº†å­—ä½“çº¹ç†å¤§å°ã€‘
 				m_Width = textSurface->w;
 				m_Height = textSurface->h;
 			}
@@ -250,14 +253,14 @@ namespace GameFrame {
 
 
 
-		// ÊÍ·ÅÁÙÊ±±íÃæ
+		// é‡Šæ”¾ä¸´æ—¶è¡¨é¢
 		SDL_FreeSurface(textSurface);
 
 		/*for (auto iter : mGameObjects2) {
 			iter.second->Draw(mRenderer);
 		}*/
 		GetGameObject("map1")->Draw(mRenderer);
-		//½»»»»º³åÇø
+		//äº¤æ¢ç¼“å†²åŒº
 		SDL_RenderPresent(mRenderer);
 	}
 	
@@ -271,13 +274,13 @@ namespace GameFrame {
 
 		SDL_Surface* surf = IMG_Load(fileName.c_str());
 		if (!surf) {
-			SDL_Log("Í¼Æ¬¼ÓÔØÊ§°Ü");
+			SDL_Log("å›¾ç‰‡åŠ è½½å¤±è´¥");
 		}
 
 		SDL_Texture* tex = SDL_CreateTextureFromSurface(mRenderer, surf);
 		SDL_FreeSurface(surf);
 		if (!tex) {
-			SDL_Log("Í¼Æ¬¸ñÊ½×ª»»Ê§°Ü");
+			SDL_Log("å›¾ç‰‡æ ¼å¼è½¬æ¢å¤±è´¥");
 		}
 
 		mTextures.emplace(newName,tex);
@@ -285,16 +288,22 @@ namespace GameFrame {
 
 	void Game::LoadData()
 	{
-		LoadTexture("sprite/1-1.png", "tile");
+		//LoadTexture("sprite/1-1.png", "tile");
 		LoadTexture("sprite/1.png", "Npc");
 		LoadTexture("sprite/2.png",	"Player");
-		
+		LoadTexture("sprite/tilesheet_0.png", "tile");
 
 		Font = TTF_OpenFont("Fonts/1.TTF", 28);
-		MapObject* map = new MapObject(this, "MAP/map1.map", "map1");
+		MapObject* map = new MapObject(this, "MAP/map0.tmx", "map1");
+
+
+
 		NpcObject* Npc = new NpcObject(this, map, "Npc");
 		PlayerObject* Player = new PlayerObject(this, map, "Player");
 		//Player->BattleStart(Npc);
+
+
+
 
 	}
 	void Game::Unload()

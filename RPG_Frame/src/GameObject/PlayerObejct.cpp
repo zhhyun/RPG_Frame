@@ -32,14 +32,14 @@ GameFrame::PlayerObject::PlayerObject(Game* game, MapObject* map, const std::str
 	BattleComponent* Battle = new BattleComponent(this);
 	
 	//ÉèÖÃ½ÇÉ«¶¯»­
-	Anim* UpForward = new Anim(Animation->GetTexture(str), 3, true, up, 10.0, 64, 64);
-	Anim* DownForward = new Anim(Animation->GetTexture(str), 3, true, down, 15.0, 64, 64);
-	Anim* LeftForward = new Anim(Animation->GetTexture(str), 3, true, left, 15.0, 64, 64);
-	Anim* RightForward = new Anim(Animation->GetTexture(str), 3, true, right, 15.0, 64, 64);
-	Anim* UpIdle = new Anim(Animation->GetTexture(str), 1, true, idleup, -1, 64, 64);
-	Anim* DownIdle = new Anim(Animation->GetTexture(str), 1, true, idledown, -1, 64, 64);
-	Anim* LeftIdle = new Anim(Animation->GetTexture(str), 1, true, idleleft, -1, 64, 64);
-	Anim* RightIdle = new Anim(Animation->GetTexture(str), 1, true, idleright, -1, 64, 64);
+	Anim* UpForward = new Anim(Animation->GetTexture(str), 3, true, up, 10.0, PlayerW, PlayerH);
+	Anim* DownForward = new Anim(Animation->GetTexture(str), 3, true, down, 15.0, PlayerW, PlayerH);
+	Anim* LeftForward = new Anim(Animation->GetTexture(str), 3, true, left, 15.0, PlayerW, PlayerH);
+	Anim* RightForward = new Anim(Animation->GetTexture(str), 3, true, right, 15.0, PlayerW, PlayerH);
+	Anim* UpIdle = new Anim(Animation->GetTexture(str), 1, true, idleup, -1, PlayerW, PlayerH);
+	Anim* DownIdle = new Anim(Animation->GetTexture(str), 1, true, idledown, -1, PlayerW, PlayerH);
+	Anim* LeftIdle = new Anim(Animation->GetTexture(str), 1, true, idleleft, -1, PlayerW, PlayerH);
+	Anim* RightIdle = new Anim(Animation->GetTexture(str), 1, true, idleright, -1, PlayerW, PlayerH);
 
 	Animation->AddAnimation(UpForward, "UpForward");
 	Animation->AddAnimation(DownForward, "DownForward");
@@ -50,11 +50,11 @@ GameFrame::PlayerObject::PlayerObject(Game* game, MapObject* map, const std::str
 	Animation->AddAnimation(LeftIdle, "LeftIdle");
 	Animation->AddAnimation(RightIdle, "RightIdle");
 
-	Animation->PlayAnimation("UpIdle");
+	Animation->PlayAnimation("DownIdle");
 
 	AddHp(1000);
 	AddACK(20);
-	SetH(64); SetW(64);
+	SetH(PlayerH); SetW(PlayerW);
 	collision->SetCollision(pos, GetH(), GetW());
 }
 
