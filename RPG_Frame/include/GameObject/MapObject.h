@@ -39,10 +39,6 @@ namespace GameFrame {
 		void Draw(SDL_Renderer* renderer) override;
 		void DrawLayer(SDL_Renderer* renderer, Layer* layer);
 
-		/*bool cmp(Layer* a, Layer* b) {
-			return a->UpdateOrder < b->UpdateOrder;
-		}*/
-
 		void AddMapObject(GameObject* gameobject);
 		void RemoveMapObject(GameObject* gameobject);
 

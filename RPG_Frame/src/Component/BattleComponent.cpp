@@ -201,7 +201,7 @@ void GameFrame::BattleComponent::Attack()
 	if (damage <= 0)
 		damage = 1;
 	SDL_Log("hp-%d", damage);
-	Enemies->AddHp(-damage);
+	Enemies->SetHp(-damage);
 }
 
 void GameFrame::BattleComponent::update()

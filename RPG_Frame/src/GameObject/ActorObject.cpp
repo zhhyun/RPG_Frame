@@ -9,6 +9,7 @@
 
 GameFrame::ActorObject::ActorObject(Game* game, MapObject* map, const std::string& name) :
 	Hp(100),
+	MaxHp(100),
 	ACK(10),
 	DEF(10),
 	Speed(1),
@@ -28,11 +29,6 @@ GameFrame::ActorObject::~ActorObject()
 int GameFrame::ActorObject::GetHp()
 {
 	return Hp;
-}
-
-void GameFrame::ActorObject::AddHp(int hp)
-{
-	Hp = Hp + hp;
 }
 
 int GameFrame::ActorObject::GetACK()

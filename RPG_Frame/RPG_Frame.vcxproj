@@ -19,14 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Base64.h" />
     <ClInclude Include="include\Component\AnimSpriteComponent.h" />
     <ClInclude Include="include\Component\BackpackComponent.h" />
     <ClInclude Include="include\Component\BattleComponent.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Component\CollisionComponent.h" />
     <ClInclude Include="include\Component\Component.h" />
-    <ClInclude Include="include\Component\MapSpriteComponent.h" />
+    <ClInclude Include="include\Control\Button.h" />
+    <ClInclude Include="include\Cursor.h" />
     <ClInclude Include="include\InputSystem.h" />
     <ClInclude Include="include\DEFINES.h" />
     <ClInclude Include="include\Game.h" />
@@ -39,18 +39,25 @@
     <ClInclude Include="include\Component\MoveComponent.h" />
     <ClInclude Include="include\GameObject\PlayerObject.h" />
     <ClInclude Include="include\Component\SpriteComponent.h" />
+    <ClInclude Include="include\ScreenUi\BarSheet.h" />
+    <ClInclude Include="include\ScreenUi\Dialogbox.h" />
+    <ClInclude Include="include\ScreenUi\PauseMenu.h" />
+    <ClInclude Include="include\ScreenUi\ScreenUi.h" />
+    <ClInclude Include="include\Fonts.h" />
+    <ClInclude Include="include\Texture.h" />
     <ClInclude Include="tinyxml_2_6_2\tinystr.h" />
     <ClInclude Include="tinyxml_2_6_2\tinyxml.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Base64.cpp" />
-    <ClCompile Include="src\Cameracpp.cpp" />
+    <ClCompile Include="src\Fonts.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Component\AnimSpriteComponent.cpp" />
     <ClCompile Include="src\Component\BackpackComponent.cpp" />
     <ClCompile Include="src\Component\BattleComponent.cpp" />
     <ClCompile Include="src\Component\CollisionComponent.cpp" />
     <ClCompile Include="src\Component\Component.cpp" />
-    <ClCompile Include="src\Component\MapSpriteComponent.cpp" />
+    <ClCompile Include="src\Control\Button.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObject\ActorObject.cpp" />
     <ClCompile Include="src\GameObject\GameObject.cpp" />
@@ -63,6 +70,10 @@
     <ClCompile Include="src\GameObject\PlayerObejct.cpp" />
     <ClCompile Include="src\Component\SpriteComponent.cpp" />
     <ClCompile Include="src\InputSystem.cpp" />
+    <ClCompile Include="src\ScreenUi\BarSheet.cpp" />
+    <ClCompile Include="src\ScreenUi\Dialogbox.cpp" />
+    <ClCompile Include="src\ScreenUi\PauseMenu.cpp" />
+    <ClCompile Include="src\ScreenUi\ScreenUi.cpp" />
     <ClCompile Include="tinyxml_2_6_2\tinystr.cpp" />
     <ClCompile Include="tinyxml_2_6_2\tinyxml.cpp" />
     <ClCompile Include="tinyxml_2_6_2\tinyxmlerror.cpp" />
@@ -83,6 +94,10 @@
     <Image Include="sprite\1-1.png" />
     <Image Include="sprite\1.png" />
     <Image Include="sprite\2.png" />
+    <Image Include="sprite\achievements.png" />
+    <Image Include="sprite\barsheet.png" />
+    <Image Include="sprite\Button.png" />
+    <Image Include="sprite\hud.png" />
     <Image Include="sprite\map1.png" />
     <Image Include="sprite\tilesheet_0.png" />
   </ItemGroup>
@@ -186,7 +201,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\111\source\repos\RPG_Frame\RPG_Frame\zlib-1213\zlib-1213_include;.\SDL2_ttf-2.20.2\include;.\include;.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\include;.\SDL2_image-devel-2.6.2-VC\SDL2_image-2.6.2\include;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\GameObject;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\Component;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\extend\python\internal;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\extend\python\cpython;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\extend\python;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\111\source\repos\RPG_Frame\RPG_Frame\zlib-1213\zlib-1213_include;.\SDL2_ttf-2.20.2\include;.\include;.\SDL2-devel-2.24.0-VC\SDL2-2.24.0\include;.\SDL2_image-devel-2.6.2-VC\SDL2_image-2.6.2\include;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\GameObject;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\Component;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\extend\python\internal;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\extend\python\cpython;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\ScreenUi;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\extend\python;C:\Users\111\source\repos\RPG_Frame\RPG_Frame\include\Control;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>
       </AdditionalOptions>
     </ClCompile>

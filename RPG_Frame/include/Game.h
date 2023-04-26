@@ -3,40 +3,46 @@
 #include	<SDL_image.h>
 #include	<SDL.h>
 #include	<SDL_ttf.h>
-//#include	<string>
 #include	<unordered_map>
 #include	"InputSystem.h"
 #include	<tinyxml.h>
+#include	<vector>
 
 namespace GameFrame {
 	class GameObject;
 	class PlayerObejct;
-	
+	class ScreenUi;
+	class Cursor;
+	class Font;
+
 	class Game {
 	public:
 		Game();
 		bool Initialize();
 		void loop();
 		void shutdown();
-		void AddGameObject(GameObject* gameobject);
+		enum class GameState {
+			EActive,
+			EPause,
+			EStop
+		};
 		void AddGameObject(GameObject* gameobject, const std::string& Name);
-		template<typename T> T* GetGameObject() {
-			for (auto com : mGameObjects) {
-				T* gameobject = dynamic_cast<T*>(com);
-				if (gameobject != nullptr) {
-					return gameobject;
-				}
-			}
-			return nullptr;
-		}
-
 		void RemoveGameObject(GameObject* gameobject);
-		//获取贴图
 		SDL_Texture* GetTexture(const std::string& filename);
+		SDL_Renderer* GetRenderer() { return mRenderer; };
+		InputSystem* GetInputSystem() { return mInputSystem; };
+		Cursor* GetCursor() { return mCursor; };
+		//GetAudioSystem();
 		GameObject* GetGameObject(const std::string& name);
-		Uint32 GetTicks();
-		Uint32 GetAnimTicks();
+		Uint32 GetTicks() { return mTickCount; };
+		Uint32 GetAnimTicks() { return mAnimTickCount; };
+		GameState GetGameState() { return mGameState; };
+		void ProcessInput();
+
+		void SetGameState(GameState state) { mGameState = state; };
 		void SetAnimTicks(Uint32 count);
+		const std::vector<ScreenUi*>& GetUIStack() { return mUIStack; };
+		void PushUI(ScreenUi* ui);
 
 	private:
 		void Event();
@@ -46,22 +52,23 @@ namespace GameFrame {
 		void LoadData();
 		void Unload();
 
-		std::vector<GameObject*> mGameObjects;
-		std::vector<GameObject*> mPendingObjects;
-
-		//注：unordered_map是哈希表容器
 		std::unordered_map<std::string, SDL_Texture*> mTextures;
-		std::unordered_map<std::string, GameObject*> mGameObjects2;
+		std::unordered_map<std::string, GameObject*> mGameObjects;
+		std::vector<GameObject*> mPendingObjects;
+		std::vector<ScreenUi*> mUIStack;
+		std::vector<Font*> mFonts;
 
 		bool							IsRunning;			//游戏运行标记
 		bool							mIsUpdating;		//更新标记
+		GameState						mGameState;			//游戏运行状态
 		SDL_Window*						mWindow;			//窗口指针
 		SDL_Renderer*					mRenderer;			//渲染器
-		SDL_Texture*					mTexture;			//纹理图片
-		TTF_Font*						Font;				//字体
+		 SDL_Texture*					mTexture;			//纹理图片
 		Uint32							mTickCount;			//计时器 // uint32型数据结构储存上限为4294967295，换算成时间约497天
-		Uint32							mAnimTickCount;		//动画用计时器
+		Uint32							mAnimTickCount;		//动画计时器
 		InputSystem*					mInputSystem;		//输入处理系统
+		Cursor*							mCursor;			//鼠标
+		//mAudioSystem;
 	};
 
 }

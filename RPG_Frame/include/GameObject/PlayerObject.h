@@ -9,7 +9,7 @@ namespace GameFrame {
 		~PlayerObject();
 		
 		void update() override;
-
+		void ProcessInput(InputSystem* keystate) override;
 	private:
 		
 	};

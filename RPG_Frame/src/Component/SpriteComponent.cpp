@@ -20,7 +20,7 @@ void GameFrame::SpriteComponent::Draw(SDL_Renderer* renderer)
 
 	// 贴图即将被绘制的位置
 
-	int textureW;
+		int textureW;
 		int textureH;
 		int x =  mOwner->GetPosition().x;
 		int y =  mOwner->GetPosition().y;

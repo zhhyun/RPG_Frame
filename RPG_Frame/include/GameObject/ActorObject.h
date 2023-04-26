@@ -10,7 +10,9 @@ namespace GameFrame {
 		ActorObject(class Game* game, class MapObject* map, const std::string& name);
 		~ActorObject();
 		int GetHp();
-		void AddHp(int hp);
+		void SetMaxHp(int hp) { MaxHp = hp; };
+		int GetMaxHp() { return MaxHp; };
+		void SetHp(int hp) { Hp = hp; };
 		int GetACK();
 		void AddACK(int ack);
 		int GetDEF();
@@ -29,6 +31,7 @@ namespace GameFrame {
 
 	private:
 		int		Hp;
+		int		MaxHp;
 		int		Speed;
 		int		ACK;
 		int		DEF;

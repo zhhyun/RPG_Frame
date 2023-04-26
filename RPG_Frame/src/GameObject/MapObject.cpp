@@ -8,10 +8,11 @@
 
 
 GameFrame::MapObject::MapObject(Game* game, const char* fileName, const std::string& name) :
+    tilewidth(0),
+    tileheight(0),
     GameObject(game, name)
 {
     LoadMapXml(fileName);
-    //MapSpriteComponent* map = new MapSpriteComponent(this, 0, fileName);
     PhysWorld* phys = new PhysWorld();
     Pw = phys;
 }
@@ -124,9 +125,7 @@ void GameFrame::MapObject::LoadMapXml(const char* filepath)
     if (!tileset) {
         exit(1);
     }
-    //int tilewidth = atoi(tileset->Attribute("tilewidth"));
-    //int tileheight = atoi(tileset->Attribute("tileheight"));
-    
+
     auto layer = tileset->NextSibling();
     int layercount = 0;
     while (layer) {
@@ -143,22 +142,16 @@ void GameFrame::MapObject::LoadMapXml(const char* filepath)
         mLayers.emplace_back(L);
         layer = layer->NextSibling();//获取到下一个兄弟节点
     }
-
-    //sort(mLayers.begin(), mLayers.end());
 }
 
 
 void GameFrame::MapObject::UncompressPy(Layer* layer)
 {
-    PyObject* pModule = NULL;
-    PyObject* pFunc = NULL;
-    PyObject* pName = NULL;
     const char* zlibcode = layer->zlibcode;
-    pModule = PyImport_ImportModule("uncompress");
-
+    PyObject*  pModule = PyImport_ImportModule("uncompress");
     //传参
     PyObject* pArgs = PyTuple_New(1);//创建参数元组，元组大小为1并返回
-    pFunc = PyObject_GetAttrString(pModule, "UncompressFc");
+    PyObject* pFunc = PyObject_GetAttrString(pModule, "UncompressFc");
     PyTuple_SetItem(pArgs, 0, Py_BuildValue("s", zlibcode));//Py_BuildValue将参数转换为py的字符串数据结构
 
     //使用C++的python接口调用该函数,接收python计算好的返回值
@@ -169,7 +162,6 @@ void GameFrame::MapObject::UncompressPy(Layer* layer)
         int c;
         PyArg_Parse(b, "i", &c);
         layer->Lcode.emplace_back(c-1);
-       // SDL_Log("res1=%d" , c);
     }
 }
 

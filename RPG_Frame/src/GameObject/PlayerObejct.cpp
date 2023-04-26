@@ -51,8 +51,8 @@ GameFrame::PlayerObject::PlayerObject(Game* game, MapObject* map, const std::str
 	Animation->AddAnimation(RightIdle, "RightIdle");
 
 	Animation->PlayAnimation("DownIdle");
-
-	AddHp(1000);
+	SetMaxHp(100);
+	SetHp(60);
 	AddACK(20);
 	SetH(PlayerH); SetW(PlayerW);
 	collision->SetCollision(pos, GetH(), GetW());
@@ -77,5 +77,10 @@ void GameFrame::PlayerObject::update()
 			iter->update();
 		}
 	}
+}
+
+void GameFrame::PlayerObject::ProcessInput(InputSystem* keystate)
+{
+	GetComponent<InputComponent>()->ProcessInput(keystate);
 }
  

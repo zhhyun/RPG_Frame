@@ -5,16 +5,23 @@
 #include	"InputComponent.h"
 #include	"MapObject.h"
 #include    <Python.h>
+#include	"BarSheet.h"
+#include	"PauseMenu.h"
+#include	<algorithm>
+#include	"Cursor.h"
+#include	"Fonts.h"
+#include	"Dialogbox.h"
 
 namespace GameFrame {
 	Game::Game() :
 		mWindow(nullptr),
 		IsRunning(true),
+		mGameState(GameState::EActive),
 		mRenderer(nullptr),
 		mTexture(nullptr),
 		mIsUpdating(false),
-		Font(nullptr),
 		mTickCount(0),
+		mCursor(nullptr),
 		mAnimTickCount(0)
 	{
 		mInputSystem = new InputSystem;
@@ -30,8 +37,8 @@ namespace GameFrame {
 			PROGRAMME_TITLE,
 			SCREEN_X,			//x
 			SCREEN_Y,			//y
-			SCREEN_W,		//w
-			SCREEN_H,		//h
+			SCREEN_W,			//w
+			SCREEN_H,			//h
 			0);
 
 		if (!mWindow) {
@@ -63,6 +70,8 @@ namespace GameFrame {
 		PyRun_SimpleString("import sys");
 		PyRun_SimpleString("sys.path.append('./scripts')");
 
+		//禁用系统光标
+		SDL_ShowCursor(SDL_FALSE);
 
 		LoadData();
 
@@ -94,7 +103,7 @@ namespace GameFrame {
 	void Game::Event()
 	{
 		SDL_Event event;
-
+		bool IsTo = true;
 		mInputSystem->PrepareUpdate();
 	//当队列中有事件，则判断事件的类型
 		while (SDL_PollEvent(&event)) {
@@ -102,56 +111,68 @@ namespace GameFrame {
 			case SDL_QUIT:
 				IsRunning = false;
 				break;
+			case SDL_KEYDOWN:
+				//优先检测ui,决定键值传递
+				//全部传递到ui里，适用于主菜单，背包等类
+				if (!mUIStack.empty() && mUIStack.back()->GetKeyOccurpy() == PauseMenu::UiKeyOccupy::EFull) {
+					mUIStack.back()->HandKeyPress(event.key.keysym.sym);
+					IsTo = false;
+				}
+					////只针对单个值传递，适用于和游戏机制同时运行的ui
+					//else if (mUIStack.back()->GetKeyOccurpy() == PauseMenu::UiKeyOccupy::EHalf) {
+
+					//}
+				//检查键值是否启动ui
+				else if(event.key.keysym.sym == SDLK_SPACE) {
+					auto mPauseMenu = new PauseMenu(this, "PauseMenu");
+					IsTo = false;
+				}
+				else if (event.key.keysym.sym == SDLK_RETURN) {
+					auto dialog = new Dialogbox(this, "Dialog", "Cat",mFonts[0]);
+					dialog->AddText("我是测试猫娘哦，当你看到本段文字，说明你测试成功了！");
+					IsTo = false;
+				}
 			default:
 				break;
 			}
 		}
-		mInputSystem->update();
+		
 		mIsUpdating = true;
-		GetGameObject("Player")->GetComponent<InputComponent>()->ProcessInput(mInputSystem);
+
+		if (IsTo) {
+			mInputSystem->update();
+			ProcessInput();
+		}
+		
 		mIsUpdating = false;
 	}
 
-	void Game::AddGameObject(GameObject* gameobject)//本函数作用是将创建好了的游戏对象注册到game的容器中
-		//在程序里定义一个游戏对象不代表在游戏里创建一个游戏对象
-		//在游戏里创建对象用Game类的创建对象函数来实现
-		//创建对象函数一般由该对象定义时 去找 和自己联系的game对象 调用
-		//传递的参数就是定义对象自己的指针，相当于把自己注册到Game对象中
-	{
-		if (mIsUpdating) {
-			//更新状态下创建的游戏对象都放在等待区里
-			mPendingObjects.emplace_back(gameobject);
-			//emplace_back在容器队尾插入
-		}
-		else {
-			mGameObjects.emplace_back(gameobject);
-		}
-	}
 
 	void Game::AddGameObject(GameObject* gameobject, const std::string& Name)
 	{
-		mGameObjects2.emplace(Name, gameobject);
+		//排序、判断游戏更新状态并插入指定容器
+		mGameObjects.emplace(Name, gameobject);
 	}
 
 	void Game::RemoveGameObject(GameObject* gameobject)
 	{
-		//find查找vector从a到b内的指定元素
-		//并返回一个指向该元素的迭代器
-		auto iter = std::find(mPendingObjects.begin(), mPendingObjects.end(), gameobject);
+		////find查找vector从a到b内的指定元素
+		////并返回一个指向该元素的迭代器
+		//auto iter = std::find(mPendingObjects.begin(), mPendingObjects.end(), gameobject);
 
-		if (iter != mPendingObjects.end()) {
-			//将删除元素移到队尾
-			std::iter_swap(iter, mPendingObjects.end() - 1);
-			//破坏顺序删除队尾
-			mPendingObjects.pop_back();//
-		}
+		//if (iter != mPendingObjects.end()) {
+		//	//将删除元素移到队尾
+		//	std::iter_swap(iter, mPendingObjects.end() - 1);
+		//	//破坏顺序删除队尾
+		//	mPendingObjects.pop_back();//
+		//}
 
-		 iter = std::find(mGameObjects.begin(), mGameObjects.end(), gameobject);
-		 if (iter != mGameObjects.end()){
-			 std::iter_swap(iter, mPendingObjects.end() - 1);
-			 //破坏顺序删除队尾
-			 mPendingObjects.pop_back();//
-		 }
+		// iter = std::find(mGameObjects.begin(), mGameObjects.end(), gameobject);
+		// if (iter != mGameObjects.end()){
+		//	 std::iter_swap(iter, mPendingObjects.end() - 1);
+		//	 //破坏顺序删除队尾
+		//	 mPendingObjects.pop_back();//
+		// }
 	}
 
 	SDL_Texture* Game::GetTexture(const std::string& filename)
@@ -167,21 +188,31 @@ namespace GameFrame {
 	GameObject* Game::GetGameObject(const std::string& name)
 	{
 		GameObject* go = nullptr;
-		auto iter = mGameObjects2.find(name);
-		if (iter != mGameObjects2.end()) {
+		auto iter = mGameObjects.find(name);
+		if (iter != mGameObjects.end()) {
 			go = iter->second;
 		}
 		return go;
 	}
 
-	Uint32 Game::GetTicks()
+	void Game::ProcessInput()
 	{
-		return mTickCount;
-	}
+		if (!mGameObjects.empty()) {
+			for (auto gameobejct = mGameObjects.begin(); gameobejct != mGameObjects.end(); gameobejct++) {
+				gameobejct->second->ProcessInput(mInputSystem);
+			}
+		}
+		auto mouse = mInputSystem->GetState().mouse;
+		mCursor->SetMousePos(mouse.mMousePos);
+		
+		if ((mouse.mCurrState & SDL_BUTTON(SDL_BUTTON_LEFT)) == 1) {
+		}
+		else if ((mouse.mCurrState & SDL_BUTTON(SDL_BUTTON_RIGHT)) == 1) {
 
-	Uint32 Game::GetAnimTicks()
-	{
-		return mAnimTickCount;
+		}
+		else if ((mouse.mCurrState & SDL_BUTTON(SDL_BUTTON_MIDDLE)) == 1) {
+
+		}
 	}
 
 	void Game::SetAnimTicks(Uint32 count)
@@ -189,30 +220,61 @@ namespace GameFrame {
 		mAnimTickCount = count;
 	}
 
+	void Game::PushUI(ScreenUi* ui)
+	{
+		mUIStack.emplace_back(ui);
+	}
+
 	void Game::Update()
 	{
-		float fm = (1 / FPS) * 1000.0f;//单位毫秒
+
+		if (mGameState == GameState::EPause) {
+			mUIStack.back()->update();
+			return;
+		}
+
+		float fm = (1.0 / FPS) * 1000.0f;//单位毫秒
 		while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTickCount + fm))
 			;
 		mTickCount = SDL_GetTicks();
-		float deltaTime = (SDL_GetTicks() - mTickCount) / 1000.0f;//单位秒
+		//float deltaTime = (SDL_GetTicks() - mTickCount) / 1000.0f;//单位秒
 		mIsUpdating = true;
-		for (auto gameobejct : mGameObjects2) {
-			gameobejct.second->update();
+
+		if (!mGameObjects.empty()) {
+			for (auto gameobejct = mGameObjects.begin(); gameobejct != mGameObjects.end(); gameobejct++) {
+				gameobejct->second->update();
+			}
 		}
+
+		if (!mUIStack.empty()) {
+			for (auto ui : mUIStack) {
+				if (ui->GetUiState() == ScreenUi::UiState::EActive) {
+					ui->update();
+				}	
+			}
+			
+			for (auto ui = mUIStack.begin(); ui != mUIStack.end(); ) {
+				if (( * ui)->GetUiState() == ScreenUi::UiState::EClosing) {
+					ui = mUIStack.erase(ui);
+					continue;
+				}
+				ui++;
+			}
+		}
+		
 
 		mIsUpdating = false;
 
 		for (auto pendingObject : mPendingObjects) {
-			mGameObjects.emplace_back(pendingObject);
+			//mGameObjects.emplace(pendingObject);
 		}
 
 		mPendingObjects.clear();
 
 		std::vector<GameObject*> deadObject;
-		for (auto deadObject : mGameObjects) {
-			//if(deadObject)
-		}
+		/*for (auto deadObject : mGameObjects) {
+			if(deadObject)
+		}*/
 
 		for (auto deadObject : deadObject) {
 			delete deadObject;
@@ -223,48 +285,23 @@ namespace GameFrame {
 	{
 		//清除缓冲区
 		SDL_RenderClear(mRenderer);
-
-
-		SDL_Color textColor{ 255,255,255 };
-		int m_Width;
-		int m_Height;
-		
-		SDL_Surface* textSurface = TTF_RenderText_Solid(Font, "SDL中文测试", textColor);
-		if (!textSurface)
+		if (mTexture)
 		{
-			SDL_Log("失败:%s", SDL_GetError());
-		}
-		else
-		{
-			mTexture = SDL_CreateTextureFromSurface(mRenderer, textSurface);
-			if (!mTexture)
-			{
-				SDL_Log("失败:%s", SDL_GetError());
-			}
-			else
-			{
-				SDL_Rect soildRect = { 0,0,textSurface->w,textSurface->h };
-				SDL_RenderCopy(mRenderer, mTexture, nullptr, &soildRect);
-				// 【这里设置了字体纹理大小】
-				m_Width = textSurface->w;
-				m_Height = textSurface->h;
-			}
+			SDL_DestroyTexture(mTexture);
 		}
 
-
-
-		// 释放临时表面
-		SDL_FreeSurface(textSurface);
-
-		/*for (auto iter : mGameObjects2) {
-			iter.second->Draw(mRenderer);
-		}*/
 		GetGameObject("map1")->Draw(mRenderer);
+		
+		if (!mUIStack.empty()) {
+			for (auto ui : mUIStack) {
+				ui->Draw(mRenderer);
+			}
+		}
+		mCursor->Draw(mRenderer);
 		//交换缓冲区
 		SDL_RenderPresent(mRenderer);
 	}
 	
-
 	void Game::LoadTexture(const std::string& fileName, const std::string& newName) {
 		auto iter = mTextures.find(newName);
 		if (iter != mTextures.end()) {
@@ -288,31 +325,39 @@ namespace GameFrame {
 
 	void Game::LoadData()
 	{
-		//LoadTexture("sprite/1-1.png", "tile");
-		LoadTexture("sprite/1.png", "Npc");
+		
+		LoadTexture("sprite/Dialog.png", "Dialog");
+		LoadTexture("Portraits/PC Computer - Sakura Dungeon - Cat.png", "Cat");
+		LoadTexture("sprite/1.png", "Npc"); 
 		LoadTexture("sprite/2.png",	"Player");
-		LoadTexture("sprite/tilesheet_0.png", "tile");
+		LoadTexture("sprite/tilesheet_0.png", "tile"); 
+		LoadTexture("sprite/barsheet.png", "barsheet");
+		LoadTexture("sprite/PauseMenu.png", "PauseMenu");
+		LoadTexture("sprite/Button.png", "Button");
+		LoadTexture("sprite/Cursor.png", "Cursor");
+		Texture* cur = new Texture("Cursor");
+		cur->CreateFromTexture(GetTexture("Cursor"));
 
-		Font = TTF_OpenFont("Fonts/1.TTF", 28);
+		auto QingNiaoHuaGuang = new Font(this);
+		if (QingNiaoHuaGuang->Load("Fonts/1.TTF")) {
+			mFonts.emplace_back(QingNiaoHuaGuang);
+		}
+
 		MapObject* map = new MapObject(this, "MAP/map0.tmx", "map1");
-
-
-
 		NpcObject* Npc = new NpcObject(this, map, "Npc");
 		PlayerObject* Player = new PlayerObject(this, map, "Player");
+		mCursor = new Cursor(cur);
+		//BarSheet* paused = new BarSheet(this, "PauseMenu", Player);
 		//Player->BattleStart(Npc);
-
-
 
 
 	}
 	void Game::Unload()
 	{
-		
-		//SDL_DestroyTexture(mTexture);
+		SDL_DestroyTexture(mTexture);
 		while (!mGameObjects.empty())
 		{
-			delete mGameObjects.back();
+			//delete mGameObjects.back();
 		}
 	}
 }

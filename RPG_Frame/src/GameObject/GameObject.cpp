@@ -1,6 +1,7 @@
 #include	"GameObject.h"
 #include	"Game.h"
 #include	"Component.h"
+#include	"InputSystem.h"
 #include	"SpriteComponent.h"
 
 
@@ -31,6 +32,9 @@ namespace GameFrame {
 				component->update();
 			}
 		}
+	}
+	void GameObject::ProcessInput(InputSystem* keystate)
+	{
 	}
 	void GameObject::AddComponent(Component* component)
 	{

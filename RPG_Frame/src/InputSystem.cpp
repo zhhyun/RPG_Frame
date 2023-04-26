@@ -17,11 +17,16 @@ void GameFrame::InputSystem::PrepareUpdate()
 	memcpy(mState.keyborad.mPrevState, 
 		mState.keyborad.mCurrState,
 		SDL_NUM_SCANCODES);
+	mState.mouse.mPrevState = mState.mouse.mCurrState;
 }
 
 void GameFrame::InputSystem::update()
 {
 	SDL_GetKeyboardState(NULL);
+	int x = 0, y = 0;
+	mState.mouse.mCurrState = SDL_GetMouseState(&x, &y);
+	mState.mouse.mMousePos.x = static_cast<float>(x);
+	mState.mouse.mMousePos.y = static_cast<float>(y);
 }
 
 bool GameFrame::KeyboradState::GetKeyValue(SDL_Scancode keycode) const

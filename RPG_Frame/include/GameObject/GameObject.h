@@ -25,7 +25,7 @@ namespace GameFrame {
 		virtual ~GameObject();
 
 		virtual void update();
-
+		virtual void ProcessInput(class InputSystem* keystate);
 		void AddComponent(class Component* component);
 		void RemoveComponent(class Component* component);
 		template<typename T> T* GetComponent() {
@@ -62,8 +62,6 @@ namespace GameFrame {
 		void SetDir(Dir mdir);
 		class Game* GetGame() const;
 		virtual void Draw(SDL_Renderer* renderer);
-		/*bool GetMovingState();
-		void SetMovingState(bool ismov);*/
 
 
 	protected:
