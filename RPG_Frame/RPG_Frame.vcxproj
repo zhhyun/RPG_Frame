@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\BattleSystem.h" />
     <ClInclude Include="include\Component\AnimSpriteComponent.h" />
     <ClInclude Include="include\Component\BackpackComponent.h" />
     <ClInclude Include="include\Component\BattleComponent.h" />
@@ -44,12 +45,19 @@
     <ClInclude Include="include\ScreenUi\PauseMenu.h" />
     <ClInclude Include="include\ScreenUi\ScreenUi.h" />
     <ClInclude Include="include\Fonts.h" />
+    <ClInclude Include="include\Script.h" />
     <ClInclude Include="include\Texture.h" />
+    <ClInclude Include="include\ScriptSystem.h" />
+    <ClInclude Include="include\ScreenUi\MainMenu.h" />
     <ClInclude Include="tinyxml_2_6_2\tinystr.h" />
     <ClInclude Include="tinyxml_2_6_2\tinyxml.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\Control\Slider_Box.h" />
+    <ClCompile Include="src\BattleSystem.cpp" />
     <ClCompile Include="src\Fonts.cpp" />
+    <ClCompile Include="src\ScreenUi\MainMenu.cpp" />
+    <ClCompile Include="src\Script.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Component\AnimSpriteComponent.cpp" />
@@ -74,6 +82,7 @@
     <ClCompile Include="src\ScreenUi\Dialogbox.cpp" />
     <ClCompile Include="src\ScreenUi\PauseMenu.cpp" />
     <ClCompile Include="src\ScreenUi\ScreenUi.cpp" />
+    <ClCompile Include="src\ScriptSystem.cpp" />
     <ClCompile Include="tinyxml_2_6_2\tinystr.cpp" />
     <ClCompile Include="tinyxml_2_6_2\tinyxml.cpp" />
     <ClCompile Include="tinyxml_2_6_2\tinyxmlerror.cpp" />

@@ -203,7 +203,7 @@ extern DECLSPEC int SDLCALL SDL_GetRenderDriverInfo(int index,
  * \sa SDL_CreateWindow
  */
 extern DECLSPEC int SDLCALL SDL_CreateWindowAndRenderer(
-                                int width, int height, Uint32 window_flags,
+                                int TLayer_width, int Tlayer_height, Uint32 window_flags,
                                 SDL_Window **window, SDL_Renderer **renderer);
 
 

@@ -3,6 +3,7 @@
 #include	"PlayerObject.h"
 #include	"NpcObject.h"
 #include	"InputComponent.h"
+#include	"MoveComponent.h"
 #include	"MapObject.h"
 #include    <Python.h>
 #include	"BarSheet.h"
@@ -11,6 +12,8 @@
 #include	"Cursor.h"
 #include	"Fonts.h"
 #include	"Dialogbox.h"
+#include	"BattleSystem.h"
+#include	"Script.h"
 
 namespace GameFrame {
 	Game::Game() :
@@ -127,9 +130,45 @@ namespace GameFrame {
 					auto mPauseMenu = new PauseMenu(this, "PauseMenu");
 					IsTo = false;
 				}
+				else if (event.key.keysym.sym == SDLK_1) {
+					Texture* tex = new Texture("Bridge");
+					tex->CreateFromTexture(GetTexture("Bridge"));
+					mBattleSystem = new BattleSystem(tex, this, Player);
+				}
 				else if (event.key.keysym.sym == SDLK_RETURN) {
-					auto dialog = new Dialogbox(this, "Dialog", "Cat",mFonts[0]);
-					dialog->AddText("我是测试猫娘哦，当你看到本段文字，说明你测试成功了！");
+					auto testScript = new Script();
+					mScriptStack.emplace_back(testScript);
+
+					auto i = new Script::Activity();
+					i->InitAct([this,i] {
+						if (i->state == Script::ScriptState::Running) {
+							if (Player->GetmDialog()->IsFin) {
+								Player->CloseDialog();
+								i->state = Script::ScriptState::Fin;
+							}
+						}
+						else if (Player->GetLv() == 1 && i->state == Script::ScriptState::Hide) {
+							i->state = Script::ScriptState::Running;
+							 Player->CreateDialog("./scripts/1.txt");
+						}
+						});
+
+					auto j = new Script::Activity();
+					j->InitAct([this, j] {
+						Vector2 p = { 500,500 };
+						if (j->state == Script::ScriptState::Running) {
+							if (Player->GetComponent<MoveComponent>()->MoveTo(p)) {
+								j->state = Script::ScriptState::Fin;
+							}
+						}
+						else if (Player->GetLv() == 1 && j->state == Script::ScriptState::Hide) {
+							j->state = Script::ScriptState::Running;
+							Player->GetComponent<MoveComponent>()->MoveTo(p);
+						}
+						});
+
+					testScript->AddActivity(i);
+					testScript->AddActivity(j);
 					IsTo = false;
 				}
 			default:
@@ -202,16 +241,21 @@ namespace GameFrame {
 				gameobejct->second->ProcessInput(mInputSystem);
 			}
 		}
+		//更新鼠标状态，鼠标状态具体会触发什么事件交给各个ui的update判定
 		auto mouse = mInputSystem->GetState().mouse;
 		mCursor->SetMousePos(mouse.mMousePos);
 		
 		if ((mouse.mCurrState & SDL_BUTTON(SDL_BUTTON_LEFT)) == 1) {
+			mCursor->SetIsPress(PressState::PLeft);
 		}
 		else if ((mouse.mCurrState & SDL_BUTTON(SDL_BUTTON_RIGHT)) == 1) {
 
 		}
 		else if ((mouse.mCurrState & SDL_BUTTON(SDL_BUTTON_MIDDLE)) == 1) {
 
+		}
+		else {
+			mCursor->SetIsPress(PressState::None);
 		}
 	}
 
@@ -223,6 +267,16 @@ namespace GameFrame {
 	void Game::PushUI(ScreenUi* ui)
 	{
 		mUIStack.emplace_back(ui);
+	}
+
+	Font* Game::GetFont(const std::string& Fontname)
+	{
+		Font* f = nullptr;
+		auto iter = mFonts.find(Fontname);
+		if (iter != mFonts.end()) {
+			f = iter->second;
+		}
+		return f;
 	}
 
 	void Game::Update()
@@ -240,6 +294,13 @@ namespace GameFrame {
 		//float deltaTime = (SDL_GetTicks() - mTickCount) / 1000.0f;//单位秒
 		mIsUpdating = true;
 
+		//剧本先于其他对象更新
+		if (!mScriptStack.empty()) {
+			for (auto script : mScriptStack) {
+				script->update();
+			}
+		}
+
 		if (!mGameObjects.empty()) {
 			for (auto gameobejct = mGameObjects.begin(); gameobejct != mGameObjects.end(); gameobejct++) {
 				gameobejct->second->update();
@@ -247,14 +308,15 @@ namespace GameFrame {
 		}
 
 		if (!mUIStack.empty()) {
+			//更新ui
 			for (auto ui : mUIStack) {
-				if (ui->GetUiState() == ScreenUi::UiState::EActive) {
-					ui->update();
+				if (ui->GetState() == ScreenUi::State::EActive) {
+					ui->update();//检查鼠标是否在ui界面按钮上的函数写在ui的update中
 				}	
 			}
-			
+			//删除关闭状态的ui
 			for (auto ui = mUIStack.begin(); ui != mUIStack.end(); ) {
-				if (( * ui)->GetUiState() == ScreenUi::UiState::EClosing) {
+				if (( * ui)->GetState() == ScreenUi::State::EDead) {
 					ui = mUIStack.erase(ui);
 					continue;
 				}
@@ -290,13 +352,17 @@ namespace GameFrame {
 			SDL_DestroyTexture(mTexture);
 		}
 
-		GetGameObject("map1")->Draw(mRenderer);
+		GetGameObject("001")->Draw(mRenderer);
 		
 		if (!mUIStack.empty()) {
 			for (auto ui : mUIStack) {
 				ui->Draw(mRenderer);
 			}
 		}
+		if (mBattleSystem) {
+			mBattleSystem->Draw(mRenderer);
+		}
+
 		mCursor->Draw(mRenderer);
 		//交换缓冲区
 		SDL_RenderPresent(mRenderer);
@@ -324,9 +390,7 @@ namespace GameFrame {
 	}
 
 	void Game::LoadData()
-	{
-		
-		LoadTexture("sprite/Dialog.png", "Dialog");
+	{	
 		LoadTexture("Portraits/PC Computer - Sakura Dungeon - Cat.png", "Cat");
 		LoadTexture("sprite/1.png", "Npc"); 
 		LoadTexture("sprite/2.png",	"Player");
@@ -335,22 +399,30 @@ namespace GameFrame {
 		LoadTexture("sprite/PauseMenu.png", "PauseMenu");
 		LoadTexture("sprite/Button.png", "Button");
 		LoadTexture("sprite/Cursor.png", "Cursor");
-		Texture* cur = new Texture("Cursor");
-		cur->CreateFromTexture(GetTexture("Cursor"));
+		LoadTexture("sprite/Alfonse.png", "Alfonse");
+		LoadTexture("sprite/Mobile - Fire Emblem Heroes - Bridge.png", "Bridge");
+
+		LoadTexture("sprite/Dialog_Speeker.png", "Dialog_Speeker");
+		LoadTexture("sprite/Dialog_OptionsBox.png", "Dialog_OptionsBox");
+		LoadTexture("sprite/DialogOpenAnim.png", "DialogOpenAnim");
+		LoadTexture("sprite/DialogCloseAnim.png", "DialogCloseAnim");
+		
+		LoadTexture("sprite/Mainmenu.png", "Mainmenu");
 
 		auto QingNiaoHuaGuang = new Font(this);
 		if (QingNiaoHuaGuang->Load("Fonts/1.TTF")) {
-			mFonts.emplace_back(QingNiaoHuaGuang);
+			mFonts.emplace("QingNiaoHuaGuang",QingNiaoHuaGuang);
 		}
 
-		MapObject* map = new MapObject(this, "MAP/map0.tmx", "map1");
-		NpcObject* Npc = new NpcObject(this, map, "Npc");
-		PlayerObject* Player = new PlayerObject(this, map, "Player");
+		MapObject* map = new MapObject(this, "MAP/map0.tmx", "001");
+		Npc = new NpcObject(this, map, "Npc");
+		Player = new PlayerObject(this, map, "Player");
+		Texture* cur = new Texture("Cursor");
+		cur->CreateFromTexture(GetTexture("Cursor"));
 		mCursor = new Cursor(cur);
+		mCamera = new Camera(this);
 		//BarSheet* paused = new BarSheet(this, "PauseMenu", Player);
 		//Player->BattleStart(Npc);
-
-
 	}
 	void Game::Unload()
 	{
@@ -361,5 +433,3 @@ namespace GameFrame {
 		}
 	}
 }
-
-

@@ -6,18 +6,24 @@
 #include	"Texture.h"
 #include	"DEFINES.h"
 namespace GameFrame {
+	enum class PressState {
+		None,
+		PLeft,
+		PRight,
+		PMidle
+	};
 	class Cursor {
 	public:
 		Cursor(Texture* cur) :
 			MouseTex(cur),
 			mMousePos(SCREEN_W/2,SCREEN_H/2),
-			IsPressable(false)
+			mPressState(PressState::None)
 		{  };
 		~Cursor(){};
 		Vector2 GetMousePos() { return mMousePos; };
 		void SetMousePos(Vector2 pos) { mMousePos = pos; };
-		void SetIsPressable(bool i) { IsPressable = i; };
-		bool GetIsPressable() { return IsPressable; };
+		void SetIsPress(PressState i) { mPressState = i; };
+		PressState GetIsPress() { return mPressState; };
 		void Draw(SDL_Renderer* renderder) {
 			SDL_Rect imagerect = { 0,0,MouseTex->GetWidth(),MouseTex->GetHeight() };
 			SDL_Rect rect = { mMousePos.x,mMousePos.y,MouseTex->GetWidth(),MouseTex->GetHeight() };
@@ -27,7 +33,7 @@ namespace GameFrame {
 	private:
 		Vector2 mMousePos;
 		Texture* MouseTex;
-		bool IsPressable;
+		PressState mPressState;
 	};
 
 }

@@ -9,6 +9,11 @@
 namespace GameFrame {
 	class Button {
 	public:
+		enum class ButtonState {
+			None,
+			Press,
+			Select
+		};
 		Button(const std::string& name,
 			Vector2 pos,
 			Texture* tex,
@@ -18,7 +23,7 @@ namespace GameFrame {
 		bool ContainsPoint(const Vector2 cur);
 		void OnClick();
 		void Draw(SDL_Renderer* renderder);
-		void SetmHeighlighted(bool is) { mHeighlighted = is; };
+		void SetmHeighlighted(ButtonState is) { mHeighlighted = is; };
 
 	private:
 		std::function<void()> mOnClick;//回调函数
@@ -28,7 +33,7 @@ namespace GameFrame {
 		class Font* mFont;//字体可选
 		int mHeight;
 		int mWidth;
-		bool mHeighlighted;//如果鼠标放在上面，则标记高亮
+		ButtonState mHeighlighted;//如果鼠标放在上面，则标记高亮
 	};
 }
 

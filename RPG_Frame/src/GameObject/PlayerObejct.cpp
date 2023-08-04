@@ -6,9 +6,11 @@
 #include	"BattleComponent.h"
 #include	"CollisionComponent.h"
 #include	"AnimSpriteComponent.h"
+#include	"Texture.h"
 #include	"Game.h"
 
 GameFrame::PlayerObject::PlayerObject(Game* game, MapObject* map, const std::string& name) :
+	mAnimComponent(nullptr),
 	ActorObject(game, map, name)
 {
 	Vector2 pos{210,274};
@@ -21,36 +23,38 @@ GameFrame::PlayerObject::PlayerObject(Game* game, MapObject* map, const std::str
 	Vector2 right{ 0,128 };
 	Vector2 up{ 0,192 };
 	SetPosition(pos);
-	//SpriteComponent* Sprite = new SpriteComponent(this, 100);
-	AnimSpriteComponent* Animation = new AnimSpriteComponent(this, 99);
+	mAnimComponent = new AnimSpriteComponent(this, 99);
 	std::string str = "Player";
-	Animation->LoadTexture(str);
+	auto ttex = mGame->GetTexture(str);
 	MoveComponent* Move = new MoveComponent(this);
 	CollisionComponent* collision = new CollisionComponent(this);
 	InputComponent* Input = new InputComponent(this);
 	Input->SetRequestCom(Move);
 	BattleComponent* Battle = new BattleComponent(this);
+	auto tex = new Texture("Alfonse");
+	tex->CreateFromTexture(mGame->GetTexture("Alfonse"));
+	Battle->SetBattleTexture(tex);
 	
 	//ÉèÖÃ½ÇÉ«¶¯»­
-	Anim* UpForward = new Anim(Animation->GetTexture(str), 3, true, up, 10.0, PlayerW, PlayerH);
-	Anim* DownForward = new Anim(Animation->GetTexture(str), 3, true, down, 15.0, PlayerW, PlayerH);
-	Anim* LeftForward = new Anim(Animation->GetTexture(str), 3, true, left, 15.0, PlayerW, PlayerH);
-	Anim* RightForward = new Anim(Animation->GetTexture(str), 3, true, right, 15.0, PlayerW, PlayerH);
-	Anim* UpIdle = new Anim(Animation->GetTexture(str), 1, true, idleup, -1, PlayerW, PlayerH);
-	Anim* DownIdle = new Anim(Animation->GetTexture(str), 1, true, idledown, -1, PlayerW, PlayerH);
-	Anim* LeftIdle = new Anim(Animation->GetTexture(str), 1, true, idleleft, -1, PlayerW, PlayerH);
-	Anim* RightIdle = new Anim(Animation->GetTexture(str), 1, true, idleright, -1, PlayerW, PlayerH);
+	Anim* UpForward = new Anim(ttex, 3, true, up, 10.0, PlayerW, PlayerH);
+	Anim* DownForward = new Anim(ttex, 3, true, down, 15.0, PlayerW, PlayerH);
+	Anim* LeftForward = new Anim(ttex, 3, true, left, 15.0, PlayerW, PlayerH);
+	Anim* RightForward = new Anim(ttex, 3, true, right, 15.0, PlayerW, PlayerH);
+	Anim* UpIdle = new Anim(ttex, 1, true, idleup, -1, PlayerW, PlayerH);
+	Anim* DownIdle = new Anim(ttex, 1, true, idledown, -1, PlayerW, PlayerH);
+	Anim* LeftIdle = new Anim(ttex, 1, true, idleleft, -1, PlayerW, PlayerH);
+	Anim* RightIdle = new Anim(ttex, 1, true, idleright, -1, PlayerW, PlayerH);
 
-	Animation->AddAnimation(UpForward, "UpForward");
-	Animation->AddAnimation(DownForward, "DownForward");
-	Animation->AddAnimation(LeftForward, "LeftForward");
-	Animation->AddAnimation(RightForward,"RightForward");
-	Animation->AddAnimation(UpIdle, "UpIdle");
-	Animation->AddAnimation(DownIdle, "DownIdle");
-	Animation->AddAnimation(LeftIdle, "LeftIdle");
-	Animation->AddAnimation(RightIdle, "RightIdle");
+	mAnimComponent->AddAnimation(UpForward, "UpForward");
+	mAnimComponent->AddAnimation(DownForward, "DownForward");
+	mAnimComponent->AddAnimation(LeftForward, "LeftForward");
+	mAnimComponent->AddAnimation(RightForward,"RightForward");
+	mAnimComponent->AddAnimation(UpIdle, "UpIdle");
+	mAnimComponent->AddAnimation(DownIdle, "DownIdle");
+	mAnimComponent->AddAnimation(LeftIdle, "LeftIdle");
+	mAnimComponent->AddAnimation(RightIdle, "RightIdle");
 
-	Animation->PlayAnimation("DownIdle");
+	mAnimComponent->PlayAnimation("DownIdle");
 	SetMaxHp(100);
 	SetHp(60);
 	AddACK(20);
@@ -77,6 +81,11 @@ void GameFrame::PlayerObject::update()
 			iter->update();
 		}
 	}
+}
+
+void GameFrame::PlayerObject::Draw(SDL_Renderer* renderer)
+{
+	mAnimComponent->Draw(renderer);
 }
 
 void GameFrame::PlayerObject::ProcessInput(InputSystem* keystate)

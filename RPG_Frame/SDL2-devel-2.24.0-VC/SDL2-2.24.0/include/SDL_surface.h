@@ -158,7 +158,7 @@ typedef enum
  * \sa SDL_FreeSurface
  */
 extern DECLSPEC SDL_Surface *SDLCALL SDL_CreateRGBSurface
-    (Uint32 flags, int width, int height, int depth,
+    (Uint32 flags, int TLayer_width, int Tlayer_height, int depth,
      Uint32 Rmask, Uint32 Gmask, Uint32 Bmask, Uint32 Amask);
 
 
@@ -186,7 +186,7 @@ extern DECLSPEC SDL_Surface *SDLCALL SDL_CreateRGBSurface
  * \sa SDL_FreeSurface
  */
 extern DECLSPEC SDL_Surface *SDLCALL SDL_CreateRGBSurfaceWithFormat
-    (Uint32 flags, int width, int height, int depth, Uint32 format);
+    (Uint32 flags, int TLayer_width, int Tlayer_height, int depth, Uint32 format);
 
 /**
  * Allocate a new RGB surface with existing pixel data.
@@ -217,8 +217,8 @@ extern DECLSPEC SDL_Surface *SDLCALL SDL_CreateRGBSurfaceWithFormat
  * \sa SDL_FreeSurface
  */
 extern DECLSPEC SDL_Surface *SDLCALL SDL_CreateRGBSurfaceFrom(void *pixels,
-                                                              int width,
-                                                              int height,
+                                                              int TLayer_width,
+                                                              int Tlayer_height,
                                                               int depth,
                                                               int pitch,
                                                               Uint32 Rmask,
@@ -255,7 +255,7 @@ extern DECLSPEC SDL_Surface *SDLCALL SDL_CreateRGBSurfaceFrom(void *pixels,
  * \sa SDL_FreeSurface
  */
 extern DECLSPEC SDL_Surface *SDLCALL SDL_CreateRGBSurfaceWithFormatFrom
-    (void *pixels, int width, int height, int depth, int pitch, Uint32 format);
+    (void *pixels, int TLayer_width, int Tlayer_height, int depth, int pitch, Uint32 format);
 
 /**
  * Free an RGB surface.
@@ -716,7 +716,7 @@ extern DECLSPEC SDL_Surface *SDLCALL SDL_ConvertSurfaceFormat
  *
  * \since This function is available since SDL 2.0.0.
  */
-extern DECLSPEC int SDLCALL SDL_ConvertPixels(int width, int height,
+extern DECLSPEC int SDLCALL SDL_ConvertPixels(int TLayer_width, int Tlayer_height,
                                               Uint32 src_format,
                                               const void * src, int src_pitch,
                                               Uint32 dst_format,
@@ -742,7 +742,7 @@ extern DECLSPEC int SDLCALL SDL_ConvertPixels(int width, int height,
  *
  * \since This function is available since SDL 2.0.18.
  */
-extern DECLSPEC int SDLCALL SDL_PremultiplyAlpha(int width, int height,
+extern DECLSPEC int SDLCALL SDL_PremultiplyAlpha(int TLayer_width, int Tlayer_height,
                                                  Uint32 src_format,
                                                  const void * src, int src_pitch,
                                                  Uint32 dst_format,
@@ -984,7 +984,7 @@ extern DECLSPEC SDL_YUV_CONVERSION_MODE SDLCALL SDL_GetYUVConversionMode(void);
  *
  * \since This function is available since SDL 2.0.8.
  */
-extern DECLSPEC SDL_YUV_CONVERSION_MODE SDLCALL SDL_GetYUVConversionModeForResolution(int width, int height);
+extern DECLSPEC SDL_YUV_CONVERSION_MODE SDLCALL SDL_GetYUVConversionModeForResolution(int TLayer_width, int Tlayer_height);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

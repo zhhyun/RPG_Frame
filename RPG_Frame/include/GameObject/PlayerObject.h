@@ -3,15 +3,17 @@
 #include "ActorObject.h"
 
 namespace GameFrame {
-	class PlayerObject : public ActorObject {
+	class AnimSpriteComponent;
+	class PlayerObject : public ActorObject {	
 	public:
 		PlayerObject(Game* game, MapObject* map, const std::string& name);
 		~PlayerObject();
 		
 		void update() override;
+		void Draw(SDL_Renderer* renderer) override;
 		void ProcessInput(InputSystem* keystate) override;
 	private:
-		
+		AnimSpriteComponent* mAnimComponent;
 	};
 }
 #endif __PlayerObject__

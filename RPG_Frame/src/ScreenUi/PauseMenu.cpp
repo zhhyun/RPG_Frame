@@ -11,16 +11,18 @@ GameFrame::PauseMenu::PauseMenu(Game* game, const std::string& fileName):
 	keyOccup = UiKeyOccupy::EFull;
 	Width = mTexture->GetWidth();
 	Height = mTexture->GetHeight();
-	mPos.x = SCREEN_W / 2 - Width / 2;
-	mPos.y = SCREEN_H / 2 - Height / 2;
+	Pos.x = SCREEN_W / 2 - Width / 2;
+	Pos.y = SCREEN_H / 2 - Height / 2;
 	
 	Texture* tex = new Texture("ResumeButton");
 	tex->CreateFromTexture(mGame->GetTexture("Button"));
 
 	Vector2 vec;
 	vec.x = SCREEN_W / 2 - tex->GetWidth() / 2;
-	vec.y = mPos.y + 70;
-	AddButton("Resume", vec, tex,[this]() {
+	vec.y = Pos.y + 70;
+
+	AddButton("Resume", vec, tex, [this]() {
+		mGame->SetGameState(Game::GameState::EActive);
 		close();
 		});
 }
@@ -32,7 +34,7 @@ GameFrame::PauseMenu::~PauseMenu()
 void GameFrame::PauseMenu::Draw(SDL_Renderer* renderer)
 {
 	SDL_Rect imageRect{ 0,0,Width,Height };
-	SDL_Rect dstRect{ mPos.x,mPos.y,Width,Height };
+	SDL_Rect dstRect{ Pos.x,Pos.y,Width,Height };
 	SDL_RenderCopy(renderer, mTexture->GetTexture(), &imageRect, &dstRect);
 
 	if (!mButtons.empty()) {

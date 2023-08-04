@@ -4,8 +4,9 @@
 #include	"MoveComponent.h"
 #include	"InputComponent.h"
 #include	"BattleComponent.h"
+#include	"Dialogbox.h"
 #include	"Game.h"
-
+#include	"Math2.h"
 
 GameFrame::ActorObject::ActorObject(Game* game, MapObject* map, const std::string& name) :
 	Hp(100),
@@ -17,6 +18,12 @@ GameFrame::ActorObject::ActorObject(Game* game, MapObject* map, const std::strin
 	mMap(map),
 	Height(20),
 	Wdith(20),
+	Lv(1),
+	ActorName(name),
+	mDialog(nullptr),
+	mDir(Dir::DOWN),
+	mScale(1),
+	mRotation(0),
 	GameObject(game,name)
 {
 	map->AddMapObject(this);
@@ -79,6 +86,24 @@ bool GameFrame::ActorObject::GetBattleState()
 void GameFrame::ActorObject::SetBattleSate(bool state)
 {
 	IsCombating = state;
+}
+
+bool GameFrame::ActorObject::CreateDialog(const std::string& scriptname)
+{
+	if (auto dialog = new Dialogbox(mGame, scriptname)) {
+		/*从人物纹理中获取肖像dialog->Portrait;*/
+		mDialog = dialog;
+		return true;
+	}
+	else
+		return false;
+}
+
+void GameFrame::ActorObject::CloseDialog()
+{
+	if (mDialog != nullptr) {
+		mDialog->close();
+	}
 }
 
 int GameFrame::ActorObject::BattleStart(class ActorObject* b)

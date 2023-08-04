@@ -5,11 +5,9 @@
 #include	"Cursor.h"
 
 GameFrame::ScreenUi::ScreenUi(Game* game, const std::string& fileName):
-	mGame(game),
-	mPos(0,0),
 	mTexture(nullptr),
 	keyOccup(UiKeyOccupy::ENone),
-	mState(UiState::EActive)
+	GameObject(game)
 {
 	LoadTexture(fileName);
 	mGame->PushUI(this);
@@ -21,15 +19,22 @@ GameFrame::ScreenUi::~ScreenUi()
 
 void GameFrame::ScreenUi::close()
 {
-	mState = UiState::EClosing;
+	mState = State::EDead;
 }
 
 void GameFrame::ScreenUi::update()
 {
 	Cursor* mouse = mGame->GetCursor();
 	if (!mButtons.empty()) {
+		//注意叠加图层判断，这里需要补充
 		for (auto iter : mButtons) {
-			iter->ContainsPoint(mouse->GetMousePos());
+			if (iter->ContainsPoint(mouse->GetMousePos())) {
+				if (mouse->GetIsPress() != PressState::None) {
+					//如果鼠标在按钮上且按下
+					iter->SetmHeighlighted(Button::ButtonState::Press);
+					iter->OnClick();
+				}
+			}
 		}
 	}
 }

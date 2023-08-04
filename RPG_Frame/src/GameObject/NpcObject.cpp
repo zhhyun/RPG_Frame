@@ -14,9 +14,11 @@ GameFrame::NpcObject::NpcObject(Game* game, MapObject* map, const std::string& n
 	SpriteComponent* Npc = new SpriteComponent(this, 100);
 	BattleComponent* Battle = new BattleComponent(this);
 	CollisionComponent* collision = new CollisionComponent(this);
-	collision->SetCollision(pos, 32, 32);
 	std::string str = "Npc";
 	Npc->LoadTexture(str);
+	Vector2 TexWh = { Npc->GetTexture()->GetWidth() / 3,Npc->GetTexture()->GetHeight() / 4 };
+	Npc->SetDrawTexWH(TexWh);
+	collision->SetCollision(pos, 32, 32);
 }
 
 GameFrame::NpcObject::~NpcObject()

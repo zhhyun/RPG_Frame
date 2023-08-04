@@ -7,6 +7,7 @@ GameFrame::BattleComponent::BattleComponent(ActorObject* gameobject):
 	InputBuf(0),
 	Enemies(nullptr),
 	Player(gameobject),
+	ActorInBattle(nullptr),
 	Component(gameobject)
 {
 }

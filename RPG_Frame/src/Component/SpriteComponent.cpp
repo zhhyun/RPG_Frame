@@ -1,11 +1,14 @@
 #include	"SpriteComponent.h"
 #include	"GameObject.h"
 #include	"Game.h"
+#include	"Texture.h"
 
 
 GameFrame::SpriteComponent::SpriteComponent(GameObject* gameobject, int draworder):
 	mTexture(nullptr),
 	mDrawOrder(draworder),
+	DrawTexWH(0,0),
+	imageDst(0,0),
 	Component(gameobject)
 {
 	mOwner->AddSpriteComponent(this);
@@ -17,42 +20,29 @@ GameFrame::SpriteComponent::~SpriteComponent()
 
 void GameFrame::SpriteComponent::Draw(SDL_Renderer* renderer)
 {
+	int x =  mOwner->GetPosition().x;
+	int y =  mOwner->GetPosition().y;
 
-	// 贴图即将被绘制的位置
+	SDL_Rect imageRect{ imageDst.x, imageDst.y, DrawTexWH.x, DrawTexWH.y };
 
-		int textureW;
-		int textureH;
-		int x =  mOwner->GetPosition().x;
-		int y =  mOwner->GetPosition().y;
-
-		SDL_QueryTexture(mTextures.begin()->second, nullptr, nullptr, &textureW, &textureH);
-
-		SDL_Rect imageRect{ 0,0,textureW/3,textureH/4 };
-
-		SDL_Rect dstRect{ x, y,textureW/3,textureH/4 };
+	SDL_Rect dstRect{ x, y, DrawTexWH.x, DrawTexWH.y };
 		
-		SDL_RenderCopy(renderer, mTextures.begin()->second, &imageRect, &dstRect);
-
-	// 绘制贴图（考虑旋转）
-	//SDL_RenderCopyEx(renderer, mTexture, nullptr, &dstrect, mGameObject->GetRotation(), nullptr, SDL_FLIP_NONE);
-
+	SDL_RenderCopy(renderer, mTexture->GetTexture(), &imageRect, &dstRect);
 }
 
 
 void GameFrame::SpriteComponent::LoadTexture(std::string& fileName)
 {
 	{
-		auto iter = mTextures.find(fileName);
-		if (iter != mTextures.end()) {
-			SDL_DestroyTexture(iter->second);
-			mTextures.erase(iter);
+		if (mTexture != NULL) {
+			//清空
 		}
-		SDL_Texture* tex = mOwner->GetGame()->GetTexture(fileName);
-		mTextures.emplace(fileName, tex);
+
+		Texture* tex = new Texture;
+		tex->CreateFromTexture(	mOwner->GetGame()->GetTexture(fileName));
+		mTexture = tex;
+		DrawTexWH.x = mTexture->GetWidth();
+		DrawTexWH.y = mTexture->GetHeight();
 	}
 }
 
-SDL_Texture* GameFrame::SpriteComponent::GetTexture(std::string& fileName)
-{
-	return mTextures.find(fileName)->second;
-}

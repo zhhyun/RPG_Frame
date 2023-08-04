@@ -11,17 +11,11 @@ namespace GameFrame {
 	public:
 		enum State {
 			EActive,
+			EWaitingDead,
 			EDead
 		};
-		enum Dir
-		{
-			UP,
-			DOWN,
-			LEFT,
-			RIGHT
-		};
 		GameObject(class Game* game, const std::string& name);
-
+		GameObject(class Game* game);
 		virtual ~GameObject();
 
 		virtual void update();
@@ -49,17 +43,12 @@ namespace GameFrame {
 			return nullptr;
 		};
 
-
 		State GetState() const;
 		void SetState(State state);
-		Vector2	GetPosition() const;
-		void SetPosition(Vector2 pos);
-		float	GetRotation() const;
-		void SetRotation(float rotation);
-		Vector2	GetScale() const;
-		void SetScale(Vector2 scale);
-		Dir GetDir() const;
-		void SetDir(Dir mdir);
+		Vector2	GetPosition() const { return Pos; };
+		void SetPosition(Vector2 pos) { Pos = pos; };
+		void SetPositionX(int x) { Pos.x = x; };
+		void SetPositionY(int y) { Pos.y = y; };
 		class Game* GetGame() const;
 		virtual void Draw(SDL_Renderer* renderer);
 
@@ -67,14 +56,9 @@ namespace GameFrame {
 	protected:
 		std::vector<class Component*> mComponents;
 		std::vector<class SpriteComponent*> mSpriteComponents;
-
-	private:
-		Dir									mDir;
-		Vector2								Pos;
-		int									mScale;
-		float								mRotation;
-		class Game*							mGame;
+		class Game* mGame;
 		State								mState;
+		Vector2								Pos;
 	};
 }
 

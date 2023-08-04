@@ -5,17 +5,21 @@
 #include	"GameObject.h"
 #include	"AnimSpriteComponent.h"
 #include	"InputSystem.h"
+#include	"ActorObject.h"
 
 GameFrame::MoveComponent::MoveComponent(GameObject* gameobject) :
 	movdir(0, 0),
 	mMovState(MovState::Idle),
 	Speed(5.0),
+	IsAcceptKey(true),
 	Component(gameobject)
 {
 }
 
 void GameFrame::MoveComponent::ProcessInput(const InputSystem* keystate)
 {
+	if (!IsAcceptKey)
+		return;
 	//根据按钮状态，人物移动也分四种情况：静止、开始移动，保持移动、停止移动
 	ButtomState W = keystate->GetState().keyborad.GetKeyState(SDL_SCANCODE_W);
 	ButtomState A = keystate->GetState().keyborad.GetKeyState(SDL_SCANCODE_A);
@@ -163,19 +167,19 @@ void GameFrame::MoveComponent::ProcessInput(const InputSystem* keystate)
 			mMovState = MovState::MovStart;
 			switch (iter->key) {
 			case SDL_SCANCODE_W:
-				mOwner->SetDir(GameObject::Dir::UP);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::UP);
 				movdir = Vector2::up;
 				break;
 			case SDL_SCANCODE_A:
-				mOwner->SetDir(GameObject::Dir::LEFT);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::LEFT);
 				movdir = Vector2::left;
 				break;
 			case SDL_SCANCODE_S:
-				mOwner->SetDir(GameObject::Dir::DOWN);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::DOWN);
 				movdir = Vector2::down;
 				break;
 			case SDL_SCANCODE_D:
-				mOwner->SetDir(GameObject::Dir::RIGHT);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::RIGHT);
 				movdir = Vector2::right;
 				break;
 			}
@@ -203,19 +207,19 @@ void GameFrame::MoveComponent::ProcessInput(const InputSystem* keystate)
 			mMovState = MovState::MovStart;
 			switch (first->key) {
 			case SDL_SCANCODE_W:
-				mOwner->SetDir(GameObject::Dir::UP);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::UP);
 				movdir = Vector2::up;
 				break;
 			case SDL_SCANCODE_A:
-				mOwner->SetDir(GameObject::Dir::LEFT);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::LEFT);
 				movdir = Vector2::left;
 				break;
 			case SDL_SCANCODE_S:
-				mOwner->SetDir(GameObject::Dir::DOWN);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::DOWN);
 				movdir = Vector2::down;
 				break;
 			case SDL_SCANCODE_D:
-				mOwner->SetDir(GameObject::Dir::RIGHT);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::RIGHT);
 				movdir = Vector2::right;
 				break;
 			}
@@ -225,19 +229,19 @@ void GameFrame::MoveComponent::ProcessInput(const InputSystem* keystate)
 			mMovState = MovState::MovHeld;
 			switch (last->key) {
 			case SDL_SCANCODE_W:
-				mOwner->SetDir(GameObject::Dir::UP);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::UP);
 				movdir = Vector2::up;
 				break;
 			case SDL_SCANCODE_A:
-				mOwner->SetDir(GameObject::Dir::LEFT);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::LEFT);
 				movdir = Vector2::left;
 				break;
 			case SDL_SCANCODE_S:
-				mOwner->SetDir(GameObject::Dir::DOWN);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::DOWN);
 				movdir = Vector2::down;
 				break;
 			case SDL_SCANCODE_D:
-				mOwner->SetDir(GameObject::Dir::RIGHT);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::RIGHT);
 				movdir = Vector2::right;
 				break;
 			}
@@ -268,19 +272,19 @@ void GameFrame::MoveComponent::ProcessInput(const InputSystem* keystate)
 				mMovState = MovState::MovHeld;
 			switch (first->key) {
 			case SDL_SCANCODE_W:
-				mOwner->SetDir(GameObject::Dir::UP);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::UP);
 				movdir = Vector2::up;
 				break;
 			case SDL_SCANCODE_A:
-				mOwner->SetDir(GameObject::Dir::LEFT);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::LEFT);
 				movdir = Vector2::left;
 				break;
 			case SDL_SCANCODE_S:
-				mOwner->SetDir(GameObject::Dir::DOWN);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::DOWN);
 				movdir = Vector2::down;
 				break;
 			case SDL_SCANCODE_D:
-				mOwner->SetDir(GameObject::Dir::RIGHT);
+				dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::RIGHT);
 				movdir = Vector2::right;
 				break;
 			}
@@ -331,19 +335,65 @@ void GameFrame::MoveComponent::update()
 	}
 	else if (mMovState == MovState::MovStop) {
 		mOwner->GetComponent<AnimSpriteComponent>()->StopPlay();
-		switch(mOwner->GetDir()) {
-		case GameObject::Dir::UP:
+		switch(dynamic_cast<ActorObject*>(mOwner)->GetDir()) {
+		case ActorObject::Dir::UP:
 			mOwner->GetComponent<AnimSpriteComponent>()->PlayAnimation("UpIdle");
 			break;
-		case GameObject::Dir::DOWN:
+		case ActorObject::Dir::DOWN:
 			mOwner->GetComponent<AnimSpriteComponent>()->PlayAnimation("DownIdle");
 			break;
-		case GameObject::Dir::LEFT:
+		case ActorObject::Dir::LEFT:
 			mOwner->GetComponent<AnimSpriteComponent>()->PlayAnimation("LeftIdle");
 			break;
-		case GameObject::Dir::RIGHT:
+		case ActorObject::Dir::RIGHT:
 			mOwner->GetComponent<AnimSpriteComponent>()->PlayAnimation("RightIdle");
 			break;
 		}
 	}
+}
+
+bool GameFrame::MoveComponent::MoveTo(Vector2 DestPos)
+{
+	if (IsAcceptKey) {
+		IsAcceptKey = false;
+	}
+	auto DirVec = DestPos - mOwner->GetPosition();
+	if (DirVec.x > -Speed && DirVec.x < Speed) {
+		DirVec.x = 0;
+		mOwner->SetPositionX(DestPos.x);
+	}
+	if (DirVec.y > -Speed && DirVec.y < Speed) {
+		DirVec.y = 0;
+		mOwner->SetPositionX(DestPos.y);
+	}
+	if (DirVec.x == 0 && DirVec.y == 0) {
+		mMovState = MovState::MovStop;
+		IsAcceptKey = true;
+		return true;
+	}
+	else if (DirVec.x > 0) {
+		movdir = Vector2::right;
+		dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::RIGHT);
+	}
+	else if (DirVec.x < 0) {
+		movdir = Vector2::left;
+		dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::LEFT);
+	}
+	else if (DirVec.y > 0 && DirVec.x == 0) {
+		movdir = Vector2::down;
+		dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::DOWN);
+	}
+	else if (DirVec.y < 0 && DirVec.x == 0) {
+		movdir = Vector2::up;
+		dynamic_cast<ActorObject*>(mOwner)->SetDir(ActorObject::Dir::UP);
+	}
+
+	if (mMovState != MovState::MovStart) {
+		mMovState = MovState::MovStart;
+		return false;
+	}
+	else{
+		mMovState = MovState::MovHeld;
+	}
+	return false;
 }

@@ -25,12 +25,14 @@ namespace GameFrame {
 		void SetSpeed(float speed);
 		float GetSpeed();
 		void update() override;
+		bool MoveTo(Vector2 DestPos);//移动指令，以默认速度将人物自动移动到destpos处，完成后返回1
 		std::vector<KeyQueSate>			mReqKeys;
 
 	private:
 		Vector2								movdir;//移动向量
 		MovState							mMovState;
 		float								Speed;
+		bool								IsAcceptKey;
 	};
 
 }

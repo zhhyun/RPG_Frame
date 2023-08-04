@@ -1927,7 +1927,7 @@ extern DECLSPEC SDL_Surface * SDLCALL IMG_LoadWEBP_RW(SDL_RWops *src);
  *
  * \since This function is available since SDL_image 2.6.0.
  */
-extern DECLSPEC SDL_Surface * SDLCALL IMG_LoadSizedSVG_RW(SDL_RWops *src, int width, int height);
+extern DECLSPEC SDL_Surface * SDLCALL IMG_LoadSizedSVG_RW(SDL_RWops *src, int TLayer_width, int Tlayer_height);
 
 /**
  * Load an XPM image from a memory array.

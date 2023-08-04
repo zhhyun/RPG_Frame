@@ -7,14 +7,16 @@
 
 namespace GameFrame {
 	GameObject::GameObject(Game* game, const std::string& name) :
-		mDir(Dir::DOWN),
-		Pos(0,0),
-		mScale(1),
-		mRotation(0),
 		mGame(game),
 		mState(State::EActive)
 	{
 		mGame->AddGameObject(this,name);
+	}
+
+	GameObject::GameObject(Game* game):
+		mGame(game),
+		mState(State::EActive)
+	{
 	}
 
 	GameObject::~GameObject()
@@ -59,39 +61,6 @@ namespace GameFrame {
 		mState = state;
 	}
 
-	void GameObject::SetPosition(Vector2 pos)
-	{
-		Pos = pos;
-	}
-
-	float GameObject::GetRotation() const
-	{
-		return 0.0f;
-	}
-
-	void GameObject::SetRotation(float rotation)
-	{
-	}
-
-	Vector2 GameObject::GetScale() const
-	{
-		return Vector2();
-	}
-
-	void GameObject::SetScale(Vector2 scale)
-	{
-	}
-
-	GameObject::Dir GameObject::GetDir() const
-	{
-		return mDir;
-	}
-
-	void GameObject::SetDir(Dir mdir)
-	{
-		mDir = mdir;
-	}
-
 	class Game* GameObject::GetGame() const
 	{
 		return mGame;
@@ -103,10 +72,4 @@ namespace GameFrame {
 			iter->Draw(renderer);
 		}
 	}
-
-	Vector2 GameObject::GetPosition() const
-	{
-		return Pos;
-	}
-	
 }
