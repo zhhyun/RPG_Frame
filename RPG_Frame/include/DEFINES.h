@@ -1,4 +1,4 @@
-#define SCREEN_W 800.0
+#define SCREEN_W 1000.0
 #define SCREEN_H 600.0
 #define SCREEN_SCALE = SCREEN_W/SCREEN_H
 #define FPS 60.0

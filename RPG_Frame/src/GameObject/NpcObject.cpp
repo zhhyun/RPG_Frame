@@ -11,6 +11,8 @@ GameFrame::NpcObject::NpcObject(Game* game, MapObject* map, const std::string& n
 {
 	Vector2 pos{ 210,210 };
 	SetPosition(pos);
+	/*pos.x = pos.x - 5;
+	pos.y = pos.y - 5;*/
 	SpriteComponent* Npc = new SpriteComponent(this, 100);
 	BattleComponent* Battle = new BattleComponent(this);
 	CollisionComponent* collision = new CollisionComponent(this);
@@ -23,4 +25,19 @@ GameFrame::NpcObject::NpcObject(Game* game, MapObject* map, const std::string& n
 
 GameFrame::NpcObject::~NpcObject()
 {
+}
+
+void GameFrame::NpcObject::update()
+{
+	//更新位置
+	//获取摄像机坐标
+	auto camera = GetGame()->GetCamera();
+	Pos.x = Pos.x + camera->GetPreImageRect().x - camera->GetImageRect().x;
+	Pos.y = Pos.y + camera->GetPreImageRect().y - camera->GetImageRect().y;
+	//相对坐标->绝对坐标->相对坐标
+	if (mState == GameObject::State::EActive) {
+		for (auto component : mComponents) {
+			component->update();
+		}
+	}
 }

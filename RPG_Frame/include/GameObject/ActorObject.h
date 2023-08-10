@@ -33,7 +33,6 @@ namespace GameFrame {
 		void SetLv(int lv) { Lv = lv; };
 
 		int BattleStart(class ActorObject* b);
-		
 		bool GetBattleState();
 		void SetBattleSate(bool state);
 		std::string GetActorName() { return ActorName; };
@@ -44,7 +43,7 @@ namespace GameFrame {
 		void SetScale(int scale){ mScale = scale; };
 		Dir GetDir() const{ return mDir; };
 		void SetDir(Dir mdir){ mDir = mdir; };
-
+		MapObject* GetMapObject() {	return mMap; };
 		bool CreateDialog(const std::string& scriptname);
 		void CloseDialog();
 		Dialogbox* GetmDialog() { return mDialog; };
@@ -67,7 +66,7 @@ namespace GameFrame {
 		float								mRotation;
 		Dialogbox*							mDialog;
 		bool								IsCombating;
-		MapObject*							mMap;
+		MapObject*							mMap;//人物挂载的地图
 	};
 }
 

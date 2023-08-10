@@ -8,6 +8,9 @@
 #include	"Camera.h"
 #include	<tinyxml.h>
 #include	<vector>
+#include	<json.hpp>
+#include	"PhysSpace.h"
+
 
 namespace GameFrame {
 	class GameObject;
@@ -19,6 +22,7 @@ namespace GameFrame {
 	class BattleSystem;
 	class Script;
 	class Camera;
+	class PhysSpace;
 
 	class Game {
 	public:
@@ -39,6 +43,7 @@ namespace GameFrame {
 		InputSystem* GetInputSystem() { return mInputSystem; };
 		Cursor* GetCursor() { return mCursor; };
 		Camera* GetCamera() { return mCamera; };
+		PhysSpace* GetPhysSpace() { return mPhysSpace; };
 		//GetAudioSystem();
 		GameObject* GetGameObject(const std::string& name);
 		PlayerObject* GetPlayer() { return Player; };
@@ -61,7 +66,7 @@ namespace GameFrame {
 		void Unload();
 
 		std::unordered_map<std::string, SDL_Texture*> mTextures;
-		std::unordered_map<std::string, GameObject*> mGameObjects;
+		std::unordered_map<std::string, GameObject*> mGameObjects;//标识要改成游戏角色id
 		std::unordered_map<std::string, Font*> mFonts;
 		std::vector<GameObject*> mPendingObjects;
 		std::vector<ScreenUi*> mUIStack;
@@ -80,9 +85,9 @@ namespace GameFrame {
 		//AudioSystem* mAudioSystem;				//音频系统
 		//ActContrSystem* mActContrSystem;			//行为控制系统
 		Cursor*							mCursor;			//鼠标
-		Camera*							mCamera;//摄像机
-
-		PlayerObject* Player;
+		Camera*							mCamera;			//摄像机
+		PhysSpace*						mPhysSpace;			//物理空间
+		PlayerObject*					Player;
 		NpcObject* Npc;
 		
 	};

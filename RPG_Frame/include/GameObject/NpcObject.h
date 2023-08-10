@@ -8,6 +8,7 @@ namespace GameFrame {
 		NpcObject(Game* game, MapObject* map, const std::string& name);
 		~NpcObject();
 
+		void update()override;
 	private:
 
 	};

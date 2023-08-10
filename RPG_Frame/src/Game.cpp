@@ -14,6 +14,7 @@
 #include	"Dialogbox.h"
 #include	"BattleSystem.h"
 #include	"Script.h"
+#include	"Camera.h"
 
 namespace GameFrame {
 	Game::Game() :
@@ -300,7 +301,9 @@ namespace GameFrame {
 				script->update();
 			}
 		}
-
+		if (mCamera) {
+			mCamera->Update();
+		}
 		if (!mGameObjects.empty()) {
 			for (auto gameobejct = mGameObjects.begin(); gameobejct != mGameObjects.end(); gameobejct++) {
 				gameobejct->second->update();
@@ -413,14 +416,15 @@ namespace GameFrame {
 		if (QingNiaoHuaGuang->Load("Fonts/1.TTF")) {
 			mFonts.emplace("QingNiaoHuaGuang",QingNiaoHuaGuang);
 		}
-
-		MapObject* map = new MapObject(this, "MAP/map0.tmx", "001");
+		mPhysSpace = new PhysSpace(this);
+		MapObject* map = new MapObject(this, "MAP/map0", "001");
 		Npc = new NpcObject(this, map, "Npc");
 		Player = new PlayerObject(this, map, "Player");
 		Texture* cur = new Texture("Cursor");
 		cur->CreateFromTexture(GetTexture("Cursor"));
 		mCursor = new Cursor(cur);
 		mCamera = new Camera(this);
+		
 		//BarSheet* paused = new BarSheet(this, "PauseMenu", Player);
 		//Player->BattleStart(Npc);
 	}

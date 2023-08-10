@@ -59,7 +59,9 @@ GameFrame::PlayerObject::PlayerObject(Game* game, MapObject* map, const std::str
 	SetHp(60);
 	AddACK(20);
 	SetH(PlayerH); SetW(PlayerW);
-	collision->SetCollision(pos, GetH(), GetW());
+	auto shape = new RectShape(collision, pos.x, pos.y, PlayerH, PlayerW);
+	collision->CreateShape(shape);
+	//collision->SetCollision(pos, GetH(), GetW());
 }
 
 GameFrame::PlayerObject::~PlayerObject()
@@ -77,6 +79,12 @@ void GameFrame::PlayerObject::update()
 		return;
 	}
 	else {
+		////更新位置
+		////获取摄像机坐标
+		auto camera = GetGame()->GetCamera();
+		Pos.x = Pos.x + camera->GetPreImageRect().x - camera->GetImageRect().x;
+		Pos.y = Pos.y + camera->GetPreImageRect().y - camera->GetImageRect().y;
+
 		for (auto iter : mComponents) {
 			iter->update();
 		}

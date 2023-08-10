@@ -4,17 +4,21 @@
 #include    <stdlib.h>
 #include    <algorithm>
 #include    "Math2.h"
+using json = nlohmann::json;
 
-GameFrame::MapObject::MapObject(Game* game, const char* fileName, const std::string& name) :
+GameFrame::MapObject::MapObject(Game* game, const std::string& fileName, const std::string& name) :
     tileW(TILEW),
     tileH(TILEH),
     GameObject(game, name)
 {
-    LoadMapXml(fileName);
-    PhysWorld* phys = new PhysWorld();
-    Pw = phys;
+    LoadMapXml(fileName + ".tmx");
+    //PhysWorld* phys = new PhysWorld();
+    CollisionsInMap = new PhysWorld();
     for (auto iter : mLayers) {
         iter->LayerTex = PreLayerTexBlit(mGame->GetRenderer(),iter);
+    }
+    if (!LoadCollision(fileName)) {
+        SDL_Log("Collision init error.");
     }
 }
 
@@ -31,36 +35,36 @@ void GameFrame::MapObject::Draw(SDL_Renderer* renderer)
     for (auto iter : mLayers) {
         DrawLayer(renderer, iter);
     }
-    for (auto iter : mMapObjects) {
+    for (auto iter : mObjectsInMap) {
         iter->Draw(renderer);
     }
 }
 
 void GameFrame::MapObject::DrawLayer(SDL_Renderer* renderer, Layer* layer)
 {
-    auto temp = GetGame()->GetCamera()->GetImageRect(this);
-    SDL_Rect is = { 0,0,MapW, MapH};
-    SDL_RenderCopy(renderer, layer->LayerTex, temp, &is);
+    auto temp = GetGame()->GetCamera()->GetImageRect();
+    SDL_Rect is = { 0,0,SCREEN_W, SCREEN_H };
+    SDL_RenderCopy(renderer, layer->LayerTex, &temp, &is);
 }
 
 void GameFrame::MapObject::AddMapObject(GameObject* gameobject)
 {
-    mMapObjects.emplace_back(gameobject);
+    mObjectsInMap.emplace_back(gameobject);
 }
 
 void GameFrame::MapObject::RemoveMapObject(GameObject* gameobject)
 {
-    auto iter = std::find(mMapObjects.begin(), mMapObjects.end(), gameobject);
-    if (iter != mMapObjects.end()) {
-        std::iter_swap(iter, mMapObjects.end() - 1);
-        mMapObjects.pop_back();
+    auto iter = std::find(mObjectsInMap.begin(), mObjectsInMap.end(), gameobject);
+    if (iter != mObjectsInMap.end()) {
+        std::iter_swap(iter, mObjectsInMap.end() - 1);
+        mObjectsInMap.pop_back();
     }
 }
 
-void GameFrame::MapObject::LoadMapXml(const char* filepath)
+void GameFrame::MapObject::LoadMapXml(const std::string& filepath)
 {
     //读取tmx格式地图文件
-    TiXmlDocument doc(filepath);
+    TiXmlDocument doc(filepath.c_str());
     if (!doc.LoadFile()) {
         printf("Could not load test file %s. Error='%s'. Exiting.\n", filepath, doc.ErrorDesc());
         exit(1);
@@ -112,39 +116,77 @@ void GameFrame::MapObject::LoadMapXml(const char* filepath)
         L->layerTileW = tmpTW;
         L->layerTileH = tmpTH;
         L->LayerName = attr->Attribute("name");
-        L->grid_LayerWidth = atoi(attr->Attribute("width"));
-        L->grid_LayerHeight = atoi(attr->Attribute("height"));
-        L->pixel_layerWidth = L->grid_LayerWidth * L->layerTileW;
-        L->pixel_layerHeight = L->grid_LayerHeight * L->layerTileH;
+        L->mesh_LayerWidth = atoi(attr->Attribute("width"));
+        L->mesh_LayerHeight = atoi(attr->Attribute("height"));
+        L->pixel_layerWidth = L->mesh_LayerWidth * L->layerTileW;
+        L->pixel_layerHeight = L->mesh_LayerHeight * L->layerTileH;
         L->zlibcode = layer->FirstChild()->ToElement()->GetText();
         L->UpdateOrder = layercount;
         size_t output_length = 0;
-        MapW = L->grid_LayerWidth * tileW;
-        MapH = L->grid_LayerHeight * tileH;
-        UncompressPy(L);
+        MapW = L->mesh_LayerWidth * tileW;
+        MapH = L->mesh_LayerHeight * tileH;
+        UncompressTile_By_Py(L);
         mLayers.emplace_back(L);
         layer = layer->NextSibling();//获取到下一个兄弟节点
     }
 }
 
-void GameFrame::MapObject::UncompressPy(Layer* layer)
+void GameFrame::MapObject::UncompressTile_By_Py(Layer* layer)
 {
     const char* zlibcode = layer->zlibcode;
+    PyObject* pZlibCode = PyUnicode_DecodeUTF8(zlibcode, strlen(zlibcode), NULL);
     PyObject*  pModule = PyImport_ImportModule("uncompress");
-    //传参
-    PyObject* pArgs = PyTuple_New(1);//创建参数元组，元组大小为1并返回
-    PyObject* pFunc = PyObject_GetAttrString(pModule, "UncompressFc");
-    PyTuple_SetItem(pArgs, 0, Py_BuildValue("s", zlibcode));//Py_BuildValue将参数转换为py的字符串数据结构
-
-    //使用C++的python接口调用该函数,接收python计算好的返回值
-    PyObject* pReturn = PyEval_CallObject(pFunc, pArgs);
-    //将元组所有的参数一个个转换成int并存起来
-    for (int i = 0; i < layer->grid_LayerHeight * layer->grid_LayerWidth; i++) {
-        PyObject* b = PyTuple_GetItem(pReturn, i);
-        int c;
-        PyArg_Parse(b, "i", &c);
-        layer->Lcode.emplace_back(c-1);
+    if (pModule != NULL) {
+        PyObject* pFunc = PyObject_GetAttrString(pModule, "UncompressFc");
+        if (pFunc && PyCallable_Check(pFunc)) {
+            PyObject* pArgs = PyTuple_Pack(3,pZlibCode, PyLong_FromLong(layer->mesh_LayerWidth), PyLong_FromLong(layer->mesh_LayerHeight));
+            PyObject* pReturn = PyEval_CallObject(pFunc, pArgs);
+            if (pReturn != NULL) {
+                //将元组所有的参数一个个转换成int并存起来
+                for (int i = 0; i < layer->mesh_LayerHeight * layer->mesh_LayerWidth; i++) {
+                    PyObject* b = PyTuple_GetItem(pReturn, i);
+                    int c;
+                    PyArg_Parse(b, "i", &c);
+                    layer->Lcode.emplace_back(c - 1);
+                }
+            }
+            Py_DECREF(pFunc);
+            Py_DECREF(pArgs);
+            Py_DECREF(pReturn);
+        }
     }
+    Py_DECREF(pModule);
+    Py_DECREF(pZlibCode);
+}
+
+
+int GameFrame::MapObject::LoadCollision(const std::string& path) {
+    std::ifstream jsonFile(path+".json");
+    if (!jsonFile.is_open()) {
+        SDL_Log("Load json error.");;
+        return 0;
+    }
+
+    // 读取JSON数据
+    json jsonData;
+    jsonFile >> jsonData;
+
+    // 关闭文件
+    jsonFile.close();
+
+    // 遍历数组中的每组数据
+    for (const auto& data : jsonData) {
+        if (data.is_object()) {
+            // 从每组数据中提取 x、y、w、h
+            int x = data["x"];
+            int y = data["y"];
+            int w = data["w"];
+            int h = data["h"];
+            mGame->GetPhysSpace()->AddRigid();
+
+        }
+    }
+    return 1;
 }
 
 SDL_Texture* GameFrame::MapObject::PreLayerTexBlit(SDL_Renderer* renderer, Layer* layer)
@@ -219,8 +261,8 @@ GameFrame::Vector2 GameFrame::Layer::TileIdParser(int id, SDL_Texture* tex)
 GameFrame::Vector2 GameFrame::Layer::MapIdParser(int it)
 {
     Vector2 vec;
-    vec.x = it % grid_LayerWidth;
-    vec.y = it / grid_LayerWidth;
+    vec.x = it % mesh_LayerWidth;
+    vec.y = it / mesh_LayerWidth;
     return vec;
 }
 

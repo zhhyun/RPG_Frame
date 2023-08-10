@@ -320,7 +320,7 @@ void GameFrame::MoveComponent::update()
 			mOwner->SetPosition(curpos);
 			return;
 		}
-		coll->OnUpdateWorldTransform();
+		//coll->OnUpdateWorldTransform();
 	}
 	else if (mMovState == MovState::MovHeld) {
 		Vector2 curpos = mOwner->GetPosition();
@@ -331,7 +331,7 @@ void GameFrame::MoveComponent::update()
 			mOwner->SetPosition(curpos);
 			return;
 		}
-		coll->OnUpdateWorldTransform();
+		//coll->OnUpdateWorldTransform();
 	}
 	else if (mMovState == MovState::MovStop) {
 		mOwner->GetComponent<AnimSpriteComponent>()->StopPlay();

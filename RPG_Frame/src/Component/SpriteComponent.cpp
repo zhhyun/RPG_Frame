@@ -22,11 +22,8 @@ void GameFrame::SpriteComponent::Draw(SDL_Renderer* renderer)
 {
 	int x =  mOwner->GetPosition().x;
 	int y =  mOwner->GetPosition().y;
-
 	SDL_Rect imageRect{ imageDst.x, imageDst.y, DrawTexWH.x, DrawTexWH.y };
-
 	SDL_Rect dstRect{ x, y, DrawTexWH.x, DrawTexWH.y };
-		
 	SDL_RenderCopy(renderer, mTexture->GetTexture(), &imageRect, &dstRect);
 }
 

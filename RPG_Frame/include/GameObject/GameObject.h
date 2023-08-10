@@ -45,6 +45,7 @@ namespace GameFrame {
 
 		State GetState() const;
 		void SetState(State state);
+		//位置是以地图为坐标系而不是窗口
 		Vector2	GetPosition() const { return Pos; };
 		void SetPosition(Vector2 pos) { Pos = pos; };
 		void SetPositionX(int x) { Pos.x = x; };
@@ -56,7 +57,7 @@ namespace GameFrame {
 	protected:
 		std::vector<class Component*> mComponents;
 		std::vector<class SpriteComponent*> mSpriteComponents;
-		class Game* mGame;
+		class Game*							mGame;
 		State								mState;
 		Vector2								Pos;
 	};
