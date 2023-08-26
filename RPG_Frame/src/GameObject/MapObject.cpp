@@ -189,7 +189,7 @@ int GameFrame::MapObject::LoadCollision(const std::string& path) {
     return 1;
 }
 
-SDL_Texture* GameFrame::MapObject::PreLayerTexBlit(SDL_Renderer* renderer, Layer* layer)
+SDL_Texture* GameFrame::Layer::PreLayerTexBlit(SDL_Renderer* renderer)
 {
     SDL_Surface* SrcSurf = IMG_Load("sprite/tilesheet_0.png");
     SDL_Texture* SrcTex = SDL_CreateTextureFromSurface(renderer, SrcSurf);
