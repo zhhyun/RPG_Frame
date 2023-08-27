@@ -8,7 +8,6 @@
 #include	<vector>
 #include	<json.hpp>
 #include	<fstream>
-
 #include	"InputSystem.h"
 #include	"Camera.h"
 #include	"PhysSpace.h"
