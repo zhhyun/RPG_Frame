@@ -2,10 +2,10 @@
 #include	"PlayerObject.h"
 #include	"BattleComponent.h"
 #include	"DEFINES.h"
-GameFrame::BattleSystem::BattleSystem(Texture* Sence, Game* game, PlayerObject* player):
+GameFrame::BattleSystem::BattleSystem(Texture* Sence, Game* game, PlayerObject* Player):
 	mSence(Sence),
 	mGame(game),
-	mPlayer(player)
+	mPlayer(Player)
 {
 }
 

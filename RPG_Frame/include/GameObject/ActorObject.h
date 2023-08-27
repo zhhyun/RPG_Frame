@@ -8,7 +8,7 @@ namespace GameFrame {
 	class Dialogbox;
 	class ActorObject : public GameObject {
 	public:
-		ActorObject(class Game* game, class MapObject* map, const std::string& name);
+		ActorObject(class Game* game, class Sence* map, const std::string& name);
 		~ActorObject();
 		enum Dir
 		{
@@ -25,10 +25,10 @@ namespace GameFrame {
 		void AddACK(int ack);
 		int GetDEF();
 		void AddDEF(int def);
-		int GetH();
-		void SetH(int h);
-		int GetW();
-		void SetW(int w);
+		//int GetH();
+		//void SetH(int h);
+		//int GetW();
+		//void SetW(int w);
 		int GetLv() { return Lv; };
 		void SetLv(int lv) { Lv = lv; };
 
@@ -43,7 +43,8 @@ namespace GameFrame {
 		void SetScale(int scale){ mScale = scale; };
 		Dir GetDir() const{ return mDir; };
 		void SetDir(Dir mdir){ mDir = mdir; };
-		MapObject* GetMapObject() {	return mMap; };
+		Sence* GetMapObject() {	return mMap; };
+		void ChangeMap(Sence* sence) { mMap = sence; };
 		bool CreateDialog(const std::string& scriptname);
 		void CloseDialog();
 		Dialogbox* GetmDialog() { return mDialog; };
@@ -55,8 +56,8 @@ namespace GameFrame {
 		int		Speed;
 		int		ACK;
 		int		DEF;
-		int		Height;
-		int		Wdith;
+		//int		Height;
+		//int		Wdith;
 		int		Lv;
 		std::string ActorName;
 
@@ -66,7 +67,7 @@ namespace GameFrame {
 		float								mRotation;
 		Dialogbox*							mDialog;
 		bool								IsCombating;
-		MapObject*							mMap;//人物挂载的地图
+		Sence*							mMap;//人物挂载的地图
 	};
 }
 

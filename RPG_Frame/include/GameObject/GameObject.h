@@ -46,20 +46,32 @@ namespace GameFrame {
 		State GetState() const;
 		void SetState(State state);
 		//位置是以地图为坐标系而不是窗口
-		Vector2	GetPosition() const { return Pos; };
-		void SetPosition(Vector2 pos) { Pos = pos; };
-		void SetPositionX(int x) { Pos.x = x; };
-		void SetPositionY(int y) { Pos.y = y; };
+		Vector2	GetPosition() const { return ObjectPosion; };
+		void SetPosition(Vector2 pos) { ObjectPosion = pos; };
+		void SetPositionX(int x) { ObjectPosion.x = x; };
+		void SetPositionY(int y) { ObjectPosion.y = y; };
 		class Game* GetGame() const;
 		virtual void Draw(SDL_Renderer* renderer);
+		//获得当前object中心点位置；
+		Vector2 GetMidllePoint();
+		Vector2 WinVecTransToMapVec(Vector2 Winvec);
+		Vector2 MapVecTransToWinVec(int MapW, int MapH, Vector2 vecInmap);
 
+
+		int GetH() { return Height; };
+		void SetH(int h) { Height = h; };
+		int GetW() { return Width; };
+		void SetW(int w) { Width = w; };
 
 	protected:
-		std::vector<class Component*> mComponents;
+		std::vector<class Component*>		mComponents;
 		std::vector<class SpriteComponent*> mSpriteComponents;
 		class Game*							mGame;
 		State								mState;
-		Vector2								Pos;
+		Vector2								ObjectPosion;
+		//Sence*								mMap;//挂载的地图
+		int									Height;
+		int									Width;
 	};
 }
 

@@ -4,7 +4,7 @@
 #include	"InputSystem.h"
 #include	<SDL.h>
 
-GameFrame::InputComponent::InputComponent(class GameObject* gameobject) :
+GameFrame::InputComponent::InputComponent(GameObject* gameobject) :
 	IsMain(false),
 	RequestComp(NULL),
 	Component(gameobject)

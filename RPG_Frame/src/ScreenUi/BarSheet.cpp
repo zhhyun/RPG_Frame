@@ -2,10 +2,10 @@
 #include	"DEFINES.h"
 #include	"PlayerObject.h"	
 
-GameFrame::BarSheet::BarSheet(Game* game, const std::string& fileName, PlayerObject* player):
+GameFrame::BarSheet::BarSheet(Game* game, const std::string& fileName, PlayerObject* Player):
 	ScreenUi(game,fileName)
 {
-	Player = player;
+	Player = Player;
 	keyOccup = UiKeyOccupy::ENone;
 }
 

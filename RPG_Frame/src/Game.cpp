@@ -9,12 +9,19 @@
 #include	"BarSheet.h"
 #include	"PauseMenu.h"
 #include	<algorithm>
+
+#include	<thread>
+#include	<queue>
+#include	<functional>
+#include	<mutex>
+
 #include	"Cursor.h"
 #include	"Fonts.h"
 #include	"Dialogbox.h"
 #include	"BattleSystem.h"
 #include	"Script.h"
 #include	"Camera.h"
+
 
 namespace GameFrame {
 	Game::Game() :
@@ -24,6 +31,7 @@ namespace GameFrame {
 		mRenderer(nullptr),
 		mTexture(nullptr),
 		mIsUpdating(false),
+		ProcessEvents(true),
 		mTickCount(0),
 		mCursor(nullptr),
 		mAnimTickCount(0)
@@ -106,85 +114,89 @@ namespace GameFrame {
 
 	void Game::Event()
 	{
-		SDL_Event event;
-		bool IsTo = true;
-		mInputSystem->PrepareUpdate();
-	//当队列中有事件，则判断事件的类型
-		while (SDL_PollEvent(&event)) {
-			switch (event.type) {
-			case SDL_QUIT:
-				IsRunning = false;
-				break;
-			case SDL_KEYDOWN:
-				//优先检测ui,决定键值传递
-				//全部传递到ui里，适用于主菜单，背包等类
-				if (!mUIStack.empty() && mUIStack.back()->GetKeyOccurpy() == PauseMenu::UiKeyOccupy::EFull) {
-					mUIStack.back()->HandKeyPress(event.key.keysym.sym);
-					IsTo = false;
-				}
+		if (ProcessEvents) {
+			SDL_Event event;
+			bool IsTo = true;
+			mInputSystem->PrepareUpdate();
+			//当队列中有事件，则判断事件的类型
+			while (SDL_PollEvent(&event)) {
+				switch (event.type) {
+				case SDL_QUIT:
+					IsRunning = false;
+					break;
+				case SDL_KEYDOWN:
+					//优先检测ui,决定键值传递
+					//全部传递到ui里，适用于主菜单，背包等类
+					if (!mUIStack.empty() && mUIStack.back()->GetKeyOccurpy() == PauseMenu::UiKeyOccupy::EFull) {
+						mUIStack.back()->HandKeyPress(event.key.keysym.sym);
+						IsTo = false;
+					}
 					////只针对单个值传递，适用于和游戏机制同时运行的ui
 					//else if (mUIStack.back()->GetKeyOccurpy() == PauseMenu::UiKeyOccupy::EHalf) {
 
 					//}
 				//检查键值是否启动ui
-				else if(event.key.keysym.sym == SDLK_SPACE) {
-					auto mPauseMenu = new PauseMenu(this, "PauseMenu");
-					IsTo = false;
-				}
-				else if (event.key.keysym.sym == SDLK_1) {
-					Texture* tex = new Texture("Bridge");
-					tex->CreateFromTexture(GetTexture("Bridge"));
-					mBattleSystem = new BattleSystem(tex, this, Player);
-				}
-				else if (event.key.keysym.sym == SDLK_RETURN) {
-					auto testScript = new Script();
-					mScriptStack.emplace_back(testScript);
+					else if (event.key.keysym.sym == SDLK_SPACE) {
+						auto mPauseMenu = new PauseMenu(this, "PauseMenu");
+						IsTo = false;
+					}
+					else if (event.key.keysym.sym == SDLK_1) {
+						Texture* tex = new Texture("Bridge");
+						tex->CreateFromTexture(GetTexture("Bridge"));
+						mBattleSystem = new BattleSystem(tex, this, Player);
+					}
+					else if (event.key.keysym.sym == SDLK_RETURN) {
+						auto testScript = new Script();
+						mScriptStack.emplace_back(testScript);
 
-					auto i = new Script::Activity();
-					i->InitAct([this,i] {
-						if (i->state == Script::ScriptState::Running) {
-							if (Player->GetmDialog()->IsFin) {
-								Player->CloseDialog();
-								i->state = Script::ScriptState::Fin;
+						auto i = new Script::Activity();
+						i->InitAct([this, i] {
+							if (i->state == Script::ScriptState::Running) {
+								if (Player->GetmDialog()->IsFin) {
+									Player->CloseDialog();
+									i->state = Script::ScriptState::Fin;
+								}
 							}
-						}
-						else if (Player->GetLv() == 1 && i->state == Script::ScriptState::Hide) {
-							i->state = Script::ScriptState::Running;
-							 Player->CreateDialog("./scripts/1.txt");
-						}
-						});
-
-					auto j = new Script::Activity();
-					j->InitAct([this, j] {
-						Vector2 p = { 500,500 };
-						if (j->state == Script::ScriptState::Running) {
-							if (Player->GetComponent<MoveComponent>()->MoveTo(p)) {
-								j->state = Script::ScriptState::Fin;
+							else if (Player->GetLv() == 1 && i->state == Script::ScriptState::Hide) {
+								i->state = Script::ScriptState::Running;
+								Player->CreateDialog("./scripts/1.txt");
 							}
-						}
-						else if (Player->GetLv() == 1 && j->state == Script::ScriptState::Hide) {
-							j->state = Script::ScriptState::Running;
-							Player->GetComponent<MoveComponent>()->MoveTo(p);
-						}
-						});
+							});
 
-					testScript->AddActivity(i);
-					testScript->AddActivity(j);
-					IsTo = false;
+						auto j = new Script::Activity();
+						j->InitAct([this, j] {
+							Vector2 p = { 500,500 };
+							if (j->state == Script::ScriptState::Running) {
+								if (Player->GetComponent<MoveComponent>()->MoveTo(p)) {
+									j->state = Script::ScriptState::Fin;
+								}
+							}
+							else if (Player->GetLv() == 1 && j->state == Script::ScriptState::Hide) {
+								j->state = Script::ScriptState::Running;
+								Player->GetComponent<MoveComponent>()->MoveTo(p);
+							}
+							});
+
+						testScript->AddActivity(i);
+						testScript->AddActivity(j);
+						IsTo = false;
+					}
+				default:
+					break;
 				}
-			default:
-				break;
 			}
-		}
-		
-		mIsUpdating = true;
 
-		if (IsTo) {
-			mInputSystem->update();
-			ProcessInput();
+			mIsUpdating = true;
+
+			if (IsTo) {
+				//输入系统获取设备状态
+				mInputSystem->update();
+				ProcessInput();
+			}
+
+			mIsUpdating = false;
 		}
 		
-		mIsUpdating = false;
 	}
 
 
@@ -309,7 +321,7 @@ namespace GameFrame {
 				gameobejct->second->update();
 			}
 		}
-
+		//mPhysSpace->Update();
 		if (!mUIStack.empty()) {
 			//更新ui
 			for (auto ui : mUIStack) {
@@ -355,7 +367,7 @@ namespace GameFrame {
 			SDL_DestroyTexture(mTexture);
 		}
 
-		GetGameObject("001")->Draw(mRenderer);
+		GetGameObject("1")->Draw(mRenderer);
 		
 		if (!mUIStack.empty()) {
 			for (auto ui : mUIStack) {
@@ -371,14 +383,14 @@ namespace GameFrame {
 		SDL_RenderPresent(mRenderer);
 	}
 	
-	void Game::LoadTexture(const std::string& fileName, const std::string& newName) {
+	void Game::LoadTexture(const std::string& loadpath, const std::string& newName) {
 		auto iter = mTextures.find(newName);
 		if (iter != mTextures.end()) {
 			SDL_DestroyTexture(iter->second);
 			mTextures.erase(iter);
 		}
 
-		SDL_Surface* surf = IMG_Load(fileName.c_str());
+		SDL_Surface* surf = IMG_Load(loadpath.c_str());
 		if (!surf) {
 			SDL_Log("图片加载失败");
 		}
@@ -416,18 +428,34 @@ namespace GameFrame {
 		if (QingNiaoHuaGuang->Load("Fonts/1.TTF")) {
 			mFonts.emplace("QingNiaoHuaGuang",QingNiaoHuaGuang);
 		}
-		mPhysSpace = new PhysSpace(this);
-		MapObject* map = new MapObject(this, "MAP/map0", "001");
-		Npc = new NpcObject(this, map, "Npc");
-		Player = new PlayerObject(this, map, "Player");
+		//mEventThread = new EventThread(this);
+		LoadSysEvent("sys_events/sys_events.json");
+
+		//mPhysSpace = new PhysSpace(this);
+
+		LoadMap();
+		
 		Texture* cur = new Texture("Cursor");
 		cur->CreateFromTexture(GetTexture("Cursor"));
 		mCursor = new Cursor(cur);
 		mCamera = new Camera(this);
-		
+		//
+		////测试添加事件
+		//GameEvent* event_01 = new GameEvent(GameEvent::EventType::MoveEvent, (std::string)"0000001", (std::string)"upmove");
+		//mEventThread->GetManager()->RegisterEvent(event_01);
+		//
+		//for (int i = 0; i < 10; ++i) {
+		//	Event event("Event " + std::to_string(i));
+		//	mtx.lock();
+		//	eventQueue.push(event);
+		//	mtx.unlock();
+		//	std::this_thread::sleep_for(std::chrono::milliseconds(500)); // 模拟事件产生间隔
+		//}
+
 		//BarSheet* paused = new BarSheet(this, "PauseMenu", Player);
 		//Player->BattleStart(Npc);
 	}
+	
 	void Game::Unload()
 	{
 		SDL_DestroyTexture(mTexture);
@@ -436,4 +464,51 @@ namespace GameFrame {
 			//delete mGameObjects.back();
 		}
 	}
+	
+
+	//GameEvent::EventType StringToEventType(const std::string& eventTypeStr) {
+	//	if (eventTypeStr == "Collision") {
+	//		return GameEvent::EventType::CollisionEvent;
+	//	}
+	//	else if (eventTypeStr == "SysEvent") {
+	//		return GameEvent::EventType::SysEvent;
+	//	}
+	//	else if (eventTypeStr == "MoveEvent") {
+	//		return GameEvent::EventType::MoveEvent;
+	//	}
+	//	// 如果无法识别字符串，可以返回一个默认值或抛出异常
+	//	//return ;
+	//}
+
+	void Game::LoadSysEvent(const std::string& loadpath)
+	{
+		std::ifstream inputFile(loadpath);
+		if (!inputFile.is_open()) {
+			SDL_Log("Load json error.");
+			return;
+		}
+
+		nlohmann::json jsonData;
+
+		inputFile >> jsonData;
+		inputFile.close();
+
+		//std::vector<GameEvent> presetEvents;
+		/*for (const auto& event : jsonData) {
+			GameEvent presetEvent(event["eventID"]);
+			mSystemEvents.push_back(&presetEvent);
+		}*/
+
+	}
+
+	void Game::LoadMap() {
+		
+
+		MapObject* map = new MapObject(this, "MAP","1");
+		//Sence* village_sence = new Sence(map, "map0");
+		//Npc = new NpcObject(this, village_sence, "Npc");
+		Player = new PlayerObject(this, map->GetCurrSence(), "Player");
+	}
+
+
 }

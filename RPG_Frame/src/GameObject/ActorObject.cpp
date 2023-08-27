@@ -8,7 +8,7 @@
 #include	"Game.h"
 #include	"Math2.h"
 
-GameFrame::ActorObject::ActorObject(Game* game, MapObject* map, const std::string& name) :
+GameFrame::ActorObject::ActorObject(Game* game, Sence* map, const std::string& name) :
 	Hp(100),
 	MaxHp(100),
 	ACK(10),
@@ -16,8 +16,6 @@ GameFrame::ActorObject::ActorObject(Game* game, MapObject* map, const std::strin
 	Speed(1),
 	IsCombating(false),
 	mMap(map),
-	Height(20),
-	Wdith(20),
 	Lv(1),
 	ActorName(name),
 	mDialog(nullptr),
@@ -26,7 +24,7 @@ GameFrame::ActorObject::ActorObject(Game* game, MapObject* map, const std::strin
 	mRotation(0),
 	GameObject(game,name)
 {
-	map->AddMapObject(this);
+	map->SetPlayer(this);
 }
 
 GameFrame::ActorObject::~ActorObject()
@@ -56,26 +54,6 @@ int GameFrame::ActorObject::GetDEF()
 void GameFrame::ActorObject::AddDEF(int def)
 {
 	DEF = DEF + def;
-}
-
-int GameFrame::ActorObject::GetH()
-{
-	return Height;
-}
-
-void GameFrame::ActorObject::SetH(int h)
-{
-	Height = h;
-}
-
-int GameFrame::ActorObject::GetW()
-{
-	return Wdith;
-}
-
-void GameFrame::ActorObject::SetW(int w)
-{
-	Wdith = w;
 }
 
 bool GameFrame::ActorObject::GetBattleState()

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="21" height="20" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="tilesheet_0" tilewidth="16" tileheight="16">
+  <image source="../sprite/tilesheet_0.png" width="320" height="1568"/>
+  <terraintypes>
+   <terrain name="新地形" tile="-1"/>
+  </terraintypes>
+  <tile id="1608" terrain=",,,0"/>
+  <tile id="1609" terrain=",,0,0"/>
+  <tile id="1610" terrain=",,0,"/>
+  <tile id="1628" terrain=",0,,0"/>
+  <tile id="1630" terrain="0,,0,"/>
+  <tile id="1648" terrain=",0,,"/>
+  <tile id="1649" terrain="0,0,,"/>
+  <tile id="1650" terrain="0,,,"/>
+ </tileset>
+ <layer name="地板" width="21" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYKANOM8KwRdIoB8D8RMsNAxgkyNE47ILBkhx36g7R9056s5Rd9LDneSYScid5PidkDupDQCAUSlX
+  </data>
+ </layer>
+ <layer name="墙壁" width="21" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxbysrAsAyIl1OIV0LxKiDeCcS7gHg3hXgPEO8F4n1AfBaIzwExNcBFoDmXaGTmQyB+NATcORLNfAo059kQMHOohOdQM3M45U03NgYGdyD2YMOvDpY+vwLxNyD+jgdHAc2KBuIYNgj/BxqGif0E4l9AzAlUxwXE3HhwHhDnA3EBlM+DhkFivFDMB8QA66lqLg==
+  </data>
+ </layer>
+ <layer name="地毯" width="21" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFowACPNkYGLyIwN5sxJsZC1QbRwSOHzVzwMwsBKotIgIXk2DmKBgF5AAANZQeFQ==
+  </data>
+ </layer>
+ <layer name="传送节点" width="21" height="20" visible="0" opacity="0.9">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMAoGHgAABpAAAQ==
+  </data>
+ </layer>
+</map>

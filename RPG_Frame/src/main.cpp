@@ -9,7 +9,6 @@ int main(int argc, char* argv[]) {
 	if (success) {
 		PROJECT.loop();
 	}
-	
 	//PROJECT.shutdown();
 	return 0;
 }

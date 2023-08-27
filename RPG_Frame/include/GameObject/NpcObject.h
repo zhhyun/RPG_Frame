@@ -5,7 +5,7 @@
 namespace GameFrame {
 	class NpcObject : public ActorObject {
 	public:
-		NpcObject(Game* game, MapObject* map, const std::string& name);
+		NpcObject(Game* game, Sence* map, const std::string& name);
 		~NpcObject();
 
 		void update()override;

@@ -4,13 +4,15 @@
 #include	<SDL.h>
 #include	<SDL_ttf.h>
 #include	<unordered_map>
-#include	"InputSystem.h"
-#include	"Camera.h"
 #include	<tinyxml.h>
 #include	<vector>
 #include	<json.hpp>
-#include	"PhysSpace.h"
+#include	<fstream>
 
+#include	"InputSystem.h"
+#include	"Camera.h"
+#include	"PhysSpace.h"
+#include	"GameEvent.h"
 
 namespace GameFrame {
 	class GameObject;
@@ -23,6 +25,8 @@ namespace GameFrame {
 	class Script;
 	class Camera;
 	class PhysSpace;
+	class EventThread;
+	class GameEvent;
 
 	class Game {
 	public:
@@ -43,13 +47,14 @@ namespace GameFrame {
 		InputSystem* GetInputSystem() { return mInputSystem; };
 		Cursor* GetCursor() { return mCursor; };
 		Camera* GetCamera() { return mCamera; };
-		PhysSpace* GetPhysSpace() { return mPhysSpace; };
+		//PhysSpace* GetPhysSpace() { return mPhysSpace; };
 		//GetAudioSystem();
 		GameObject* GetGameObject(const std::string& name);
 		PlayerObject* GetPlayer() { return Player; };
 		Uint32 GetTicks() { return mTickCount; };
 		Uint32 GetAnimTicks() { return mAnimTickCount; };
 		GameState GetGameState() { return mGameState; };
+		EventThread* GetEventThread() { return mEventThread; };
 		void ProcessInput();
 		void SetGameState(GameState state) { mGameState = state; };
 		void SetAnimTicks(Uint32 count);
@@ -57,11 +62,16 @@ namespace GameFrame {
 		void PushUI(ScreenUi* ui);
 		Font* GetFont(const std::string& Fontname); 
 
+		void SetUpdateState(bool Switch) { mIsUpdating = Switch; };
+		void SetProcessEvent(bool Switch) { ProcessEvents = Switch; };
+
 	private:
 		void Event();
 		void Update();
 		void Draw();
-		void LoadTexture(const std::string& fileName, const std::string& newName);
+		void LoadTexture(const std::string& loadpath, const std::string& newName);
+		void LoadSysEvent(const std::string& loadpath);
+		void LoadMap();
 		void LoadData();
 		void Unload();
 
@@ -71,9 +81,11 @@ namespace GameFrame {
 		std::vector<GameObject*> mPendingObjects;
 		std::vector<ScreenUi*> mUIStack;
 		std::vector<Script*> mScriptStack;
+		std::vector<GameEvent*> mSystemEvents;//系统预设事件
 
 		bool							IsRunning;			//游戏运行标记
 		bool							mIsUpdating;		//更新标记
+		bool							ProcessEvents;		//事件处理标记
 		GameState						mGameState;			//游戏运行状态
 		SDL_Window*						mWindow;			//窗口指针
 		SDL_Renderer*					mRenderer;			//渲染器
@@ -86,9 +98,13 @@ namespace GameFrame {
 		//ActContrSystem* mActContrSystem;			//行为控制系统
 		Cursor*							mCursor;			//鼠标
 		Camera*							mCamera;			//摄像机
-		PhysSpace*						mPhysSpace;			//物理空间
+	//	PhysSpace*						mPhysSpace;			//物理空间
+		EventThread*					mEventThread;		//事件线程
+		
 		PlayerObject*					Player;
 		NpcObject* Npc;
+
+		//void LoadSysEvent(const std::string& loadpath);
 		
 	};
 

@@ -1,7 +1,9 @@
-#include "Component.h"
+#include	"Component.h"
+#include	"Game.h"
 #include	"GameObject.h"
 
 namespace GameFrame {
+
 	Component::Component(class GameObject* gameobject) :
 		mOwner(gameobject),
 		mUpdateOder(100)
@@ -14,10 +16,6 @@ namespace GameFrame {
 		mOwner->RemoveComponent(this);
 	}
 
-	void Component::update()
-	{
-	}
-
 	GameObject* Component::GetGameObject()
 	{
 		return mOwner;
@@ -25,5 +23,9 @@ namespace GameFrame {
 
 	void Component::ProcessInput(const InputSystem* keystate)
 	{
+	}
+	void Component::SubscribeToEvent(const std::string& id, std::function<void()> callback)
+	{
+		//mOwner->GetGame()->GetEventThread()->GetManager()->Subscribe(id, callback);
 	}
 }

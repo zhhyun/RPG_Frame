@@ -2,7 +2,7 @@
 
 GameFrame::Button::Button(const std::string& name, Vector2 pos, Texture* tex, std::function<void()> OnClick):
 	mName(name),
-	Pos(pos),
+	ObjectPosion(pos),
 	mTexture(tex),
 	mFont(nullptr),
 	mHeighlighted(ButtonState::None),
@@ -19,7 +19,7 @@ GameFrame::Button::~Button()
 bool GameFrame::Button::ContainsPoint(const Vector2 cur)
 {
 	//mHeighlighted = ButtonState::None;
-	if ((cur.x <= Pos.x + mWidth && cur.x >= Pos.x) && (cur.y <= Pos.y + mHeight && cur.y >= Pos.y)) {
+	if ((cur.x <= ObjectPosion.x + mWidth && cur.x >= ObjectPosion.x) && (cur.y <= ObjectPosion.y + mHeight && cur.y >= ObjectPosion.y)) {
 		mHeighlighted = ButtonState::Select;
 		return true;
 	}
@@ -45,6 +45,6 @@ void GameFrame::Button::Draw(SDL_Renderer* renderder)
 	else if (mHeighlighted == ButtonState::Press) {
 		imageRect.y = 2 * mHeight;
 	}
-	SDL_Rect dstRect{ Pos.x,Pos.y,mWidth,mHeight };
+	SDL_Rect dstRect{ ObjectPosion.x,ObjectPosion.y,mWidth,mHeight };
 	SDL_RenderCopy(renderder, mTexture->GetTexture(), &imageRect, &dstRect);
 }

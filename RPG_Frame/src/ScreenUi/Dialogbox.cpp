@@ -16,8 +16,8 @@ GameFrame::Dialogbox::Dialogbox(Game* game, const std::string& fileName) :
 	Height = mTexture->GetHeight();
 	mTextFont = mGame->GetFont("QingNiaoHuaGuang");
 	LoadScript(fileName);
-	Pos.x = 20;
-	Pos.y = SCREEN_H - 220;
+	ObjectPosion.x = 20;
+	ObjectPosion.y = SCREEN_H - 220;
 	//加载动画效果
 	mAnimComponent = new AnimSpriteComponent(this,70);
 	//对话打开动画
@@ -64,7 +64,7 @@ void GameFrame::Dialogbox::DrawText(SDL_Renderer* renderer)
 	//绘制speaker
 	SDL_Rect SpeakerRect{ 0,0,CurrTextTex[CurrText]->speaker->GetWidth(),CurrTextTex[CurrText]->speaker-> GetHeight()};
 	SDL_Rect SpeakerdstRect{ 
-		Pos.x  + (DialogueSpeakerBoxW - CurrTextTex[CurrText]->speaker->GetWidth() )/2,
+		ObjectPosion.x  + (DialogueSpeakerBoxW - CurrTextTex[CurrText]->speaker->GetWidth() )/2,
 		(SCREEN_H - 220 - 75)+ (DialogueSpeakerBoxH - CurrTextTex[CurrText]->speaker->GetHeight() )/2 ,
 		CurrTextTex[CurrText]->speaker->GetWidth(),
 		CurrTextTex[CurrText]->speaker->GetHeight() };
@@ -72,7 +72,7 @@ void GameFrame::Dialogbox::DrawText(SDL_Renderer* renderer)
 	SDL_RenderCopy(renderer, CurrTextTex[CurrText]->speaker->GetTexture(), &SpeakerRect, &SpeakerdstRect);
 
 	SDL_Rect TextRect{ 0,0,0,0};
-	SDL_Rect TextdstRect{ Pos.x + 25, SCREEN_H - 220 + 25 ,0,0 };
+	SDL_Rect TextdstRect{ ObjectPosion.x + 25, SCREEN_H - 220 + 25 ,0,0 };
 	for (auto iter : CurrTextTex[CurrText]->dialogue) {
 		TextRect.w = iter->GetWidth();
 		TextRect.h = iter->GetHeight();
@@ -88,7 +88,7 @@ void GameFrame::Dialogbox::DrawSpeakerBox(SDL_Renderer* renderer)
 	auto SpeakerBox = new Texture("SpeekerBox");
 	SpeakerBox->CreateFromTexture(mGame->GetTexture("Dialog_Speeker"));
 	SDL_Rect SpeekerBoxRect{ 0,0,SpeakerBox->GetWidth(),SpeakerBox->GetHeight()};
-	SDL_Rect SpeekerBoxdstRect{ Pos.x, Pos.y - 80 ,SpeakerBox->GetWidth(),SpeakerBox->GetHeight() };//用相对位置
+	SDL_Rect SpeekerBoxdstRect{ ObjectPosion.x, ObjectPosion.y - 80 ,SpeakerBox->GetWidth(),SpeakerBox->GetHeight() };//用相对位置
 	SDL_RenderCopy(renderer, SpeakerBox->GetTexture(), &SpeekerBoxRect, &SpeekerBoxdstRect);
 }
 

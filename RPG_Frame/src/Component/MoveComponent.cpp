@@ -6,11 +6,12 @@
 #include	"AnimSpriteComponent.h"
 #include	"InputSystem.h"
 #include	"ActorObject.h"
-
+#include	"GameEvent.h"
+#include	"Game.h"
 GameFrame::MoveComponent::MoveComponent(GameObject* gameobject) :
 	movdir(0, 0),
 	mMovState(MovState::Idle),
-	Speed(5.0),
+	Speed(6.0),
 	IsAcceptKey(true),
 	Component(gameobject)
 {
@@ -18,6 +19,7 @@ GameFrame::MoveComponent::MoveComponent(GameObject* gameobject) :
 
 void GameFrame::MoveComponent::ProcessInput(const InputSystem* keystate)
 {
+	//本函数目的在于根据键盘输入状态判断运动状态
 	if (!IsAcceptKey)
 		return;
 	//根据按钮状态，人物移动也分四种情况：静止、开始移动，保持移动、停止移动
@@ -316,22 +318,27 @@ void GameFrame::MoveComponent::update()
 		Vector2 newpos = curpos + movdir * Speed;
 		mOwner->SetPosition(newpos);
 		CollisionComponent* coll = mOwner->GetComponent<CollisionComponent>();
-		if (coll->CheckCollision()) {
-			mOwner->SetPosition(curpos);
-			return;
+		if (coll) {
+			if (coll->CheckCollision()) {
+				mOwner->SetPosition(curpos);
+				return;
+			}
+
 		}
-		//coll->OnUpdateWorldTransform();
+		
 	}
 	else if (mMovState == MovState::MovHeld) {
 		Vector2 curpos = mOwner->GetPosition();
 		Vector2 newpos = curpos + movdir * Speed;
 		mOwner->SetPosition(newpos);
 		CollisionComponent* coll = mOwner->GetComponent<CollisionComponent>();
-		if (coll->CheckCollision()) {
-			mOwner->SetPosition(curpos);
-			return;
+		if (coll) {
+			if (coll->CheckCollision()) {
+				mOwner->SetPosition(curpos);
+				return;
+			}
 		}
-		//coll->OnUpdateWorldTransform();
+		
 	}
 	else if (mMovState == MovState::MovStop) {
 		mOwner->GetComponent<AnimSpriteComponent>()->StopPlay();

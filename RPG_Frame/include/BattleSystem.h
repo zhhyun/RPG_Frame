@@ -10,7 +10,7 @@ namespace GameFrame {
 	class PlayerObject;
 	class BattleSystem {
 	public:
-		BattleSystem(Texture* Sence, Game* game, PlayerObject* player);
+		BattleSystem(Texture* Sence, Game* game, PlayerObject* Player);
 		~BattleSystem(){};
 		void Draw(SDL_Renderer* renderer);
 

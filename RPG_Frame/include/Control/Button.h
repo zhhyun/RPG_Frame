@@ -28,7 +28,7 @@ namespace GameFrame {
 	private:
 		std::function<void()> mOnClick;//回调函数
 		std::string mName;
-		Vector2 Pos;
+		Vector2 ObjectPosion;
 		Texture* mTexture;
 		class Font* mFont;//字体可选
 		int mHeight;

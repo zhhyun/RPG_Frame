@@ -72,4 +72,58 @@ namespace GameFrame {
 			iter->Draw(renderer);
 		}
 	}
+
+	Vector2 GameObject::GetMidllePoint()
+	{
+		Vector2 vec;
+		vec.x = ObjectPosion.x + Width / 2;
+		vec.y = ObjectPosion.y + Height / 2;
+		return vec;
+	}
+
+
+	Vector2 GameObject::WinVecTransToMapVec(Vector2 Winvec)
+	{
+		Vector2 tansVec;
+		auto camera = GetGame()->GetCamera();
+		tansVec.x = Winvec.x + camera->GetImageRect().x;
+		tansVec.y = Winvec.y + camera->GetImageRect().y;
+		return tansVec;
+	}
+
+	Vector2 GameObject::MapVecTransToWinVec(int MapW, int MapH, Vector2 vecInmap)
+	{
+		Vector2 tansVec;
+		auto camera = GetGame()->GetCamera();
+
+		if (MapW < SCREEN_W) {
+			SDL_Rect RectArea = { 0,0,SCREEN_W, SCREEN_H };
+			//调整绘制目的坐标，确保对于尺寸小于屏幕的场景居中对其
+			if (camera->GetImageRect().w < RectArea.w) {
+				RectArea.w = camera->GetImageRect().w;
+				//RectArea.x是小地图在窗口中的横坐标
+				RectArea.x += 0.5 * (SCREEN_W - camera->GetImageRect().w);
+			}
+
+			tansVec.x = vecInmap.x + RectArea.x;
+		}
+		else {
+			tansVec.x = vecInmap.x - camera->GetImageRect().x;
+		}
+
+
+		if (MapH < SCREEN_H) {
+			SDL_Rect RectArea = { 0,0,SCREEN_W, SCREEN_H };
+			if (camera->GetImageRect().h < RectArea.h) {
+				RectArea.h = camera->GetImageRect().h;
+				RectArea.y += 0.5 * (SCREEN_H - camera->GetImageRect().h);
+			}
+
+			tansVec.y = vecInmap.y + RectArea.y;
+		}
+		else {
+			tansVec.y = vecInmap.y - camera->GetImageRect().y;
+		}
+		return tansVec;
+	}
 }

@@ -8,12 +8,13 @@
 #include	"AnimSpriteComponent.h"
 #include	"Texture.h"
 #include	"Game.h"
+#include	"Math2.h"
 
-GameFrame::PlayerObject::PlayerObject(Game* game, MapObject* map, const std::string& name) :
+GameFrame::PlayerObject::PlayerObject(Game* game, Sence* map, const std::string& name) :
 	mAnimComponent(nullptr),
 	ActorObject(game, map, name)
 {
-	Vector2 pos{210,274};
+	Vector2 pos{240,274};
 	Vector2 down{ 0,0 };
 	Vector2 idleup{ 64,192 };
 	Vector2 idledown{ 64,0 };
@@ -59,9 +60,21 @@ GameFrame::PlayerObject::PlayerObject(Game* game, MapObject* map, const std::str
 	SetHp(60);
 	AddACK(20);
 	SetH(PlayerH); SetW(PlayerW);
-	auto shape = new RectShape(collision, pos.x, pos.y, PlayerH, PlayerW);
-	collision->CreateShape(shape);
-	//collision->SetCollision(pos, GetH(), GetW());
+	/*auto shape = new RectShape(collision, pos.x, pos.y, PlayerH, PlayerW);*/
+	SDL_Rect collArea = { 15,32,64-2*15,32 };
+	collision->SetCollisionArea(collArea);
+
+	//为碰撞组件提供碰撞发生后的回调函数，处理碰撞的内容即发布特定事件
+	//collision->DefinecallbackOnCollision([this]() {
+	//	SDL_Log("collidion event has sub");
+	//	GameEvent* event = new GameEvent("000004");
+	//	mGame->GetEventThread()->GetManager()->RegisterEvent(event);
+	//	});
+	////设定移动组件特定的订阅（回调）事件
+	//Move->SubscribeToEvent("000004", [this,Move]() {
+	//	SDL_Log("sub collidion sucess");
+	//	SetPosition(ObjectPosion - Move->GetSpeed() * Move->GetMovdir());
+	//	});
 }
 
 GameFrame::PlayerObject::~PlayerObject()
@@ -79,15 +92,10 @@ void GameFrame::PlayerObject::update()
 		return;
 	}
 	else {
-		////更新位置
-		////获取摄像机坐标
-		auto camera = GetGame()->GetCamera();
-		Pos.x = Pos.x + camera->GetPreImageRect().x - camera->GetImageRect().x;
-		Pos.y = Pos.y + camera->GetPreImageRect().y - camera->GetImageRect().y;
-
 		for (auto iter : mComponents) {
 			iter->update();
 		}
+		
 	}
 }
 
@@ -100,4 +108,3 @@ void GameFrame::PlayerObject::ProcessInput(InputSystem* keystate)
 {
 	GetComponent<InputComponent>()->ProcessInput(keystate);
 }
- 

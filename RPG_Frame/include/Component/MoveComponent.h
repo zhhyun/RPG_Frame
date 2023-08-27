@@ -22,14 +22,16 @@ namespace GameFrame {
 			Idle
 		};
 		void ProcessInput(const InputSystem* keystate);
-		void SetSpeed(float speed);
-		float GetSpeed();
+		void SetSpeed(float speed) { Speed = speed; };
+		float GetSpeed() { return Speed; };
+		Vector2 GetMovdir() { return movdir; };
+
 		void update() override;
 		bool MoveTo(Vector2 DestPos);//移动指令，以默认速度将人物自动移动到destpos处，完成后返回1
 		std::vector<KeyQueSate>			mReqKeys;
 
 	private:
-		Vector2								movdir;//移动向量
+		Vector2								movdir;//移动方向向量
 		MovState							mMovState;
 		float								Speed;
 		bool								IsAcceptKey;

@@ -69,10 +69,18 @@ void GameFrame::AnimSpriteComponent::Draw(SDL_Renderer* renderer)
 	int textureW = PlayingAnim->textureW;
 	int textureH = PlayingAnim->textureH;
 	SDL_Rect imageRect{ PlayingAnim->AnimPosInTex.x + mCurrFrame * textureW,PlayingAnim->AnimPosInTex.y,textureW ,textureH };
+	auto map = dynamic_cast<ActorObject*>(mOwner)->GetMapObject();
+	
+
 	//Ö¡äÖÈ¾Î»ÖÃ
-	int x = mOwner->GetPosition().x;
-	int y = mOwner->GetPosition().y;
-	SDL_Rect dstRect{ x, y,textureW ,textureH };
+	Vector2 pos = mOwner->GetPosition();
+	Vector2 pos2;
+	if (map) {
+		pos2 = mOwner->MapVecTransToWinVec(map->GetMapW(), map->GetMapH(), pos);
+	}
+	
+
+	SDL_Rect dstRect{ pos2.x, pos2.y,textureW ,textureH };
 	SDL_RenderCopy(renderer, PlayingAnim->mAnimTextures, &imageRect, &dstRect);	
 }
 
