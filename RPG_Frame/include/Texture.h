@@ -15,6 +15,11 @@ namespace GameFrame {
 		int GetHeight() { return TexHeight; };
 		void CreateFromSurface(SDL_Renderer* renderer, SDL_Surface* surface);
 		void CreateFromTexture(SDL_Texture* tex);
+		SDL_Rect GetTextureRect() {
+			SDL_Rect SrcRect{ 0, 0, TexWidth, TexHeight };
+			return SrcRect;
+		}
+
 	private:
 		const std::string Name;
 		SDL_Texture* mTexture;

@@ -3,6 +3,7 @@
 
 #include	"GameObject.h"
 #include	"Math2.h"
+#include	"Equipments.h"
 
 namespace GameFrame {
 	class Dialogbox;
@@ -67,7 +68,7 @@ namespace GameFrame {
 		float								mRotation;
 		Dialogbox*							mDialog;
 		bool								IsCombating;
-		Sence*							mMap;//人物挂载的地图
+		Sence*								mMap;//人物挂载的地图
 	};
 }
 

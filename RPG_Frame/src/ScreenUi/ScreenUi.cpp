@@ -46,6 +46,6 @@ void GameFrame::ScreenUi::Draw(SDL_Renderer* renderer)
 
 void GameFrame::ScreenUi::LoadTexture(const std::string& NameInGame)
 {
-	mTexture = new Texture("PauseMenu");
+	mTexture = new Texture(NameInGame.c_str());
 	mTexture->CreateFromTexture(mGame->GetTexture(NameInGame));
 }

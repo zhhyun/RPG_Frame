@@ -14,7 +14,7 @@
 #include	<queue>
 #include	<functional>
 #include	<mutex>
-
+#include	"MainMenu.h"
 #include	"Cursor.h"
 #include	"Fonts.h"
 #include	"Dialogbox.h"
@@ -137,7 +137,8 @@ namespace GameFrame {
 					//}
 				//检查键值是否启动ui
 					else if (event.key.keysym.sym == SDLK_SPACE) {
-						auto mPauseMenu = new PauseMenu(this, "PauseMenu");
+						auto mMainMenu = new MainMenu(this);
+						//auto mPauseMenu = new PauseMenu(this, "PauseMenu");
 						IsTo = false;
 					}
 					else if (event.key.keysym.sym == SDLK_1) {
@@ -406,7 +407,7 @@ namespace GameFrame {
 
 	void Game::LoadData()
 	{	
-		LoadTexture("Portraits/PC Computer - Sakura Dungeon - Cat.png", "Cat");
+		//LoadTexture("Portraits/PC Computer - Sakura Dungeon - Cat.png", "Cat");
 		LoadTexture("sprite/1.png", "Npc"); 
 		LoadTexture("sprite/2.png",	"Player");
 		LoadTexture("sprite/tilesheet_0.png", "tile"); 

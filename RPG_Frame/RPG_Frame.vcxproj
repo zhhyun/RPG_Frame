@@ -256,6 +256,7 @@
     <ClInclude Include="include\Extend\tinystr.h" />
     <ClInclude Include="include\Extend\tinyxml.h" />
     <ClInclude Include="include\GameEvent.h" />
+    <ClInclude Include="include\GameObject\Equipments.h" />
     <ClInclude Include="include\InputSystem.h" />
     <ClInclude Include="include\DEFINES.h" />
     <ClInclude Include="include\Game.h" />
