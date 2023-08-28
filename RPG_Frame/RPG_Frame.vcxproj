@@ -278,7 +278,6 @@
     <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\ScriptSystem.h" />
     <ClInclude Include="include\ScreenUi\MainMenu.h" />
-
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\Control\Slider_Box.h" />
@@ -321,7 +320,6 @@
     <ClCompile Include="src\tinyxml\tinyxml.cpp" />
     <ClCompile Include="src\tinyxml\tinyxmlerror.cpp" />
     <ClCompile Include="src\tinyxml\tinyxmlparser.cpp" />
-
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -329,7 +327,6 @@
     <None Include="dll\SDL2_image.dll" />
     <None Include="dll\SDL2_ttf.dll" />
     <None Include="MAP\map1.map" />
-    <None Include="MAP\map0.tmx" />
     <None Include="scripts\uncompress.py" />
   </ItemGroup>
   <ItemGroup>
@@ -454,7 +451,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\lib\python;.\lib\SDL2_ttf\x64;.\lib\SDL2_image\x64;.\lib\SDL2\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>.\lib\SDL2\x64\SDL2.lib;.\lib\SDL2\x64\SDL2main.lib;.\lib\SDL2_image\x64\SDL2_image.lib;.\lib\SDL2_ttf\x64\SDL2_ttf.lib;.\lib\python\_tkinter.lib;.\lib\python\python3.lib;.\lib\python\python38.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>.\lib\SDL2\x64\SDL2.lib;.\lib\SDL2\x64\SDL2main.lib;.\lib\SDL2_image\x64\SDL2_image.lib;.\lib\SDL2_ttf\x64\SDL2_ttf.lib;.\lib\python\_tkinter.lib;.\lib\python\python3.lib;.\lib\python\python311.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

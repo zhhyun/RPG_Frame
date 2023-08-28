@@ -416,7 +416,8 @@ namespace GameFrame {
 		LoadTexture("sprite/Cursor.png", "Cursor");
 		LoadTexture("sprite/Alfonse.png", "Alfonse");
 		LoadTexture("sprite/Mobile - Fire Emblem Heroes - Bridge.png", "Bridge");
-
+		LoadTexture("sprite/mainBoard.png", MainBoard);
+		
 		LoadTexture("sprite/Dialog_Speeker.png", "Dialog_Speeker");
 		LoadTexture("sprite/Dialog_OptionsBox.png", "Dialog_OptionsBox");
 		LoadTexture("sprite/DialogOpenAnim.png", "DialogOpenAnim");
@@ -429,10 +430,6 @@ namespace GameFrame {
 			mFonts.emplace("QingNiaoHuaGuang",QingNiaoHuaGuang);
 		}
 		//mEventThread = new EventThread(this);
-		LoadSysEvent("sys_events/sys_events.json");
-
-		//mPhysSpace = new PhysSpace(this);
-
 		LoadMap();
 		
 		Texture* cur = new Texture("Cursor");
@@ -502,10 +499,7 @@ namespace GameFrame {
 	}
 
 	void Game::LoadMap() {
-		
-
 		MapObject* map = new MapObject(this, "MAP","1");
-		//Sence* village_sence = new Sence(map, "map0");
 		//Npc = new NpcObject(this, village_sence, "Npc");
 		Player = new PlayerObject(this, map->GetCurrSence(), "Player");
 	}

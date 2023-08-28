@@ -11,7 +11,7 @@
 namespace GameFrame {
 	class PauseMenu : public ScreenUi {
 	public:
-		PauseMenu(class Game* game, const std::string& fileName);
+		PauseMenu(class Game* game, const std::string& NameInGame);
 		~PauseMenu();
 		void Draw(SDL_Renderer* renderer) override;
 		void HandKeyPress(int key)override;

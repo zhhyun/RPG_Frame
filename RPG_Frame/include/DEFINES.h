@@ -52,3 +52,6 @@
 #define DialogueSpeakerBoxH 62
 #define DialogueFontColor Crimson
 #define SpeakerFontColor  Orange
+
+// Ù–‘√Ê∞Â
+#define MainBoard "mainBoard"

@@ -511,7 +511,7 @@ void GameFrame::Sence::UncompressTile_By_Py(Layer* layer,const char* zlibcode)
         PyObject* pFunc = PyObject_GetAttrString(pModule, "UncompressFc");
         if (pFunc && PyCallable_Check(pFunc)) {
             PyObject* pArgs = PyTuple_Pack(3,pZlibCode, PyLong_FromLong(layer->mesh_LayerWidth), PyLong_FromLong(layer->mesh_LayerHeight));
-            PyObject* pReturn = PyEval_CallObject(pFunc, pArgs);
+            PyObject* pReturn = PyObject_Call(pFunc, pArgs, NULL);
             if (pReturn != NULL) {
                 //将元组所有的参数一个个转换成int并存起来
                 for (int i = 0; i < layer->mesh_LayerHeight * layer->mesh_LayerWidth; i++) {
@@ -519,7 +519,6 @@ void GameFrame::Sence::UncompressTile_By_Py(Layer* layer,const char* zlibcode)
                     int c;
                     PyArg_Parse(b, "i", &c);
                     layer->Lcode.emplace_back(c - 1);
-                    //Py_DECREF(b);
                 }
             }
             Py_DECREF(pFunc);

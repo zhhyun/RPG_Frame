@@ -1,7 +1,9 @@
 #ifndef __MainMenu__
 #define __MainMenu__
-#include "ScreenUi.h"
-#include "Button.h"
+#include	"ScreenUi.h"
+#include	"Button.h"
+#include	"Game.h"
+#include	"DEFINES.h"
 
 namespace GameFrame {
 	class MainMenu : public ScreenUi {
@@ -9,7 +11,7 @@ namespace GameFrame {
 		MainMenu(class Game* game);
 		~MainMenu(){};
 
-		void Draw(SDL_Renderer* renderer)override{};
+		void Draw(SDL_Renderer* renderer)override;
 		
 	private:
 		void DrawHeroData(SDL_Renderer* renderer);

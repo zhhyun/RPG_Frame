@@ -4,12 +4,12 @@
 #include	"Button.h"
 #include	"Cursor.h"
 
-GameFrame::ScreenUi::ScreenUi(Game* game, const std::string& fileName):
+GameFrame::ScreenUi::ScreenUi(Game* game, const std::string& filePath):
 	mTexture(nullptr),
 	keyOccup(UiKeyOccupy::ENone),
 	GameObject(game)
 {
-	LoadTexture(fileName);
+	LoadTexture(filePath);
 	mGame->PushUI(this);
 }
 
@@ -44,8 +44,8 @@ void GameFrame::ScreenUi::Draw(SDL_Renderer* renderer)
 
 }
 
-void GameFrame::ScreenUi::LoadTexture(const std::string& fileName)
+void GameFrame::ScreenUi::LoadTexture(const std::string& NameInGame)
 {
 	mTexture = new Texture("PauseMenu");
-	mTexture->CreateFromTexture(mGame->GetTexture(fileName));
+	mTexture->CreateFromTexture(mGame->GetTexture(NameInGame));
 }

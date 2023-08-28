@@ -12,7 +12,7 @@
 namespace GameFrame {
 	class ScreenUi : public GameObject {
 	public:
-		ScreenUi(class Game* game, const std::string& fileName);
+		ScreenUi(class Game* game, const std::string& NameInGame);
 		~ScreenUi();
 		enum class UiKeyOccupy
 		{
@@ -28,7 +28,7 @@ namespace GameFrame {
 		virtual void Draw(SDL_Renderer* renderer);
 		virtual void AddButton(const std::string& name, Vector2 pos, Texture* tex, std::function<void()> OnClick){};
 
-		void LoadTexture(const std::string& fileName);
+		void LoadTexture(const std::string& NameInGame);
 		
 		std::vector<class Button*> mButtons;
 
