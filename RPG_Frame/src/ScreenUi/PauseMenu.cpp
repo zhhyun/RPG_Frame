@@ -55,6 +55,6 @@ void GameFrame::PauseMenu::HandKeyPress(int key)
 
 void GameFrame::PauseMenu::AddButton(const std::string& name, Vector2 pos, Texture* tex, std::function<void()> OnClick)
 {
-	Button* b = new Button(name, pos, tex, OnClick);
-	mButtons.emplace_back(b);
+	/*Button* b = new Button(name,this, pos, tex, OnClick);
+	mButtons.emplace_back(b);*/
 }

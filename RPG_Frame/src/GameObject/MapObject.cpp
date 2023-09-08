@@ -11,10 +11,10 @@ GameFrame::Sence::Sence(MapObject* map, const std::string& fileName) :
     tileW(TILEW),
     tileH(TILEH),
     SenceName(fileName),
-    mMap(map)
+    mSence(map)
 {
     LoadSenceXml("MAP/" + fileName + ".tmx");
-    mMap->AddSence(this);
+    mSence->AddSence(this);
 }
 
 GameFrame::Sence::~Sence()
@@ -26,7 +26,7 @@ GameFrame::Sence::~Sence()
 
 void GameFrame::Sence::update()
 {
-    CheckinRegion(mMap->GetGame()->GetPlayer());
+    CheckinRegion(mSence->GetGame()->GetPlayer());
 }
 
 void GameFrame::Sence::Draw(SDL_Renderer* renderer)
@@ -45,7 +45,7 @@ void GameFrame::Sence::Draw(SDL_Renderer* renderer)
 
 void GameFrame::Sence::DrawLayer(SDL_Renderer* renderer, SDL_Texture* layerTex)
 {
-    auto temp = mMap->GetGame()->GetCamera()->GetImageRect();
+    auto temp = mSence->GetGame()->GetCamera()->GetImageRect();
 
     SDL_Rect RectArea = { 0,0,SCREEN_W, SCREEN_H };
     //调整绘制目的坐标，确保对于尺寸小于屏幕的场景居中对齐
@@ -64,8 +64,7 @@ void GameFrame::Sence::DrawLayer(SDL_Renderer* renderer, SDL_Texture* layerTex)
 }
 
 void GameFrame::Sence::DrawAnimTile(SDL_Renderer* renderer)
-{
-    
+{   
     for (auto layer : mLayers) {
         if (!layer->AnimaTiles.empty()) {
             for (auto& anima : layer->AnimaTiles) {
@@ -392,14 +391,14 @@ void GameFrame::Sence::CheckinRegion(GameObject* object)
             for (auto& propt : obj->mProperties) {
                 if (propt.Name == "target_sence") {
                     IsFindTargetSence;
-                    sence = mMap->GetSenceFromName(std::to_string(propt.Value));
+                    sence = mSence->GetSenceFromName(std::to_string(propt.Value));
                 }
                 if (propt.Name == "dst_id") {
                     destid = propt.Value;
                 }
             }
             if (sence && destid != -1) {
-                mMap->EnterSence(sence, destid);
+                mSence->EnterSence(sence, destid);
             }
         }
     }

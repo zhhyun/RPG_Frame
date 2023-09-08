@@ -9,7 +9,6 @@
 #include	"BarSheet.h"
 #include	"PauseMenu.h"
 #include	<algorithm>
-
 #include	<thread>
 #include	<queue>
 #include	<functional>
@@ -20,8 +19,8 @@
 #include	"Dialogbox.h"
 #include	"BattleSystem.h"
 #include	"Script.h"
-#include	"Camera.h"
 
+#include	"Equipments.h"
 
 namespace GameFrame {
 	Game::Game() :
@@ -109,6 +108,8 @@ namespace GameFrame {
 			Draw();
 		}
 	}
+
+	
 
 	
 
@@ -236,6 +237,16 @@ namespace GameFrame {
 			tex = iter->second;
 		}
 		return tex;
+	}
+
+	Equipments* Game::GetEquip(const std::string equipname)
+	{
+		Equipments* equip = nullptr;
+		auto iter = mEquipments.find(equipname);
+		if (iter != mEquipments.end()) {
+			equip = iter->second;
+		}
+		return equip;
 	}
 
 	GameObject* Game::GetGameObject(const std::string& name)
@@ -407,37 +418,33 @@ namespace GameFrame {
 
 	void Game::LoadData()
 	{	
-		//LoadTexture("Portraits/PC Computer - Sakura Dungeon - Cat.png", "Cat");
 		LoadTexture("sprite/1.png", "Npc"); 
 		LoadTexture("sprite/2.png",	"Player");
 		LoadTexture("sprite/tilesheet_0.png", "tile"); 
-		LoadTexture("sprite/barsheet.png", "barsheet");
 		LoadTexture("sprite/PauseMenu.png", "PauseMenu");
+		LoadTexture("sprite/defaultSlot.png", "defaultSlot");
 		LoadTexture("sprite/Button.png", "Button");
 		LoadTexture("sprite/Cursor.png", "Cursor");
-		LoadTexture("sprite/Alfonse.png", "Alfonse");
-		LoadTexture("sprite/Mobile - Fire Emblem Heroes - Bridge.png", "Bridge");
 		LoadTexture("sprite/mainBoard.png", MainBoard);
-		
 		LoadTexture("sprite/Dialog_Speeker.png", "Dialog_Speeker");
 		LoadTexture("sprite/Dialog_OptionsBox.png", "Dialog_OptionsBox");
 		LoadTexture("sprite/DialogOpenAnim.png", "DialogOpenAnim");
 		LoadTexture("sprite/DialogCloseAnim.png", "DialogCloseAnim");
 		
 		LoadTexture("sprite/Mainmenu.png", "Mainmenu");
-
+		
 		auto QingNiaoHuaGuang = new Font(this);
 		if (QingNiaoHuaGuang->Load("Fonts/1.TTF")) {
 			mFonts.emplace("QingNiaoHuaGuang",QingNiaoHuaGuang);
 		}
-		//mEventThread = new EventThread(this);
+
+		LoadEquipments();
 		LoadMap();
-		
 		Texture* cur = new Texture("Cursor");
 		cur->CreateFromTexture(GetTexture("Cursor"));
 		mCursor = new Cursor(cur);
 		mCamera = new Camera(this);
-		//
+
 		////测试添加事件
 		//GameEvent* event_01 = new GameEvent(GameEvent::EventType::MoveEvent, (std::string)"0000001", (std::string)"upmove");
 		//mEventThread->GetManager()->RegisterEvent(event_01);
@@ -503,6 +510,12 @@ namespace GameFrame {
 		MapObject* map = new MapObject(this, "MAP","1");
 		//Npc = new NpcObject(this, village_sence, "Npc");
 		Player = new PlayerObject(this, map->GetCurrSence(), "Player");
+	}
+
+	void Game::LoadEquipments()
+	{
+		//Sword* testBlade = new Sword();
+
 	}
 
 

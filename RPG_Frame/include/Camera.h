@@ -1,11 +1,11 @@
 #ifndef __Camera__
 #define __Camera__
-#include "Game.h"
 #include "PlayerObject.h"
 #include "DEFINES.h"
 #include "MapObject.h"
 
 namespace GameFrame {
+	class Game;
 	class Camera {
 	public:
 		Camera(Game* game);

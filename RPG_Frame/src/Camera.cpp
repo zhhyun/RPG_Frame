@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "Game.h"
 
 GameFrame::Camera::Camera(Game* game):
 	mGame(game)

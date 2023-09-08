@@ -136,7 +136,7 @@ namespace GameFrame {
 		void ClearLayersTex();
 		void ClearObjGroups();
 		
-		MapObject* mMap;
+		MapObject* mSence;
 
 	protected:
 		void DrawLayer(SDL_Renderer* renderer, SDL_Texture* layerTex);

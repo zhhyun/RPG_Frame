@@ -6,8 +6,9 @@
 
 
 namespace GameFrame {
-	GameObject::GameObject(Game* game, const std::string& name) :
+	GameObject::GameObject(Game* game, const std::string& name, const std::string& id) :
 		mGame(game),
+		ID(id),
 		mState(State::EActive)
 	{
 		mGame->AddGameObject(this,name);

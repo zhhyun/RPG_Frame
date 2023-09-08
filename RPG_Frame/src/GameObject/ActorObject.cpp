@@ -15,7 +15,7 @@ GameFrame::ActorObject::ActorObject(Game* game, Sence* map, const std::string& n
 	DEF(10),
 	Speed(1),
 	IsCombating(false),
-	mMap(map),
+	mSence(map),
 	Lv(1),
 	ActorName(name),
 	mDialog(nullptr),

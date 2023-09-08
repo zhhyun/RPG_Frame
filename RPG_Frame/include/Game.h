@@ -8,13 +8,11 @@
 #include	<vector>
 #include	<json.hpp>
 #include	<fstream>
-#include	"InputSystem.h"
 #include	"Camera.h"
-#include	"PhysSpace.h"
-#include	"GameEvent.h"
+#include	"InputSystem.h"
+
 
 namespace GameFrame {
-	class GameObject;
 	class PlayerObject;
 	class NpcObject;
 	class ScreenUi;
@@ -26,6 +24,7 @@ namespace GameFrame {
 	class PhysSpace;
 	class EventThread;
 	class GameEvent;
+	class Equipments;
 
 	class Game {
 	public:
@@ -64,6 +63,8 @@ namespace GameFrame {
 		void SetUpdateState(bool Switch) { mIsUpdating = Switch; };
 		void SetProcessEvent(bool Switch) { ProcessEvents = Switch; };
 
+		Equipments* GetEquip(const std::string equipname);
+
 	private:
 		void Event();
 		void Update();
@@ -71,10 +72,12 @@ namespace GameFrame {
 		void LoadTexture(const std::string& loadpath, const std::string& newName);
 		void LoadSysEvent(const std::string& loadpath);
 		void LoadMap();
+		void LoadEquipments();
 		void LoadData();
 		void Unload();
 
 		std::unordered_map<std::string, SDL_Texture*> mTextures;
+		std::unordered_map<std::string, Equipments*> mEquipments;
 		std::unordered_map<std::string, GameObject*> mGameObjects;//标识要改成游戏角色id
 		std::unordered_map<std::string, Font*> mFonts;
 		std::vector<GameObject*> mPendingObjects;
@@ -97,7 +100,6 @@ namespace GameFrame {
 		//ActContrSystem* mActContrSystem;			//行为控制系统
 		Cursor*							mCursor;			//鼠标
 		Camera*							mCamera;			//摄像机
-	//	PhysSpace*						mPhysSpace;			//物理空间
 		EventThread*					mEventThread;		//事件线程
 		
 		PlayerObject*					Player;

@@ -9,6 +9,17 @@ GameFrame::MainMenu::MainMenu(Game* game) :
 	Width = mTexture->GetWidth();
 	Height = mTexture->GetHeight();
 	BindPlayer = mGame->GetPlayer();
+	menuSlot* slot1 = new menuSlot(this);
+	menuSlot* slot2 = new menuSlot(this);
+	menuSlot* slot3 = new menuSlot(this);
+	menuSlot* slot4 = new menuSlot(this);
+	AddButton(slot1);
+}
+
+
+void GameFrame::MainMenu::AddButton(Button* button)
+{
+	mButtons.emplace_back(button);
 }
 
 void GameFrame::MainMenu::Draw(SDL_Renderer* renderer)
@@ -22,7 +33,6 @@ void GameFrame::MainMenu::Draw(SDL_Renderer* renderer)
 			iter->Draw(renderer);
 		}
 	}
-
 	DrawHeroData(renderer);
 	DrawHeroName(renderer);
 	DrawHpBar(renderer);

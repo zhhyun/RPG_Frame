@@ -5,13 +5,16 @@
 #include	"Game.h"
 #include	"DEFINES.h"
 #include	"Fonts.h"
+#include	"Equipments.h"
 
 namespace GameFrame {
+	
 	class MainMenu : public ScreenUi {
 	public:
 		MainMenu(class Game* game);
 		~MainMenu(){};
-
+		//void AddButton(const std::string& name, Vector2 pos, Texture* tex, std::function<void()> OnClick) override;
+		void AddButton(Button* button);
 		void Draw(SDL_Renderer* renderer)override;
 		
 	private:
@@ -23,7 +26,7 @@ namespace GameFrame {
 		void HandKeyPress(int key) override;
 
 		Font* mFont;
-		PlayerObject* BindPlayer;
+		PlayerObject* BindPlayer;	
 	};
 }
 #endif __MainMenu__

@@ -282,6 +282,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\Control\Slider_Box.h" />
+    <ClCompile Include="include\GameObject\Equipments.cpp" />
     <ClCompile Include="include\tinyxml\tinystr.cpp" />
     <ClCompile Include="include\tinyxml\tinyxml.cpp" />
     <ClCompile Include="include\tinyxml\tinyxmlerror.cpp" />

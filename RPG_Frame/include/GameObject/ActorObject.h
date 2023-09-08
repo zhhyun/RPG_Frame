@@ -1,13 +1,22 @@
 #ifndef __ActorObject__
 #define __ActorObject__
-
 #include	"GameObject.h"
 #include	"Math2.h"
-#include	"Equipments.h"
+#include	"BackpackComponent.h"
 
 namespace GameFrame {
 	class Dialogbox;
+	class Weapon;
+	class Shield;
+	class Armor;
+
 	class ActorObject : public GameObject {
+		typedef struct readyEquip {
+			Weapon* slot1;
+			Shield* slot2;
+			Armor* slot3;
+		}readyEquip;
+
 	public:
 		ActorObject(class Game* game, class Sence* map, const std::string& name);
 		~ActorObject();
@@ -26,10 +35,6 @@ namespace GameFrame {
 		void AddACK(int ack);
 		int GetDEF();
 		void AddDEF(int def);
-		//int GetH();
-		//void SetH(int h);
-		//int GetW();
-		//void SetW(int w);
 		int GetLv() { return Lv; };
 		void SetLv(int lv) { Lv = lv; };
 
@@ -44,21 +49,20 @@ namespace GameFrame {
 		void SetScale(int scale){ mScale = scale; };
 		Dir GetDir() const{ return mDir; };
 		void SetDir(Dir mdir){ mDir = mdir; };
-		Sence* GetMapObject() {	return mMap; };
-		void ChangeMap(Sence* sence) { mMap = sence; };
+		Sence* GetMapObject() {	return mSence; };
+		void ChangeMap(Sence* sence) { mSence = sence; };
 		bool CreateDialog(const std::string& scriptname);
 		void CloseDialog();
 		Dialogbox* GetmDialog() { return mDialog; };
 		friend class CollisionComponent;
 		friend class Script;
+
 	private:
 		int		Hp;
 		int		MaxHp;
 		int		Speed;
 		int		ACK;
 		int		DEF;
-		//int		Height;
-		//int		Wdith;
 		int		Lv;
 		std::string ActorName;
 
@@ -68,7 +72,9 @@ namespace GameFrame {
 		float								mRotation;
 		Dialogbox*							mDialog;
 		bool								IsCombating;
-		Sence*								mMap;//人物挂载的地图
+		Sence*								mSence;			//人物挂载的地图
+		BackpackComponent*					mBackpack;		//背包
+		readyEquip							mReadyEquip;	//人物身上的装备
 	};
 }
 

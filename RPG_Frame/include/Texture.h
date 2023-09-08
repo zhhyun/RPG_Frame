@@ -6,7 +6,8 @@
 namespace GameFrame {
 	class Texture {
 	public:
-		Texture( const std::string name);
+		Texture(const std::string name);
+		Texture(const std::string name, SDL_Texture* tex);
 		Texture();
 		~Texture();
 		SDL_Texture* GetTexture() { return mTexture; };

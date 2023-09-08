@@ -14,7 +14,7 @@ namespace GameFrame {
 			EWaitingDead,
 			EDead
 		};
-		GameObject(class Game* game, const std::string& name);
+		GameObject(class Game* game, const std::string& name, const std::string& id);
 		GameObject(class Game* game);
 		virtual ~GameObject();
 
@@ -62,6 +62,7 @@ namespace GameFrame {
 		void SetH(int h) { Height = h; };
 		int GetW() { return Width; };
 		void SetW(int w) { Width = w; };
+		std::string GetID() { return ID; };
 
 	protected:
 		std::vector<class Component*>		mComponents;
@@ -69,6 +70,7 @@ namespace GameFrame {
 		class Game*							mGame;
 		State								mState;
 		Vector2								ObjectPosion;
+		const std::string					ID;
 		//Sence*								mMap;//¹ÒÔØµÄµØÍ¼
 		int									Height;
 		int									Width;

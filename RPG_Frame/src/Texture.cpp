@@ -8,6 +8,15 @@ GameFrame::Texture::Texture(const std::string name) :
 {
 }
 
+GameFrame::Texture::Texture(const std::string name, SDL_Texture* tex):
+	Name(name),
+	mTexture(nullptr),
+	TexWidth(0),
+	TexHeight(0)
+{
+	CreateFromTexture(tex);
+}
+
 GameFrame::Texture::Texture():
 	Name("图案"),
 	mTexture(nullptr),
