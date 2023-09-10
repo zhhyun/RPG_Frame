@@ -9,9 +9,9 @@
 /*				系统编号唯一，相对编号在第三方对象文件索引中唯一			  */
 /*																	  */
 /**********************************************************************/
-using namespace GameFrame;
-
 namespace GameFrame {
+	class Game;
+
 	enum class EquipCLASS {
 		UNKONWN,
 		WEAPON,
@@ -37,17 +37,9 @@ namespace GameFrame {
 			//........
 		};
 
-		typedef struct EquPropertity {
-			int deltaACK;
-			int deltaDEF;
-			int deltaHealth;
-			int deltaMp;
-			//...
-		}EquPropertity;
-
 	public:
 		Equipments(const std::string& id, const std::string name, Game* game);
-		
+
 		void SetEquipTexArea(SDL_Rect area) { TakeOutPosFromTex = area; };
 		void SetEquipTex(SDL_Texture* tex) { EquTileset = tex; };
 		void SetLevel(unsigned int lv) { level = lv; };
@@ -55,30 +47,18 @@ namespace GameFrame {
 		void SetLimited(int limit) { limited = limit; };
 		void SetPropertity(EquPropertity propertity) { Propertity = propertity; };
 		void SetClass(EquipCLASS mClass) { Class = mClass; };
-
-	private:
-		bool enable;
-		unsigned int level;
-		int limited;
-		const std::string id;
-		const std::string name;
-		EquPropertity propertity;
-		SDL_Rect TakeOutPosFromTex;
-
 		int GetLimit() { return limited; };
-
-		
-
+		EquipCLASS GetClass() { return Class; };
+		EquPropertity GetPropty() { return Propertity; };
 
 	protected:
 		bool enable = true;
 		unsigned int level;
 		int limited = -1;	//-1为无限制
-		const std::string ID;
 		const std::string Name;
 		SDL_Texture* EquTileset;
-		EquPropertity Propertity;
-		SDL_Rect TakeOutPosFromTex;
+		EquPropertity Propertity = { 0,0,0,0 };
+		SDL_Rect TakeOutPosFromTex = { 0,0,0,0 };
 		EquipCLASS Class = EquipCLASS::UNKONWN;
 	};
 
@@ -101,7 +81,7 @@ namespace GameFrame {
 
 	class Armor : public Equipments {
 	public:
-
+		Armor(const std::string& id, const std::string name, Game* game);
 	private:
 
 	};
@@ -109,7 +89,8 @@ namespace GameFrame {
 	
 
 	class Shield : public Equipments {
-
+	public:
+		Shield(const std::string& id, const std::string name, Game* game);
 	};
 }
 

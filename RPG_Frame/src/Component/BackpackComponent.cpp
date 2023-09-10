@@ -1,6 +1,10 @@
 #include "BackpackComponent.h"
 #include "Equipments.h"
 #include "GameObject.h"
+GameFrame::BackpackComponent::BackpackComponent(GameObject* gameobject):
+	SpriteComponent(gameobject, 1)
+{
+}
 void GameFrame::BackpackComponent::ProcessInput(const uint8_t* keystate)
 {
 }
@@ -15,17 +19,18 @@ void GameFrame::BackpackComponent::AddEquipment(Equipments* equip)
 	if (equipNum(id) == equip->GetLimit()) {
 		return;
 	}
-	if (equip->Class == EquipCLASS::SWORD) {
+	if (equip->GetClass() == EquipCLASS::SWORD) {
 		AddWeapon(dynamic_cast<Weapon*>(equip));
 		AddSword(dynamic_cast<Sword*>(equip));
 	}
-	else if (equip->Class == EquipCLASS::WEAPON) {
+	else if (equip->GetClass() == EquipCLASS::WEAPON) {
 		AddWeapon(dynamic_cast<Weapon*>(equip));
 	}
-	else if (equip->Class == EquipCLASS::ARMOR) {
+	else if (equip->GetClass() == EquipCLASS::ARMOR) {
 		AddArmor(dynamic_cast<Armor*>(equip));
 	}
 	mObjectsInBackpack.emplace_back(equip);
+	mEquipsInBackpack.emplace_back(equip);
 }
 
 int GameFrame::BackpackComponent::equipNum(const std::string& id)

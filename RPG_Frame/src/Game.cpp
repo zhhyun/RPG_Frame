@@ -19,7 +19,6 @@
 #include	"Dialogbox.h"
 #include	"BattleSystem.h"
 #include	"Script.h"
-
 #include	"Equipments.h"
 
 namespace GameFrame {
@@ -430,8 +429,8 @@ namespace GameFrame {
 		LoadTexture("sprite/Dialog_OptionsBox.png", "Dialog_OptionsBox");
 		LoadTexture("sprite/DialogOpenAnim.png", "DialogOpenAnim");
 		LoadTexture("sprite/DialogCloseAnim.png", "DialogCloseAnim");
-		
-		LoadTexture("sprite/Mainmenu.png", "Mainmenu");
+		LoadTexture("sprite/Weapons.png", "weapon");
+		LoadTexture("sprite/mainBoard.png", "Mainmenu");
 		
 		auto QingNiaoHuaGuang = new Font(this);
 		if (QingNiaoHuaGuang->Load("Fonts/1.TTF")) {
@@ -514,8 +513,17 @@ namespace GameFrame {
 
 	void Game::LoadEquipments()
 	{
-		//Sword* testBlade = new Sword();
-
+		//目前创建武器都要在程序中手动初始化，未来该部分应当分割出来，武器的数据
+		//存在json文件里，程序负责读取文件并根据文件信息初始化
+		Sword* testBlade = new Sword("111","测试武器",this);
+		testBlade->SetEquipTex(GetTexture("weapon"));
+		SDL_Rect area = {29,38,27,27};
+		testBlade->SetEquipTexArea(area);
+		testBlade->SetLevel(1);
+		EquPropertity propty = { 10,0,0,0 };
+		testBlade->SetPropertity(propty);
+		//在武器库中注册
+		mEquipments.emplace("test_WEAPON", testBlade);
 	}
 
 

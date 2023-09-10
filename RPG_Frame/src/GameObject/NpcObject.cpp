@@ -7,12 +7,10 @@
 #include	"Game.h"
 
 GameFrame::NpcObject::NpcObject(Game* game, Sence* map, const std::string& name):
-	ActorObject(game, map, name)
+	ActorObject(game, map, name,"4")
 {
 	Vector2 pos{ 210,210 };
 	SetPosition(pos);
-	/*pos.x = pos.x - 5;
-	pos.y = pos.y - 5;*/
 	SpriteComponent* Npc = new SpriteComponent(this, 100);
 	BattleComponent* Battle = new BattleComponent(this);
 

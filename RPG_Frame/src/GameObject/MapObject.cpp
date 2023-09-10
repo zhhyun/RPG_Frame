@@ -190,7 +190,6 @@ void GameFrame::Sence::LoadSenceXml(const std::string& filepath)
                    layer->property.assign(prop->Attribute("name"));
                 }
             }
-
              MapW = tileW * SenceTileW;
              MapH = tileH * SenceTileH;
              UncompressTile_By_Py(layer, layerElement->FirstChildElement("data")->GetText());
@@ -263,7 +262,7 @@ GameFrame::Tile GameFrame::Sence::GetStandTileFromLayer(Vector2 standpos)
     }
 
     if (target_id == -1) {
-        SDL_Log("tile is transparent");
+        //SDL_Log("tile is transparent");
         Tile tilewithnull;
         tilewithnull.Tile_id = -1;
         return tilewithnull;
@@ -304,7 +303,7 @@ bool GameFrame::Sence::GetStandTileFromObejctLayer(Vector2 standpos)
         target_id = OLcode[code];
 
         if (target_id == -1) {
-            SDL_Log("tile is transparent");
+            //SDL_Log("tile is transparent");
             Tile tilewithnull;
             tilewithnull.Tile_id = -1;
             return false;
@@ -566,7 +565,7 @@ GameFrame::Vector2 GameFrame::Layer::MapIdParser(int it)
 
 GameFrame::MapObject::MapObject(Game* game, const std::string& folderPath, const std::string& map_id):
     Map_id(map_id),
-    GameObject(game, map_id)
+    GameObject(game, map_id, map_id)
 {
     LoadSence(folderPath);
 }
@@ -609,14 +608,6 @@ void GameFrame::MapObject::LoadSence(const std::string& folderPath)
    Sence* cave2031 = new Sence(this, "2031");
    Sence* room2041 = new Sence(this, "2041");
    EnterSence(main_sence);
-
-    //GameEvent* testEvent = new GameEvent("test");
-    /*testEvent->ResignCallback([this,village_sence,room]() {
-        SDL_Log("test success!");
-        ExchangeSence(village_sence, room);
-        });
-    testRegion->ResignEvent(testEvent);*/
-
 }
 
 void GameFrame::MapObject::EnterSence(Sence* targetSence)
@@ -630,7 +621,6 @@ void GameFrame::MapObject::EnterSence(Sence* targetSence)
         targetSence->Player = tmpPlayer;
     }
     CurrSence = targetSence;  
-    
 }
 
 void GameFrame::MapObject::EnterSence(Sence* targetSence, int destid)
@@ -653,7 +643,6 @@ void GameFrame::MapObject::EnterSence(Sence* targetSence, int destid)
                             break;
                         }
                     }
-                   
                 }
             }
         }

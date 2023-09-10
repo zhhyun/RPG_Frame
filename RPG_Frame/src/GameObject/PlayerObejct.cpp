@@ -10,9 +10,11 @@
 #include	"Game.h"
 #include	"Math2.h"
 
+#define TESTWEAPON "111"
+
 GameFrame::PlayerObject::PlayerObject(Game* game, Sence* map, const std::string& name) :
 	mAnimComponent(nullptr),
-	ActorObject(game, map, name)
+	ActorObject(game, map, name,"5")
 {
 	Vector2 pos{240,274};
 	Vector2 down{ 0,0 };
@@ -57,24 +59,14 @@ GameFrame::PlayerObject::PlayerObject(Game* game, Sence* map, const std::string&
 
 	mAnimComponent->PlayAnimation("DownIdle");
 	SetMaxHp(100);
-	SetHp(60);
-	AddACK(20);
 	SetH(PlayerH); SetW(PlayerW);
-	/*auto shape = new RectShape(collision, pos.x, pos.y, PlayerH, PlayerW);*/
 	SDL_Rect collArea = { 15,32,64-2*15,32 };
 	collision->SetCollisionArea(collArea);
-
-	//为碰撞组件提供碰撞发生后的回调函数，处理碰撞的内容即发布特定事件
-	//collision->DefinecallbackOnCollision([this]() {
-	//	SDL_Log("collidion event has sub");
-	//	GameEvent* event = new GameEvent("000004");
-	//	mGame->GetEventThread()->GetManager()->RegisterEvent(event);
-	//	});
-	////设定移动组件特定的订阅（回调）事件
-	//Move->SubscribeToEvent("000004", [this,Move]() {
-	//	SDL_Log("sub collidion sucess");
-	//	SetPosition(ObjectPosion - Move->GetSpeed() * Move->GetMovdir());
-	//	});
+	auto addweapom = mGame->GetEquip("test_WEAPON");
+	if (addweapom) {
+		Additem(addweapom);
+		EquipEquipment(TESTWEAPON);
+	}
 }
 
 GameFrame::PlayerObject::~PlayerObject()
@@ -95,7 +87,8 @@ void GameFrame::PlayerObject::update()
 		for (auto iter : mComponents) {
 			iter->update();
 		}
-		
+		//更新武器数值
+		UpdateEquipGain();
 	}
 }
 

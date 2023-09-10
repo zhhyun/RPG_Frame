@@ -62,7 +62,7 @@ namespace GameFrame {
 		void SetH(int h) { Height = h; };
 		int GetW() { return Width; };
 		void SetW(int w) { Width = w; };
-		std::string GetID() { return ID; };
+		std::string GetID()const { return ID; };
 
 	protected:
 		std::vector<class Component*>		mComponents;
@@ -70,10 +70,9 @@ namespace GameFrame {
 		class Game*							mGame;
 		State								mState;
 		Vector2								ObjectPosion;
-		const std::string					ID;
-		//Sence*								mMap;//¹ÒÔØµÄµØÍ¼
 		int									Height;
 		int									Width;
+		const std::string					ID;
 	};
 }
 

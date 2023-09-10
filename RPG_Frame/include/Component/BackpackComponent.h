@@ -14,13 +14,14 @@ namespace GameFrame {
 
 	class BackpackComponent : public SpriteComponent {
 	public:
-		BackpackComponent();
-		~BackpackComponent();
+		BackpackComponent(GameObject* gameobject);
+		//~BackpackComponent();
 		void ProcessInput(const uint8_t* keystate); //override;
 		void update(); //override;
 		void AddEquipment(Equipments* equip);
 		int equipNum(const std::string& id);
 		friend class MainMenu;
+		friend class ActorObject;
 
 	private:
 		void AddWeapon(Weapon* weapon);
@@ -28,6 +29,7 @@ namespace GameFrame {
 		void AddSheild(Shield* sheild);
 		void AddSword(Sword* sword);
 		std::vector<GameObject*> mObjectsInBackpack;
+		std::vector<Equipments*> mEquipsInBackpack;
 		std::vector<Weapon*> mWeaponsInBackPack;
 	};
 }

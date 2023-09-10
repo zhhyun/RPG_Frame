@@ -2,12 +2,10 @@
 #include	"Game.h"
 
 GameFrame::Equipments::Equipments(const std::string& id, const std::string name, Game* game):
-	ID(id),
 	Name(name),
-	GameObject(game)
+	level(1),
+	GameObject(game, name,id)
 {
-	TakeOutPosFromTex = { 0,0,0,0 };
-	Propertity = { 0,0,0,0 };
 }
 
 
@@ -21,4 +19,16 @@ GameFrame::Sword::Sword(const std::string& id, const std::string name, Game* gam
 	Weapon(id, name, game)
 {
 	Class = EquipCLASS::SWORD;
+}
+
+GameFrame::Armor::Armor(const std::string& id, const std::string name, Game* game):
+	Equipments(id, name, game)
+{
+	Class = EquipCLASS::ARMOR;
+}
+
+GameFrame::Shield::Shield(const std::string& id, const std::string name, Game* game):
+	Equipments(id, name, game)
+{
+	Class = EquipCLASS::SHIELD;
 }

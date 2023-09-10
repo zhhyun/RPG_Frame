@@ -3,6 +3,7 @@
 #include	"GameObject.h"
 #include	"Math2.h"
 #include	"BackpackComponent.h"
+#include "Equipments.h"
 
 namespace GameFrame {
 	class Dialogbox;
@@ -18,7 +19,7 @@ namespace GameFrame {
 		}readyEquip;
 
 	public:
-		ActorObject(class Game* game, class Sence* map, const std::string& name);
+		ActorObject(class Game* game, class Sence* map, const std::string& name, const std::string& id);
 		~ActorObject();
 		enum Dir
 		{
@@ -54,6 +55,18 @@ namespace GameFrame {
 		bool CreateDialog(const std::string& scriptname);
 		void CloseDialog();
 		Dialogbox* GetmDialog() { return mDialog; };
+
+		void Additem(GameObject* item) {
+			//mBackpack->AddEquipment(item);
+		}
+		void Additem(Equipments* equip) {
+			SDL_Log("add item");
+			mBackpack->AddEquipment(equip);
+		}
+
+		//id区分了物品种类，但是没有编号实例，需要重新设计一个实例编号
+		void EquipEquipment(const std::string& equipid);
+
 		friend class CollisionComponent;
 		friend class Script;
 
@@ -66,6 +79,13 @@ namespace GameFrame {
 		int		Lv;
 		std::string ActorName;
 
+
+		int BasicACK;
+		int BasicDEF;
+		int BasicLv;
+		int BasicHp;
+
+
 	protected:
 		Dir									mDir;
 		int									mScale;
@@ -75,6 +95,8 @@ namespace GameFrame {
 		Sence*								mSence;			//人物挂载的地图
 		BackpackComponent*					mBackpack;		//背包
 		readyEquip							mReadyEquip;	//人物身上的装备
+
+		void UpdateEquipGain();
 	};
 }
 
