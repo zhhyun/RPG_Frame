@@ -55,7 +55,7 @@ namespace GameFrame {
 		bool CreateDialog(const std::string& scriptname);
 		void CloseDialog();
 		Dialogbox* GetmDialog() { return mDialog; };
-
+		readyEquip GetreadyEquip() { return mReadyEquip; };
 		void Additem(GameObject* item) {
 			//mBackpack->AddEquipment(item);
 		}

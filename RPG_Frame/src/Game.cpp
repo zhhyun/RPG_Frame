@@ -525,6 +525,4 @@ namespace GameFrame {
 		//在武器库中注册
 		mEquipments.emplace("test_WEAPON", testBlade);
 	}
-
-
 }

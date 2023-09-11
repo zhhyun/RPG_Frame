@@ -1,5 +1,5 @@
 #include "MainMenu.h"
-
+#include "Cursor.h"
 GameFrame::MainMenu::MainMenu(Game* game) :
 	ScreenUi(game, MainBoard)
 {
@@ -38,6 +38,36 @@ void GameFrame::MainMenu::Draw(SDL_Renderer* renderer)
 	DrawHpBar(renderer);
 	DrawLvBar(renderer);
 	DrawMpBar(renderer);
+}
+
+void GameFrame::MainMenu::update()
+{
+	Cursor* mouse = mGame->GetCursor();	
+	auto playerEquip = BindPlayer->GetreadyEquip();
+
+	if (playerEquip.slot1) {
+		dynamic_cast<menuSlot*>(mButtons[0])->SetEquip(playerEquip.slot1);
+	}
+	/*if (playerEquip.slot2) {
+		dynamic_cast<menuSlot*>(mButtons[1])->SetEquip(playerEquip.slot2);
+	}
+	if (playerEquip.slot3) {
+		dynamic_cast<menuSlot*>(mButtons[2])->SetEquip(playerEquip.slot3);
+	}*/
+
+	if (!mButtons.empty()) {
+		//注意叠加图层判断，这里需要补充
+		for (auto iter : mButtons) {
+			if (iter->ContainsPoint(mouse->GetMousePos())) {
+				if (mouse->GetIsPress() != PressState::None) {
+					//如果鼠标在按钮上且按下
+					iter->SetmHeighlighted(Button::ButtonState::Press);
+					iter->OnClick();
+				}
+			}
+		}
+	}
+
 }
 
 void GameFrame::MainMenu::DrawHeroData(SDL_Renderer* renderer)

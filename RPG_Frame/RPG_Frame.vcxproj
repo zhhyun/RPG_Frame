@@ -27,6 +27,8 @@
     <ClInclude Include="include\Component\CollisionComponent.h" />
     <ClInclude Include="include\Component\Component.h" />
     <ClInclude Include="include\Control\Button.h" />
+    <ClInclude Include="include\Control\Control.h" />
+    <ClInclude Include="include\Control\Floating_Box.h" />
     <ClInclude Include="include\Cursor.h" />
     <ClInclude Include="include\Extend\begin_code.h" />
     <ClInclude Include="include\Extend\close_code.h" />
@@ -281,7 +283,9 @@
     <ClInclude Include="include\ScreenUi\MainMenu.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\Control\Control.cpp" />
     <ClCompile Include="include\Control\Slider_Box.h" />
+    <ClCompile Include="src\Control\Floating_Box.cpp" />
     <ClCompile Include="src\GameObject\Equipments.cpp" />
     <ClCompile Include="include\tinyxml\tinystr.cpp" />
     <ClCompile Include="include\tinyxml\tinyxml.cpp" />

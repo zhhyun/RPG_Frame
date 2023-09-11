@@ -16,6 +16,7 @@ namespace GameFrame {
 		//void AddButton(const std::string& name, Vector2 pos, Texture* tex, std::function<void()> OnClick) override;
 		void AddButton(Button* button);
 		void Draw(SDL_Renderer* renderer)override;
+		void update() override;
 		
 	private:
 		void DrawHeroData(SDL_Renderer* renderer);//»æÖÆ¹¥»÷¡¢·ÀÓù

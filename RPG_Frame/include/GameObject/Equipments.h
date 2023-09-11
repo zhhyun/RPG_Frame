@@ -50,6 +50,8 @@ namespace GameFrame {
 		int GetLimit() { return limited; };
 		EquipCLASS GetClass() { return Class; };
 		EquPropertity GetPropty() { return Propertity; };
+		SDL_Texture* GetEquipTex() { return EquTileset; };
+		SDL_Rect GetRectFromTex() { return TakeOutPosFromTex; };
 
 	protected:
 		bool enable = true;

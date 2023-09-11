@@ -7,12 +7,13 @@
 #include	"Texture.h"
 #include	"GameObject.h"
 #include	"Game.h"
+#include	"Control.h"
 	
 #define SLOT_SIDE_LENGTH 27
 
 namespace GameFrame {
 	//应该注册创建者，button控件和创建者绑定在一起
-	class Button {
+	class Button : public Control{
 	public:
 		enum class ButtonState {
 			None,
@@ -28,14 +29,12 @@ namespace GameFrame {
 		~Button();
 		virtual bool ContainsPoint(const Vector2 cur);
 		void OnClick();
-		void Draw(SDL_Renderer* renderder);
+		virtual void Draw(SDL_Renderer* renderder);
 		void SetmHeighlighted(ButtonState is) { mHeighlighted = is; };
 
 	protected:
-		GameObject* BindObject;//控件绑定对象
 		std::function<void()> mOnClick;//回调函数
 		std::string mName;
-		Vector2 ObjectPosion;
 		Texture* mTexture;
 		class Font* mFont;//字体可选
 		int mHeight;
@@ -54,6 +53,8 @@ namespace GameFrame {
 		menuSlot(GameObject* gameobject);
 
 		bool ContainsPoint(const Vector2 cur) override;
+		void Draw(SDL_Renderer* renderder) override;
+		void update() override;
 
 		void SetEquip(Equipments* equip) {
 			ReadyEquip = equip;

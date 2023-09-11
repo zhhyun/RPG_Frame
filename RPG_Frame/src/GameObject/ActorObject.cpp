@@ -28,9 +28,9 @@ GameFrame::ActorObject::ActorObject(Game* game, Sence* map, const std::string& n
 	BasicDEF = DEF;
 	BasicHp = MaxHp;
 	BasicLv = Lv;
-	mReadyEquip.slot1 = new Weapon("slot1", "slot1",mGame);
-	mReadyEquip.slot2 = new Shield("slot2", "slot2", mGame);
-	mReadyEquip.slot3 = new Armor("slot3", "slot3", mGame);
+	mReadyEquip.slot1 = nullptr;// new Weapon("slot1", "slot1", mGame);
+	mReadyEquip.slot2 = nullptr; //new Shield("slot2", "slot2", mGame);
+	mReadyEquip.slot3 = nullptr; //new Armor("slot3", "slot3", mGame);
 	map->SetPlayer(this);
 	mBackpack = new BackpackComponent(this);
 }
@@ -111,13 +111,16 @@ void GameFrame::ActorObject::EquipEquipment(const std::string& equipid)
 
 void GameFrame::ActorObject::UpdateEquipGain()
 {
-	ACK = BasicACK + ( mReadyEquip.slot1->GetPropty().deltaACK + 
-		mReadyEquip.slot2->GetPropty().deltaACK + 
-		mReadyEquip.slot3->GetPropty().deltaACK );
+	if (mReadyEquip.slot1) {
+		ACK = BasicACK + mReadyEquip.slot1->GetPropty().deltaACK; /*+
+			mReadyEquip.slot2->GetPropty().deltaACK +
+			mReadyEquip.slot3->GetPropty().deltaACK);*/
 
-	DEF = BasicDEF + (mReadyEquip.slot1->GetPropty().deltaDEF +
-		mReadyEquip.slot2->GetPropty().deltaDEF +
-		mReadyEquip.slot3->GetPropty().deltaDEF);
+		DEF = BasicDEF + mReadyEquip.slot1->GetPropty().deltaDEF; /* +
+			mReadyEquip.slot2->GetPropty().deltaDEF +
+			mReadyEquip.slot3->GetPropty().deltaDEF);*/
+	}
+	
 
 	//....
 }
